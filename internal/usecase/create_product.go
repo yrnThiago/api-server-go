@@ -1,6 +1,6 @@
 package usecase
 
-import "github.com/yrnThiago/gdlp-go/internal/entity"
+import "github.com/yrnThiago/gdlp-go/internal/domain"
 
 type CreateProductInputDto struct {
 	Name  string
@@ -14,10 +14,10 @@ type CreateProductOutputDto struct {
 }
 
 type CreateProductUseCase struct {
-	ProductRepository entity.ProductRepository
+	ProductRepository domain.ProductRepository
 }
 
-func NewCreateProductUseCase(productRepository entity.ProductRepository) *CreateProductUseCase {
+func NewCreateProductUseCase(productRepository domain.ProductRepository) *CreateProductUseCase {
 	return &CreateProductUseCase{
 		ProductRepository: productRepository,
 	}
@@ -26,7 +26,7 @@ func NewCreateProductUseCase(productRepository entity.ProductRepository) *Create
 func (u *CreateProductUseCase) Execute(
 	input CreateProductInputDto,
 ) (*CreateProductOutputDto, error) {
-	product := entity.NewProduct(input.Name, input.Price)
+	product := domain.NewProduct(input.Name, input.Price)
 	err := u.ProductRepository.Create(product)
 	if err != nil {
 		return nil, err

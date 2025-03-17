@@ -1,23 +1,23 @@
 package usecase
 
-import "github.com/yrnThiago/gdlp-go/internal/entity"
+import "github.com/yrnThiago/gdlp-go/internal/domain"
 
 type CreateOrderInputDto struct {
 	Date  string
-	Items []entity.OrderItems
+	Items []domain.OrderItems
 }
 
 type CreateOrderOutputDto struct {
 	ID    string
 	Date  string
-	Items []entity.OrderItems
+	Items []domain.OrderItems
 }
 
 type CreateOrderUseCase struct {
-	orderRepository entity.OrderRepository
+	orderRepository domain.OrderRepository
 }
 
-func NewCreateOrderUseCase(orderRepository entity.OrderRepository) *CreateOrderUseCase {
+func NewCreateOrderUseCase(orderRepository domain.OrderRepository) *CreateOrderUseCase {
 	return &CreateOrderUseCase{
 		orderRepository: orderRepository,
 	}
@@ -26,7 +26,7 @@ func NewCreateOrderUseCase(orderRepository entity.OrderRepository) *CreateOrderU
 func (u *CreateOrderUseCase) Execute(
 	input CreateOrderInputDto,
 ) (*CreateOrderOutputDto, error) {
-	order := entity.NewOrder(input.Date, input.Items)
+	order := domain.NewOrder(input.Date, input.Items)
 	err := u.orderRepository.Create(order)
 	if err != nil {
 		return nil, err

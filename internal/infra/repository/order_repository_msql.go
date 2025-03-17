@@ -1,9 +1,8 @@
 package repository
 
 import (
+	"github.com/yrnThiago/gdlp-go/internal/domain"
 	"gorm.io/gorm"
-
-	"github.com/yrnThiago/gdlp-go/internal/entity"
 )
 
 type OrderRepositoryMysql struct {
@@ -16,8 +15,8 @@ func NewOrderRepositoryMysql(db *gorm.DB) *OrderRepositoryMysql {
 	}
 }
 
-func (r *OrderRepositoryMysql) Create(order *entity.Order) error {
-	res := r.DB.Create(&entity.Order{
+func (r *OrderRepositoryMysql) Create(order *domain.Order) error {
+	res := r.DB.Create(&domain.Order{
 		ID:    order.ID,
 		Date:  order.Date,
 		Items: order.Items,
@@ -30,8 +29,8 @@ func (r *OrderRepositoryMysql) Create(order *entity.Order) error {
 	return nil
 }
 
-func (r *OrderRepositoryMysql) FindAll() ([]*entity.Order, error) {
-	var orders []*entity.Order
+func (r *OrderRepositoryMysql) FindAll() ([]*domain.Order, error) {
+	var orders []*domain.Order
 	res := r.DB.Preload("Items.Product").Find(&orders)
 
 	if res.Error != nil {

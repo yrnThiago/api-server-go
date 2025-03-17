@@ -13,10 +13,10 @@ import (
 	"github.com/yrnThiago/gdlp-go/internal/api"
 	"github.com/yrnThiago/gdlp-go/internal/cmd/pub"
 	"github.com/yrnThiago/gdlp-go/internal/cmd/sub"
-	"github.com/yrnThiago/gdlp-go/internal/entity"
+	"github.com/yrnThiago/gdlp-go/internal/domain"
+	"github.com/yrnThiago/gdlp-go/internal/handlers"
 	"github.com/yrnThiago/gdlp-go/internal/infra/repository"
 	"github.com/yrnThiago/gdlp-go/internal/usecase"
-	"github.com/yrnThiago/gdlp-go/internal/web"
 )
 
 func main() {
@@ -46,16 +46,16 @@ func main() {
 	}
 
 	// Maybe this would be better in another place right??
-	db.AutoMigrate(&entity.Product{}, &entity.Order{}, &entity.OrderItems{})
+	db.AutoMigrate(&domain.Product{}, &domain.Order{}, &domain.OrderItems{})
 	repositoryProducts := repository.NewProductRepositoryMysql(db)
 	createProductUseCase := usecase.NewCreateProductUseCase(repositoryProducts)
 	listProductUseCase := usecase.NewListProductsCase(repositoryProducts)
-	productHandlers := web.NewProductHandlers(createProductUseCase, listProductUseCase)
+	productHandlers := handlers.NewProductHandlers(createProductUseCase, listProductUseCase)
 
 	repositoryOrders := repository.NewOrderRepositoryMysql(db)
 	createOrderUseCase := usecase.NewCreateOrderUseCase(repositoryOrders)
 	listOrderUseCase := usecase.NewListOrdersCase(repositoryOrders)
-	orderHandlers := web.NewOrderHandlers(createOrderUseCase, listOrderUseCase)
+	orderHandlers := handlers.NewOrderHandlers(createOrderUseCase, listOrderUseCase)
 
 	go api.CreateServer(productHandlers, orderHandlers)
 

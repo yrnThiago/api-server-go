@@ -1,6 +1,6 @@
 package usecase
 
-import "github.com/yrnThiago/gdlp-go/internal/entity"
+import "github.com/yrnThiago/gdlp-go/internal/domain"
 
 type ListProductsOutputDto struct {
 	ID    string
@@ -9,10 +9,10 @@ type ListProductsOutputDto struct {
 }
 
 type ListProductsUseCase struct {
-	ProductRepository entity.ProductRepository
+	ProductRepository domain.ProductRepository
 }
 
-func NewListProductsCase(productRepository entity.ProductRepository) *ListProductsUseCase {
+func NewListProductsCase(productRepository domain.ProductRepository) *ListProductsUseCase {
 	return &ListProductsUseCase{
 		ProductRepository: productRepository,
 	}

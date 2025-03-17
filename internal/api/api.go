@@ -8,8 +8,7 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
-
-	"github.com/yrnThiago/gdlp-go/internal/web"
+	"github.com/yrnThiago/gdlp-go/internal/handlers"
 )
 
 type Server struct {
@@ -32,7 +31,7 @@ func CreateLogger() {
 	Logger = myslog
 }
 
-func CreateServer(productHandlers *web.ProductHandlers, orderHandlers *web.OrderHandlers) {
+func CreateServer(productHandlers *handlers.ProductHandlers, orderHandlers *handlers.OrderHandlers) {
 	mux := http.NewServeMux()
 	Logger.Info("Server listening", "port", PORT)
 
@@ -78,8 +77,8 @@ func ping(w http.ResponseWriter, r *http.Request) {
 
 func setupHandlers(
 	m *http.ServeMux,
-	productHandlers *web.ProductHandlers,
-	orderHandlers *web.OrderHandlers,
+	productHandlers *handlers.ProductHandlers,
+	orderHandlers *handlers.OrderHandlers,
 ) {
 	m.Handle("/ping", loggingMiddleware(errorMiddleware(http.HandlerFunc(ping))))
 	m.Handle(

@@ -1,18 +1,19 @@
 package usecase
 
-import "github.com/yrnThiago/gdlp-go/internal/entity"
+import "github.com/yrnThiago/gdlp-go/internal/domain"
+
 
 type ListOrdersOutputDto struct {
 	ID    string
 	Date  string
-	Items []entity.OrderItems
+	Items []domain.OrderItems
 }
 
 type ListOrdersUseCase struct {
-	orderRepository entity.OrderRepository
+	orderRepository domain.OrderRepository
 }
 
-func NewListOrdersCase(orderRepository entity.OrderRepository) *ListOrdersUseCase {
+func NewListOrdersCase(orderRepository domain.OrderRepository) *ListOrdersUseCase {
 	return &ListOrdersUseCase{
 		orderRepository: orderRepository,
 	}

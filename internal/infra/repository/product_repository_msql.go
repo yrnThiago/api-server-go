@@ -1,9 +1,8 @@
 package repository
 
 import (
+	"github.com/yrnThiago/gdlp-go/internal/domain"
 	"gorm.io/gorm"
-
-	"github.com/yrnThiago/gdlp-go/internal/entity"
 )
 
 type ProductRepositoryMysql struct {
@@ -16,8 +15,8 @@ func NewProductRepositoryMysql(db *gorm.DB) *ProductRepositoryMysql {
 	}
 }
 
-func (r *ProductRepositoryMysql) Create(product *entity.Product) error {
-	res := r.DB.Create(&entity.Product{
+func (r *ProductRepositoryMysql) Create(product *domain.Product) error {
+	res := r.DB.Create(&domain.Product{
 		ID:    product.ID,
 		Name:  product.Name,
 		Price: product.Price,
@@ -30,8 +29,8 @@ func (r *ProductRepositoryMysql) Create(product *entity.Product) error {
 	return nil
 }
 
-func (r *ProductRepositoryMysql) FindAll() ([]*entity.Product, error) {
-	var products []*entity.Product
+func (r *ProductRepositoryMysql) FindAll() ([]*domain.Product, error) {
+	var products []*domain.Product
 	res := r.DB.Find(&products)
 
 	if res.Error != nil {
