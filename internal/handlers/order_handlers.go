@@ -9,29 +9,26 @@ import (
 )
 
 type OrderHandlers struct {
-	CreateOrderUseCase *usecase.CreateOrderUseCase
-	ListOrdersUseCase  *usecase.ListOrdersUseCase
+	OrderUseCase *usecase.OrderUseCase
 }
 
 func NewOrderHandlers(
-	createOrderUseCase *usecase.CreateOrderUseCase,
-	listOrdersUseCase *usecase.ListOrdersUseCase,
+	createOrderUseCase *usecase.OrderUseCase,
 ) *OrderHandlers {
 	return &OrderHandlers{
-		CreateOrderUseCase: createOrderUseCase,
-		ListOrdersUseCase:  listOrdersUseCase,
+		OrderUseCase: createOrderUseCase,
 	}
 }
 
-func (p *OrderHandlers) CreateOrderHandler(w http.ResponseWriter, r *http.Request) {
-	var input usecase.CreateOrderInputDto
+func (p *OrderHandlers) OrderHandler(w http.ResponseWriter, r *http.Request) {
+	var input usecase.OrderInputDto
 	err := json.NewDecoder(r.Body).Decode(&input)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	output, err := p.CreateOrderUseCase.Execute(input)
+	output, err := p.OrderUseCase.Create(input)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -45,7 +42,7 @@ func (p *OrderHandlers) CreateOrderHandler(w http.ResponseWriter, r *http.Reques
 }
 
 func (p *OrderHandlers) ListOrderHandler(w http.ResponseWriter, r *http.Request) {
-	output, err := p.ListOrdersUseCase.Execute()
+	output, err := p.OrderUseCase.GetMany()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return

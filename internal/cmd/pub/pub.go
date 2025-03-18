@@ -23,7 +23,7 @@ func PublisherInit() {
 	Pub = nc
 }
 
-func SendMessage(order *usecase.CreateOrderOutputDto) {
+func SendMessage(order *usecase.OrderOutputDto) {
 	msg := fmt.Sprintf("New order: %s", order.ID)
 	err := Pub.Publish(os.Getenv("NEW_ORDERS_TOPIC"), []byte(msg))
 	if err != nil {

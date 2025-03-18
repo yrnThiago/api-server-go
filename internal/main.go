@@ -49,14 +49,12 @@ func main() {
 	// Maybe this would be better in another place right??
 	db.AutoMigrate(&domain.Product{}, &domain.Order{}, &domain.OrderItems{})
 	repositoryProducts := repository.NewProductRepositoryMysql(db)
-	createProductUseCase := usecase.NewCreateProductUseCase(repositoryProducts)
-	listProductUseCase := usecase.NewListProductsCase(repositoryProducts)
-	productHandlers := handlers.NewProductHandlers(createProductUseCase, listProductUseCase)
+	productUseCase := usecase.NewProductUseCase(repositoryProducts)
+	productHandlers := handlers.NewProductHandlers(productUseCase)
 
 	repositoryOrders := repository.NewOrderRepositoryMysql(db)
-	createOrderUseCase := usecase.NewCreateOrderUseCase(repositoryOrders)
-	listOrderUseCase := usecase.NewListOrdersCase(repositoryOrders)
-	orderHandlers := handlers.NewOrderHandlers(createOrderUseCase, listOrderUseCase)
+	orderUseCase := usecase.NewOrderUseCase(repositoryOrders)
+	orderHandlers := handlers.NewOrderHandlers(orderUseCase)
 
 	go api.CreateServer(productHandlers, orderHandlers)
 

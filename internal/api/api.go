@@ -73,7 +73,7 @@ func setupHandlers(
 	m.Handle("/ping", loggingMiddleware(errorMiddleware(http.HandlerFunc(ping))))
 	m.Handle(
 		"/checkout",
-		loggingMiddleware(errorMiddleware(http.HandlerFunc(orderHandlers.CreateOrderHandler))),
+		loggingMiddleware(errorMiddleware(http.HandlerFunc(orderHandlers.OrderHandler))),
 	)
 	m.Handle(
 		"/orders",
@@ -85,6 +85,6 @@ func setupHandlers(
 	)
 	m.Handle(
 		"/addproduct",
-		loggingMiddleware(errorMiddleware(http.HandlerFunc(productHandlers.CreateProductHandler))),
+		loggingMiddleware(errorMiddleware(http.HandlerFunc(productHandlers.ProductHandler))),
 	)
 }

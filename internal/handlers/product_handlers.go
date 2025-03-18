@@ -8,29 +8,26 @@ import (
 )
 
 type ProductHandlers struct {
-	CreateProductUseCase *usecase.CreateProductUseCase
-	ListProductsUseCase  *usecase.ListProductsUseCase
+	ProductUseCase *usecase.ProductUseCase
 }
 
 func NewProductHandlers(
-	createProductUseCase *usecase.CreateProductUseCase,
-	listProductsUseCase *usecase.ListProductsUseCase,
+	createProductUseCase *usecase.ProductUseCase,
 ) *ProductHandlers {
 	return &ProductHandlers{
-		CreateProductUseCase: createProductUseCase,
-		ListProductsUseCase:  listProductsUseCase,
+		ProductUseCase: createProductUseCase,
 	}
 }
 
-func (p *ProductHandlers) CreateProductHandler(w http.ResponseWriter, r *http.Request) {
-	var input usecase.CreateProductInputDto
+func (p *ProductHandlers) ProductHandler(w http.ResponseWriter, r *http.Request) {
+	var input usecase.ProductInputDto
 	err := json.NewDecoder(r.Body).Decode(&input)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	output, err := p.CreateProductUseCase.Execute(input)
+	output, err := p.ProductUseCase.Create(input)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -42,7 +39,7 @@ func (p *ProductHandlers) CreateProductHandler(w http.ResponseWriter, r *http.Re
 }
 
 func (p *ProductHandlers) ListProductsHandler(w http.ResponseWriter, r *http.Request) {
-	output, err := p.ListProductsUseCase.Execute()
+	output, err := p.ProductUseCase.GetMany()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -54,7 +51,7 @@ func (p *ProductHandlers) ListProductsHandler(w http.ResponseWriter, r *http.Req
 }
 
 func (p *ProductHandlers) FindByProductIdHandler(w http.ResponseWriter, r *http.Request) {
-	// output, err := p.CreateProductUseCase.Execute(input)
+	// output, err := p.ProductUseCase.Create(input)
 	// if err != nil {
 	// 	w.WriteHeader(http.StatusInternalServerError)
 	// 	return
