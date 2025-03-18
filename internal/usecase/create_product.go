@@ -5,12 +5,14 @@ import "github.com/yrnThiago/gdlp-go/internal/domain"
 type CreateProductInputDto struct {
 	Name  string
 	Price float64
+	Stock int
 }
 
 type CreateProductOutputDto struct {
 	ID    string
 	Name  string
 	Price float64
+	Stock int
 }
 
 type CreateProductUseCase struct {
@@ -26,7 +28,7 @@ func NewCreateProductUseCase(productRepository domain.ProductRepository) *Create
 func (u *CreateProductUseCase) Execute(
 	input CreateProductInputDto,
 ) (*CreateProductOutputDto, error) {
-	product := domain.NewProduct(input.Name, input.Price)
+	product := domain.NewProduct(input.Name, input.Price, input.Stock)
 	err := u.ProductRepository.Create(product)
 	if err != nil {
 		return nil, err
@@ -36,5 +38,6 @@ func (u *CreateProductUseCase) Execute(
 		ID:    product.ID,
 		Name:  product.Name,
 		Price: product.Price,
+		Stock: product.Stock,
 	}, err
 }

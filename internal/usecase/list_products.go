@@ -6,6 +6,7 @@ type ListProductsOutputDto struct {
 	ID    string
 	Name  string
 	Price float64
+	Stock int
 }
 
 type ListProductsUseCase struct {
@@ -30,6 +31,7 @@ func (u *ListProductsUseCase) Execute() ([]*ListProductsOutputDto, error) {
 			ID:    product.ID,
 			Name:  product.Name,
 			Price: product.Price,
+			Stock: product.Stock,
 		})
 	}
 

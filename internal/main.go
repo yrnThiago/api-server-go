@@ -13,6 +13,7 @@ import (
 	"github.com/yrnThiago/gdlp-go/internal/api"
 	"github.com/yrnThiago/gdlp-go/internal/cmd/pub"
 	"github.com/yrnThiago/gdlp-go/internal/cmd/sub"
+	"github.com/yrnThiago/gdlp-go/internal/config"
 	"github.com/yrnThiago/gdlp-go/internal/domain"
 	"github.com/yrnThiago/gdlp-go/internal/handlers"
 	"github.com/yrnThiago/gdlp-go/internal/infra/repository"
@@ -20,7 +21,7 @@ import (
 )
 
 func main() {
-	api.LoadEnv()
+	config.LoadEnv()
 	api.CreateLogger()
 
 	// Can u please make a proper palce to config NATs

@@ -2,12 +2,11 @@ package api
 
 import (
 	"encoding/json"
-	"log"
 	"log/slog"
 	"net/http"
 	"os"
 
-	"github.com/joho/godotenv"
+	"github.com/yrnThiago/gdlp-go/internal/config"
 	"github.com/yrnThiago/gdlp-go/internal/handlers"
 )
 
@@ -19,10 +18,7 @@ type Response struct {
 	Message string `json:"message"`
 }
 
-var (
-	Logger *slog.Logger
-	PORT   string
-)
+var Logger *slog.Logger
 
 func CreateLogger() {
 	jsonHandler := slog.NewJSONHandler(os.Stderr, nil)
@@ -31,24 +27,18 @@ func CreateLogger() {
 	Logger = myslog
 }
 
-func CreateServer(productHandlers *handlers.ProductHandlers, orderHandlers *handlers.OrderHandlers) {
+func CreateServer(
+	productHandlers *handlers.ProductHandlers,
+	orderHandlers *handlers.OrderHandlers,
+) {
 	mux := http.NewServeMux()
-	Logger.Info("Server listening", "port", PORT)
+	Logger.Info("Server listening", "port", config.GetEnv("PORT"))
 
 	setupHandlers(mux, productHandlers, orderHandlers)
-	err := http.ListenAndServe(":"+PORT, mux)
+	err := http.ListenAndServe(":"+config.GetEnv("PORT"), mux)
 	if err != nil {
 		Logger.Error("Servidor deu merda!")
 	}
-}
-
-func LoadEnv() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
-	PORT = os.Getenv("PORT")
 }
 
 func errorMiddleware(next http.Handler) http.Handler {

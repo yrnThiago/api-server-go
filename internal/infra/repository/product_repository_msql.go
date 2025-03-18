@@ -1,8 +1,11 @@
 package repository
 
 import (
-	"github.com/yrnThiago/gdlp-go/internal/domain"
+	"fmt"
+
 	"gorm.io/gorm"
+
+	"github.com/yrnThiago/gdlp-go/internal/domain"
 )
 
 type ProductRepositoryMysql struct {
@@ -20,6 +23,7 @@ func (r *ProductRepositoryMysql) Create(product *domain.Product) error {
 		ID:    product.ID,
 		Name:  product.Name,
 		Price: product.Price,
+		Stock: product.Stock,
 	})
 
 	if res.Error != nil {
@@ -38,4 +42,26 @@ func (r *ProductRepositoryMysql) FindAll() ([]*domain.Product, error) {
 	}
 
 	return products, nil
+}
+
+func (r *ProductRepositoryMysql) FindById(productID string) (*domain.Product, error) {
+	var product *domain.Product
+	res := r.DB.First(&product, productID)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+
+	return product, nil
+}
+
+func (r *ProductRepositoryMysql) UpdateById(productID string, newProduct *domain.Product) error {
+	product, err := r.FindById(productID)
+	if err != nil {
+		return err
+	}
+
+	r.DB.Model(&product).Updates(newProduct)
+	fmt.Println(product)
+
+	return nil
 }
