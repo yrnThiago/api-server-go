@@ -1,8 +1,9 @@
 package repository
 
 import (
-	"github.com/yrnThiago/gdlp-go/internal/domain"
 	"gorm.io/gorm"
+
+	"github.com/yrnThiago/gdlp-go/internal/domain"
 )
 
 type OrderRepositoryMysql struct {
@@ -17,9 +18,10 @@ func NewOrderRepositoryMysql(db *gorm.DB) *OrderRepositoryMysql {
 
 func (r *OrderRepositoryMysql) Create(order *domain.Order) error {
 	res := r.DB.Create(&domain.Order{
-		ID:    order.ID,
-		Date:  order.Date,
-		Items: order.Items,
+		ID:     order.ID,
+		Date:   order.Date,
+		Items:  order.Items,
+		Status: order.Status,
 	})
 
 	if res.Error != nil {
