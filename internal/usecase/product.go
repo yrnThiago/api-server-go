@@ -1,8 +1,6 @@
 package usecase
 
 import (
-	"fmt"
-
 	"github.com/yrnThiago/gdlp-go/internal/domain"
 )
 
@@ -67,7 +65,6 @@ func (u *ProductUseCase) GetMany() ([]*ProductOutputDto, error) {
 
 func (u *ProductUseCase) GetById(id string) (*ProductOutputDto, error) {
 	product, err := u.ProductRepository.GetById(id)
-	fmt.Println(id)
 	if err != nil {
 		return nil, err
 	}
@@ -81,18 +78,30 @@ func (u *ProductUseCase) GetById(id string) (*ProductOutputDto, error) {
 }
 
 func (u *ProductUseCase) UpdateById(
-	input ProductInputDto,
+	productId string,
+	input *ProductInputDto,
 ) (*ProductOutputDto, error) {
-	product := domain.NewProduct(input.Name, input.Price, input.Stock)
-	err := u.ProductRepository.Add(product)
+	newProduct := domain.NewProduct(input.Name, input.Price, input.Stock)
+	_, err := u.ProductRepository.UpdateById(productId, newProduct)
 	if err != nil {
 		return nil, err
 	}
 
 	return &ProductOutputDto{
-		ID:    product.ID,
-		Name:  product.Name,
-		Price: product.Price,
-		Stock: product.Stock,
+		ID:    newProduct.ID,
+		Name:  newProduct.Name,
+		Price: newProduct.Price,
+		Stock: newProduct.Stock,
 	}, err
+}
+
+func (u *ProductUseCase) DeleteById(
+	productId string,
+) error {
+	err := u.ProductRepository.DeleteById(productId)
+	if err != nil {
+		return err
+	}
+
+	return err
 }

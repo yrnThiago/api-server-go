@@ -73,27 +73,18 @@ func setupHandlers(
 	productHandlers *handlers.ProductHandlers,
 	orderHandlers *handlers.OrderHandlers,
 ) {
-	chi.Handle("/ping", loggingMiddleware(errorMiddleware(http.HandlerFunc(ping))))
-	chi.Handle(
-		"/checkout",
-		loggingMiddleware(errorMiddleware(http.HandlerFunc(orderHandlers.OrderHandler))),
+	chi.Use(loggingMiddleware, errorMiddleware)
+	chi.Get("/ping", ping)
+	chi.Post(
+		"/checkout", orderHandlers.OrderHandler,
 	)
-	chi.Handle(
-		"/orders",
-		loggingMiddleware(errorMiddleware(http.HandlerFunc(orderHandlers.ListOrderHandler))),
+	chi.Get(
+		"/orders", orderHandlers.ListOrderHandler,
 	)
-	chi.Handle(
-		"/products",
-		loggingMiddleware(errorMiddleware(http.HandlerFunc(productHandlers.ListProductsHandler))),
-	)
-	chi.Handle(
-		"/addproduct",
-		loggingMiddleware(errorMiddleware(http.HandlerFunc(productHandlers.ProductHandler))),
-	)
-	chi.Handle(
-		"/product/{id}",
-		loggingMiddleware(
-			errorMiddleware(http.HandlerFunc(productHandlers.FindByProductIdHandler)),
-		),
-	)
+
+	chi.Post("/product", productHandlers.Add)
+	chi.Get("/product", productHandlers.GetMany)
+	chi.Get("/product/{id}", productHandlers.GetById)
+	chi.Post("/product/{id}", productHandlers.UpdateById)
+	chi.Delete("/product/{id}", productHandlers.DeleteById)
 }

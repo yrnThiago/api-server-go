@@ -2,7 +2,6 @@ package repository
 
 import (
 	"errors"
-	"fmt"
 
 	"gorm.io/gorm"
 
@@ -68,12 +67,17 @@ func (r *ProductRepositoryMysql) UpdateById(
 		return nil, err
 	}
 
-	r.DB.Model(&product).Updates(newProduct)
-	fmt.Println(product)
+	r.DB.Model(&product).Omit("ID").Updates(newProduct)
 
 	return product, nil
 }
 
 func (r *ProductRepositoryMysql) DeleteById(productID string) error {
+	var product *domain.Product
+	res := r.DB.Delete(&product, "id = ?", productID)
+	if res.Error != nil {
+		return res.Error
+	}
+
 	return nil
 }

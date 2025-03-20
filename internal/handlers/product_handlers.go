@@ -21,7 +21,7 @@ func NewProductHandlers(
 	}
 }
 
-func (p *ProductHandlers) ProductHandler(w http.ResponseWriter, r *http.Request) {
+func (p *ProductHandlers) Add(w http.ResponseWriter, r *http.Request) {
 	var input usecase.ProductInputDto
 	err := json.NewDecoder(r.Body).Decode(&input)
 	if err != nil {
@@ -40,7 +40,7 @@ func (p *ProductHandlers) ProductHandler(w http.ResponseWriter, r *http.Request)
 	json.NewEncoder(w).Encode(output)
 }
 
-func (p *ProductHandlers) ListProductsHandler(w http.ResponseWriter, r *http.Request) {
+func (p *ProductHandlers) GetMany(w http.ResponseWriter, r *http.Request) {
 	output, err := p.ProductUseCase.GetMany()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -52,7 +52,7 @@ func (p *ProductHandlers) ListProductsHandler(w http.ResponseWriter, r *http.Req
 	json.NewEncoder(w).Encode(output)
 }
 
-func (p *ProductHandlers) FindByProductIdHandler(w http.ResponseWriter, r *http.Request) {
+func (p *ProductHandlers) GetById(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 	output, err := p.ProductUseCase.GetById(id)
 	if err != nil {
@@ -61,4 +61,39 @@ func (p *ProductHandlers) FindByProductIdHandler(w http.ResponseWriter, r *http.
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(output)
+}
+
+func (p *ProductHandlers) UpdateById(w http.ResponseWriter, r *http.Request) {
+	var input usecase.ProductInputDto
+	err := json.NewDecoder(r.Body).Decode(&input)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	id := chi.URLParam(r, "id")
+	_, err = p.ProductUseCase.GetById(id)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	new, err := p.ProductUseCase.UpdateById(id, &input)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(new)
+}
+func (p *ProductHandlers) DeleteById(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+	err := p.ProductUseCase.DeleteById(id)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode("Product removed")
 }
