@@ -6,8 +6,11 @@ import (
 )
 
 type OrderRepository interface {
-	Create(order *Order) error
-	FindAll() ([]*Order, error)
+	Add(order *Order) error
+	GetMany() ([]*Order, error)
+	GetById(id string) (*Order, error)
+	UpdateById(id string, newOrder *Order) (*Order, error)
+	DeleteById(id string) error
 }
 
 type OrderItems struct {

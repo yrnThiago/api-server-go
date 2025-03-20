@@ -75,12 +75,12 @@ func setupHandlers(
 ) {
 	chi.Use(loggingMiddleware, errorMiddleware)
 	chi.Get("/ping", ping)
-	chi.Post(
-		"/checkout", orderHandlers.OrderHandler,
-	)
-	chi.Get(
-		"/orders", orderHandlers.ListOrderHandler,
-	)
+
+	chi.Post("/checkout", orderHandlers.Add)
+	chi.Get("/orders", orderHandlers.GetMany)
+	chi.Get("/orders/{id}", orderHandlers.GetById)
+	chi.Post("/orders/{id}", orderHandlers.UpdateById)
+	chi.Delete("/orders/{id}", orderHandlers.DeleteById)
 
 	chi.Post("/product", productHandlers.Add)
 	chi.Get("/product", productHandlers.GetMany)
