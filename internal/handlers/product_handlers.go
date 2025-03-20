@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/go-chi/chi/v5"
+
 	"github.com/yrnThiago/gdlp-go/internal/usecase"
 )
 
@@ -27,7 +29,7 @@ func (p *ProductHandlers) ProductHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	output, err := p.ProductUseCase.Create(input)
+	output, err := p.ProductUseCase.Add(input)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -51,13 +53,12 @@ func (p *ProductHandlers) ListProductsHandler(w http.ResponseWriter, r *http.Req
 }
 
 func (p *ProductHandlers) FindByProductIdHandler(w http.ResponseWriter, r *http.Request) {
-	// output, err := p.ProductUseCase.Create(input)
-	// if err != nil {
-	// 	w.WriteHeader(http.StatusInternalServerError)
-	// 	return
-	// }
-	//
-	// w.Header().Set("Content-Type", "application/json")
-	// w.WriteHeader(http.StatusCreated)
-	// json.NewEncoder(w).Encode(output)
+	id := chi.URLParam(r, "id")
+	output, err := p.ProductUseCase.GetById(id)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(output)
 }

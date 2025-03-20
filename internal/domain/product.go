@@ -8,8 +8,11 @@ import (
 )
 
 type ProductRepository interface {
-	Create(product *Product) error
-	FindAll() ([]*Product, error)
+	Add(product *Product) error
+	GetMany() ([]*Product, error)
+	GetById(id string) (*Product, error)
+	UpdateById(id string, newProduct *Product) (*Product, error)
+	DeleteById(id string) error
 }
 
 type Product struct {

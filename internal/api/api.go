@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/go-chi/chi/v5"
+
 	"github.com/yrnThiago/gdlp-go/internal/config"
 	"github.com/yrnThiago/gdlp-go/internal/handlers"
 )
@@ -31,11 +33,12 @@ func CreateServer(
 	productHandlers *handlers.ProductHandlers,
 	orderHandlers *handlers.OrderHandlers,
 ) {
-	mux := http.NewServeMux()
+	chi := chi.NewRouter()
+	// mux := http.NewServeMux()
 	Logger.Info("Server listening", "port", config.GetEnv("PORT"))
 
-	setupHandlers(mux, productHandlers, orderHandlers)
-	err := http.ListenAndServe(":"+config.GetEnv("PORT"), mux)
+	setupHandlers(chi, productHandlers, orderHandlers)
+	err := http.ListenAndServe(":"+config.GetEnv("PORT"), chi)
 	if err != nil {
 		Logger.Error("Servidor deu merda!")
 	}
@@ -66,25 +69,31 @@ func ping(w http.ResponseWriter, r *http.Request) {
 }
 
 func setupHandlers(
-	m *http.ServeMux,
+	chi *chi.Mux,
 	productHandlers *handlers.ProductHandlers,
 	orderHandlers *handlers.OrderHandlers,
 ) {
-	m.Handle("/ping", loggingMiddleware(errorMiddleware(http.HandlerFunc(ping))))
-	m.Handle(
+	chi.Handle("/ping", loggingMiddleware(errorMiddleware(http.HandlerFunc(ping))))
+	chi.Handle(
 		"/checkout",
 		loggingMiddleware(errorMiddleware(http.HandlerFunc(orderHandlers.OrderHandler))),
 	)
-	m.Handle(
+	chi.Handle(
 		"/orders",
 		loggingMiddleware(errorMiddleware(http.HandlerFunc(orderHandlers.ListOrderHandler))),
 	)
-	m.Handle(
+	chi.Handle(
 		"/products",
 		loggingMiddleware(errorMiddleware(http.HandlerFunc(productHandlers.ListProductsHandler))),
 	)
-	m.Handle(
+	chi.Handle(
 		"/addproduct",
 		loggingMiddleware(errorMiddleware(http.HandlerFunc(productHandlers.ProductHandler))),
+	)
+	chi.Handle(
+		"/product/{id}",
+		loggingMiddleware(
+			errorMiddleware(http.HandlerFunc(productHandlers.FindByProductIdHandler)),
+		),
 	)
 }

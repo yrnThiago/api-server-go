@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"fmt"
 
 	"gorm.io/gorm"
@@ -18,7 +19,7 @@ func NewProductRepositoryMysql(db *gorm.DB) *ProductRepositoryMysql {
 	}
 }
 
-func (r *ProductRepositoryMysql) Create(product *domain.Product) error {
+func (r *ProductRepositoryMysql) Add(product *domain.Product) error {
 	res := r.DB.Create(&domain.Product{
 		ID:    product.ID,
 		Name:  product.Name,
@@ -33,7 +34,7 @@ func (r *ProductRepositoryMysql) Create(product *domain.Product) error {
 	return nil
 }
 
-func (r *ProductRepositoryMysql) FindAll() ([]*domain.Product, error) {
+func (r *ProductRepositoryMysql) GetMany() ([]*domain.Product, error) {
 	var products []*domain.Product
 	res := r.DB.Find(&products)
 
@@ -44,24 +45,35 @@ func (r *ProductRepositoryMysql) FindAll() ([]*domain.Product, error) {
 	return products, nil
 }
 
-func (r *ProductRepositoryMysql) FindById(productID string) (*domain.Product, error) {
+func (r *ProductRepositoryMysql) GetById(productID string) (*domain.Product, error) {
 	var product *domain.Product
-	res := r.DB.First(&product, productID)
+	res := r.DB.First(&product, "id = ?", productID)
 	if res.Error != nil {
+		if errors.Is(res.Error, gorm.ErrRecordNotFound) {
+			return nil, res.Error
+		}
+
 		return nil, res.Error
 	}
 
 	return product, nil
 }
 
-func (r *ProductRepositoryMysql) UpdateById(productID string, newProduct *domain.Product) error {
-	product, err := r.FindById(productID)
+func (r *ProductRepositoryMysql) UpdateById(
+	productID string,
+	newProduct *domain.Product,
+) (*domain.Product, error) {
+	product, err := r.GetById(productID)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	r.DB.Model(&product).Updates(newProduct)
 	fmt.Println(product)
 
+	return product, nil
+}
+
+func (r *ProductRepositoryMysql) DeleteById(productID string) error {
 	return nil
 }
