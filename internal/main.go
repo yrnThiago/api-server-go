@@ -1,13 +1,14 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"time"
 
-	"github.com/glebarez/sqlite"
 	"github.com/nats-io/nats-server/v2/server"
 	"github.com/nats-io/nats.go"
+	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 
 	"github.com/yrnThiago/gdlp-go/internal/api"
@@ -41,13 +42,13 @@ func main() {
 	pub.PublisherInit()
 	sub := sub.Connect()
 
-	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
+	db, err := gorm.Open(mysql.Open(config.GetDatabaseUrl()), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
 	}
 
 	// Maybe this would be better in another place right??
-	db.AutoMigrate(&domain.Product{}, &domain.Order{}, &domain.OrderItems{})
+	db.Migrator().AutoMigrate(&domain.Product{}, &domain.Order{}, &domain.OrderItems{})
 	repositoryProducts := repository.NewProductRepositoryMysql(db)
 	productUseCase := usecase.NewProductUseCase(repositoryProducts)
 	productHandlers := handlers.NewProductHandlers(productUseCase)
@@ -61,6 +62,14 @@ func main() {
 	go sub.ReceiveMessage(msgChan, os.Getenv("NEW_ORDERS_TOPIC"))
 
 	for msg := range msgChan {
-		fmt.Println(string(msg.Data))
+		var order *domain.Order
+
+		err = json.Unmarshal(msg.Data, &order)
+		if err != nil {
+			return
+		}
+
+		fmt.Println(order)
+		repositoryOrders.UpdateById(order, map[string]any{"Status": "Pagamento Aprovado"})
 	}
 }

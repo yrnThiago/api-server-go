@@ -19,12 +19,7 @@ func NewProductRepositoryMysql(db *gorm.DB) *ProductRepositoryMysql {
 }
 
 func (r *ProductRepositoryMysql) Add(product *domain.Product) error {
-	res := r.DB.Create(&domain.Product{
-		ID:    product.ID,
-		Name:  product.Name,
-		Price: product.Price,
-		Stock: product.Stock,
-	})
+	res := r.DB.Create(product)
 
 	if res.Error != nil {
 		return res.Error
@@ -46,7 +41,7 @@ func (r *ProductRepositoryMysql) GetMany() ([]*domain.Product, error) {
 
 func (r *ProductRepositoryMysql) GetById(productID string) (*domain.Product, error) {
 	var product *domain.Product
-	res := r.DB.First(&product, "id = ?", productID)
+	res := r.DB.Limit(1).First(&product, "id = ?", productID)
 	if res.Error != nil {
 		if errors.Is(res.Error, gorm.ErrRecordNotFound) {
 			return nil, res.Error

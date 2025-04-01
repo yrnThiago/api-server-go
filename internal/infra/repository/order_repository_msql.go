@@ -2,6 +2,7 @@ package repository
 
 import (
 	"errors"
+	"fmt"
 
 	"gorm.io/gorm"
 
@@ -19,12 +20,7 @@ func NewOrderRepositoryMysql(db *gorm.DB) *OrderRepositoryMysql {
 }
 
 func (r *OrderRepositoryMysql) Add(order *domain.Order) error {
-	res := r.DB.Create(&domain.Order{
-		ID:     order.ID,
-		Date:   order.Date,
-		Items:  order.Items,
-		Status: order.Status,
-	})
+	res := r.DB.Create(order)
 
 	if res.Error != nil {
 		return res.Error
@@ -59,28 +55,13 @@ func (r *OrderRepositoryMysql) GetById(orderId string) (*domain.Order, error) {
 }
 
 func (r *OrderRepositoryMysql) UpdateById(
-	orderId string,
-	newOrder *domain.Order,
-) (*domain.Order, error) {
-	order, err := r.GetById(orderId)
-	if err != nil {
-		return nil, err
-	}
+	order *domain.Order,
+	body map[string]any,
+) error {
+	fmt.Println(body)
+	r.DB.Model(&order).Omit("Items").Updates(body)
 
-	if newOrder.Date != "" {
-		order.Date = newOrder.Date
-	}
-	if newOrder.Status != "" {
-		order.Status = newOrder.Status
-	}
-
-	if newOrder.Items != nil {
-		order.Items = newOrder.Items
-	}
-
-	r.DB.Save(&order)
-
-	return order, nil
+	return nil
 }
 
 func (r *OrderRepositoryMysql) DeleteById(orderId string) error {

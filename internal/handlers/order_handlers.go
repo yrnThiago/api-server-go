@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+
 	"github.com/yrnThiago/gdlp-go/internal/cmd/pub"
 	"github.com/yrnThiago/gdlp-go/internal/usecase"
 )
@@ -66,7 +67,7 @@ func (p *OrderHandlers) GetById(w http.ResponseWriter, r *http.Request) {
 }
 
 func (p *OrderHandlers) UpdateById(w http.ResponseWriter, r *http.Request) {
-	var input usecase.OrderInputDto
+	var input map[string]any
 	err := json.NewDecoder(r.Body).Decode(&input)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -74,21 +75,22 @@ func (p *OrderHandlers) UpdateById(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id := chi.URLParam(r, "id")
-	_, err = p.OrderUseCase.GetById(id)
+	output, err := p.OrderUseCase.GetById(id)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	new, err := p.OrderUseCase.UpdateById(id, &input)
+	err = p.OrderUseCase.UpdateById(output, input)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(new)
+	json.NewEncoder(w).Encode(output)
 }
+
 func (p *OrderHandlers) DeleteById(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 	err := p.OrderUseCase.DeleteById(id)

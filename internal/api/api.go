@@ -79,12 +79,12 @@ func setupHandlers(
 	chi.Post("/checkout", orderHandlers.Add)
 	chi.Get("/orders", orderHandlers.GetMany)
 	chi.Get("/orders/{id}", orderHandlers.GetById)
-	chi.Post("/orders/{id}", orderHandlers.UpdateById)
+	chi.Put("/orders/{id}", orderHandlers.UpdateById)
 	chi.Delete("/orders/{id}", orderHandlers.DeleteById)
 
-	chi.Post("/product", productHandlers.Add)
-	chi.Get("/product", productHandlers.GetMany)
-	chi.Get("/product/{id}", productHandlers.GetById)
-	chi.Post("/product/{id}", productHandlers.UpdateById)
-	chi.Delete("/product/{id}", productHandlers.DeleteById)
+	chi.Post("/products", productHandlers.Add)
+	chi.Get("/products", productHandlers.GetMany)
+	chi.Get("/products/{id}", productHandlers.GetById)
+	chi.Put("/products/{id}", productHandlers.UpdateById)
+	chi.Delete("/products/{id}", productHandlers.DeleteById)
 }

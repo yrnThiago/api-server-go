@@ -1,8 +1,6 @@
 package domain
 
 import (
-	"time"
-
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
@@ -16,13 +14,11 @@ type ProductRepository interface {
 }
 
 type Product struct {
+	ID    string `gorm:"primaryKey"`
+	Name  string
+	Price float64
+	Stock int
 	gorm.Model
-	ID        string `gorm:"primaryKey"`
-	Name      string
-	Price     float64
-	Stock     int
-	CreatedAt time.Time
-	UpdatedAt time.Time
 }
 
 func NewProduct(name string, price float64, stock int) *Product {

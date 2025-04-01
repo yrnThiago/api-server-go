@@ -1,6 +1,7 @@
 package pub
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -24,8 +25,13 @@ func PublisherInit() {
 }
 
 func SendMessage(order *usecase.OrderOutputDto) {
-	msg := fmt.Sprintf("New order: %s", order.ID)
-	err := Pub.Publish(os.Getenv("NEW_ORDERS_TOPIC"), []byte(msg))
+	orderStr, err := json.Marshal(order)
+	if err != nil {
+		fmt.Println("Erro JSON")
+	}
+
+	fmt.Sprintf("New order: %s", order.ID)
+	err = Pub.Publish(os.Getenv("NEW_ORDERS_TOPIC"), []byte(orderStr))
 	if err != nil {
 		log.Fatal(err)
 	}

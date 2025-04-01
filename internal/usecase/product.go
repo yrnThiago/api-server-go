@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"gorm.io/gorm"
+
 	"github.com/yrnThiago/gdlp-go/internal/domain"
 )
 
@@ -11,6 +13,7 @@ type ProductInputDto struct {
 }
 
 type ProductOutputDto struct {
+	gorm.Model
 	ID    string
 	Name  string
 	Price float64
@@ -29,70 +32,45 @@ func NewProductUseCase(productRepository domain.ProductRepository) *ProductUseCa
 
 func (u *ProductUseCase) Add(
 	input ProductInputDto,
-) (*ProductOutputDto, error) {
+) (*domain.Product, error) {
 	product := domain.NewProduct(input.Name, input.Price, input.Stock)
 	err := u.ProductRepository.Add(product)
 	if err != nil {
 		return nil, err
 	}
 
-	return &ProductOutputDto{
-		ID:    product.ID,
-		Name:  product.Name,
-		Price: product.Price,
-		Stock: product.Stock,
-	}, err
+	return product, nil
 }
 
-func (u *ProductUseCase) GetMany() ([]*ProductOutputDto, error) {
+func (u *ProductUseCase) GetMany() ([]*domain.Product, error) {
 	products, err := u.ProductRepository.GetMany()
 	if err != nil {
 		return nil, err
 	}
 
-	var productsOutput []*ProductOutputDto
-	for _, product := range products {
-		productsOutput = append(productsOutput, &ProductOutputDto{
-			ID:    product.ID,
-			Name:  product.Name,
-			Price: product.Price,
-			Stock: product.Stock,
-		})
-	}
-
-	return productsOutput, nil
+	return products, nil
 }
 
-func (u *ProductUseCase) GetById(id string) (*ProductOutputDto, error) {
+func (u *ProductUseCase) GetById(id string) (*domain.Product, error) {
 	product, err := u.ProductRepository.GetById(id)
 	if err != nil {
 		return nil, err
 	}
 
-	return &ProductOutputDto{
-		ID:    product.ID,
-		Name:  product.Name,
-		Price: product.Price,
-		Stock: product.Stock,
-	}, err
+	return product, nil
 }
 
 func (u *ProductUseCase) UpdateById(
 	productId string,
 	input *ProductInputDto,
-) (*ProductOutputDto, error) {
+) (*domain.Product, error) {
 	newProduct := domain.NewProduct(input.Name, input.Price, input.Stock)
-	_, err := u.ProductRepository.UpdateById(productId, newProduct)
+	product, err := u.ProductRepository.UpdateById(productId, newProduct)
 	if err != nil {
 		return nil, err
 	}
 
-	return &ProductOutputDto{
-		ID:    newProduct.ID,
-		Name:  newProduct.Name,
-		Price: newProduct.Price,
-		Stock: newProduct.Stock,
-	}, err
+	return product, nil
 }
 
 func (u *ProductUseCase) DeleteById(
