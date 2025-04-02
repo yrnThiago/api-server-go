@@ -34,11 +34,10 @@ func CreateServer(
 	orderHandlers *handlers.OrderHandlers,
 ) {
 	chi := chi.NewRouter()
-	// mux := http.NewServeMux()
-	Logger.Info("Server listening", "port", config.GetEnv("PORT"))
+	Logger.Info("Server listening", "port", config.Env.PORT)
 
 	setupHandlers(chi, productHandlers, orderHandlers)
-	err := http.ListenAndServe(":"+config.GetEnv("PORT"), chi)
+	err := http.ListenAndServe(":"+config.Env.PORT, chi)
 	if err != nil {
 		Logger.Error("Servidor deu merda!")
 	}

@@ -22,7 +22,7 @@ import (
 )
 
 func main() {
-	config.LoadEnv()
+	config.Init()
 	api.CreateLogger()
 
 	// Can u please make a proper palce to config NATs
