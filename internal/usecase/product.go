@@ -3,7 +3,7 @@ package usecase
 import (
 	"gorm.io/gorm"
 
-	"github.com/yrnThiago/gdlp-go/internal/domain"
+	"github.com/yrnThiago/api-server-go/internal/models"
 )
 
 type ProductInputDto struct {
@@ -21,10 +21,10 @@ type ProductOutputDto struct {
 }
 
 type ProductUseCase struct {
-	ProductRepository domain.ProductRepository
+	ProductRepository models.ProductRepository
 }
 
-func NewProductUseCase(productRepository domain.ProductRepository) *ProductUseCase {
+func NewProductUseCase(productRepository models.ProductRepository) *ProductUseCase {
 	return &ProductUseCase{
 		ProductRepository: productRepository,
 	}
@@ -32,8 +32,8 @@ func NewProductUseCase(productRepository domain.ProductRepository) *ProductUseCa
 
 func (u *ProductUseCase) Add(
 	input ProductInputDto,
-) (*domain.Product, error) {
-	product := domain.NewProduct(input.Name, input.Price, input.Stock)
+) (*models.Product, error) {
+	product := models.NewProduct(input.Name, input.Price, input.Stock)
 	err := u.ProductRepository.Add(product)
 	if err != nil {
 		return nil, err
@@ -42,7 +42,7 @@ func (u *ProductUseCase) Add(
 	return product, nil
 }
 
-func (u *ProductUseCase) GetMany() ([]*domain.Product, error) {
+func (u *ProductUseCase) GetMany() ([]*models.Product, error) {
 	products, err := u.ProductRepository.GetMany()
 	if err != nil {
 		return nil, err
@@ -51,7 +51,7 @@ func (u *ProductUseCase) GetMany() ([]*domain.Product, error) {
 	return products, nil
 }
 
-func (u *ProductUseCase) GetById(id string) (*domain.Product, error) {
+func (u *ProductUseCase) GetById(id string) (*models.Product, error) {
 	product, err := u.ProductRepository.GetById(id)
 	if err != nil {
 		return nil, err
@@ -63,8 +63,8 @@ func (u *ProductUseCase) GetById(id string) (*domain.Product, error) {
 func (u *ProductUseCase) UpdateById(
 	productId string,
 	input *ProductInputDto,
-) (*domain.Product, error) {
-	newProduct := domain.NewProduct(input.Name, input.Price, input.Stock)
+) (*models.Product, error) {
+	newProduct := models.NewProduct(input.Name, input.Price, input.Stock)
 	product, err := u.ProductRepository.UpdateById(productId, newProduct)
 	if err != nil {
 		return nil, err

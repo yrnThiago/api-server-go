@@ -6,8 +6,8 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
-	"github.com/yrnThiago/gdlp-go/internal/cmd/pub"
-	"github.com/yrnThiago/gdlp-go/internal/usecase"
+	"github.com/yrnThiago/api-server-go/internal/cmd/pub"
+	"github.com/yrnThiago/api-server-go/internal/usecase"
 )
 
 type OrderHandlers struct {

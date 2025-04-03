@@ -9,7 +9,7 @@ import (
 
 	"github.com/nats-io/nats.go"
 
-	"github.com/yrnThiago/gdlp-go/internal/usecase"
+	"github.com/yrnThiago/api-server-go/internal/usecase"
 )
 
 var Pub *nats.Conn

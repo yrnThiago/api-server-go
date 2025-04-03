@@ -1,23 +1,18 @@
-package api
+package chiserver
 
 import (
-	"encoding/json"
 	"log/slog"
 	"net/http"
 	"os"
 
 	"github.com/go-chi/chi/v5"
 
-	"github.com/yrnThiago/gdlp-go/internal/config"
-	"github.com/yrnThiago/gdlp-go/internal/handlers"
+	"github.com/yrnThiago/api-server-go/internal/config"
+	"github.com/yrnThiago/api-server-go/internal/handlers"
 )
 
 type Server struct {
 	Logger *slog.Logger
-}
-
-type Response struct {
-	Message string `json:"message"`
 }
 
 var Logger *slog.Logger
@@ -30,13 +25,14 @@ func CreateLogger() {
 }
 
 func CreateServer(
+	healthHandlers *handlers.HealthHandler,
 	productHandlers *handlers.ProductHandlers,
 	orderHandlers *handlers.OrderHandlers,
 ) {
 	chi := chi.NewRouter()
 	Logger.Info("Server listening", "port", config.Env.PORT)
 
-	setupHandlers(chi, productHandlers, orderHandlers)
+	setupHandlers(chi, healthHandlers, productHandlers, orderHandlers)
 	err := http.ListenAndServe(":"+config.Env.PORT, chi)
 	if err != nil {
 		Logger.Error("Servidor deu merda!")
@@ -59,21 +55,14 @@ func loggingMiddleware(next http.Handler) http.Handler {
 	})
 }
 
-func ping(w http.ResponseWriter, r *http.Request) {
-	err := json.NewEncoder(w).Encode(Response{"pong"})
-	if err != nil {
-		Logger.Error("Parsing JSON")
-		http.Error(w, "Parsing JSON", http.StatusInternalServerError)
-	}
-}
-
 func setupHandlers(
 	chi *chi.Mux,
+	healthHandlers *handlers.HealthHandler,
 	productHandlers *handlers.ProductHandlers,
 	orderHandlers *handlers.OrderHandlers,
 ) {
 	chi.Use(loggingMiddleware, errorMiddleware)
-	chi.Get("/ping", ping)
+	chi.Get("/ping", healthHandlers.Ping)
 
 	chi.Post("/checkout", orderHandlers.Add)
 	chi.Get("/orders", orderHandlers.GetMany)

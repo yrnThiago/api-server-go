@@ -1,23 +1,23 @@
 package usecase
 
-import "github.com/yrnThiago/gdlp-go/internal/domain"
+import "github.com/yrnThiago/api-server-go/internal/models"
 
 type OrderInputDto struct {
-	Items  []domain.OrderItems
+	Items  []models.OrderItems
 	Status string
 }
 
 type OrderOutputDto struct {
 	ID     string
 	Status string
-	Items  []domain.OrderItems
+	Items  []models.OrderItems
 }
 
 type OrderUseCase struct {
-	orderRepository domain.OrderRepository
+	orderRepository models.OrderRepository
 }
 
-func NewOrderUseCase(orderRepository domain.OrderRepository) *OrderUseCase {
+func NewOrderUseCase(orderRepository models.OrderRepository) *OrderUseCase {
 	return &OrderUseCase{
 		orderRepository: orderRepository,
 	}
@@ -26,7 +26,7 @@ func NewOrderUseCase(orderRepository domain.OrderRepository) *OrderUseCase {
 func (u *OrderUseCase) Add(
 	input OrderInputDto,
 ) (*OrderOutputDto, error) {
-	order := domain.NewOrder(input.Items, "Aguardando pagamento")
+	order := models.NewOrder(input.Items, "Aguardando pagamento")
 	err := u.orderRepository.Add(order)
 	if err != nil {
 		return nil, err
@@ -57,7 +57,7 @@ func (u *OrderUseCase) GetMany() ([]*OrderOutputDto, error) {
 	return ordersOutput, nil
 }
 
-func (u *OrderUseCase) GetById(id string) (*domain.Order, error) {
+func (u *OrderUseCase) GetById(id string) (*models.Order, error) {
 	order, err := u.orderRepository.GetById(id)
 	if err != nil {
 		return nil, err
@@ -67,7 +67,7 @@ func (u *OrderUseCase) GetById(id string) (*domain.Order, error) {
 }
 
 func (u *OrderUseCase) UpdateById(
-	order *domain.Order,
+	order *models.Order,
 	body map[string]any,
 ) error {
 	err := u.orderRepository.UpdateById(order, body)

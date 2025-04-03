@@ -11,19 +11,19 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 
-	"github.com/yrnThiago/gdlp-go/internal/api"
-	"github.com/yrnThiago/gdlp-go/internal/cmd/pub"
-	"github.com/yrnThiago/gdlp-go/internal/cmd/sub"
-	"github.com/yrnThiago/gdlp-go/internal/config"
-	"github.com/yrnThiago/gdlp-go/internal/domain"
-	"github.com/yrnThiago/gdlp-go/internal/handlers"
-	"github.com/yrnThiago/gdlp-go/internal/infra/repository"
-	"github.com/yrnThiago/gdlp-go/internal/usecase"
+	"github.com/yrnThiago/api-server-go/internal/chiserver"
+	"github.com/yrnThiago/api-server-go/internal/cmd/pub"
+	"github.com/yrnThiago/api-server-go/internal/cmd/sub"
+	"github.com/yrnThiago/api-server-go/internal/config"
+	"github.com/yrnThiago/api-server-go/internal/handlers"
+	"github.com/yrnThiago/api-server-go/internal/infra/repository"
+	"github.com/yrnThiago/api-server-go/internal/models"
+	"github.com/yrnThiago/api-server-go/internal/usecase"
 )
 
 func main() {
 	config.Init()
-	api.CreateLogger()
+	chiserver.CreateLogger()
 
 	// Can u please make a proper palce to config NATs
 	opts := &server.Options{}
@@ -48,7 +48,7 @@ func main() {
 	}
 
 	// Maybe this would be better in another place right??
-	db.Migrator().AutoMigrate(&domain.Product{}, &domain.Order{}, &domain.OrderItems{})
+	db.Migrator().AutoMigrate(&models.Product{}, &models.Order{}, &models.OrderItems{})
 	repositoryProducts := repository.NewProductRepositoryMysql(db)
 	productUseCase := usecase.NewProductUseCase(repositoryProducts)
 	productHandlers := handlers.NewProductHandlers(productUseCase)
@@ -57,12 +57,14 @@ func main() {
 	orderUseCase := usecase.NewOrderUseCase(repositoryOrders)
 	orderHandlers := handlers.NewOrderHandlers(orderUseCase)
 
-	go api.CreateServer(productHandlers, orderHandlers)
+	healthHandlers := handlers.NewHealthHandlers()
+
+	go chiserver.CreateServer(healthHandlers, productHandlers, orderHandlers)
 
 	go sub.ReceiveMessage(msgChan, os.Getenv("NEW_ORDERS_TOPIC"))
 
 	for msg := range msgChan {
-		var order *domain.Order
+		var order *models.Order
 
 		err = json.Unmarshal(msg.Data, &order)
 		if err != nil {

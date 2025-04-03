@@ -6,7 +6,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
-	"github.com/yrnThiago/gdlp-go/internal/usecase"
+	"github.com/yrnThiago/api-server-go/internal/usecase"
 )
 
 type ProductHandlers struct {
