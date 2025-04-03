@@ -8,22 +8,18 @@ import (
 
 	"github.com/nats-io/nats-server/v2/server"
 	"github.com/nats-io/nats.go"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
 
 	"github.com/yrnThiago/api-server-go/internal/chiserver"
 	"github.com/yrnThiago/api-server-go/internal/cmd/pub"
 	"github.com/yrnThiago/api-server-go/internal/cmd/sub"
 	"github.com/yrnThiago/api-server-go/internal/config"
-	"github.com/yrnThiago/api-server-go/internal/handlers"
-	"github.com/yrnThiago/api-server-go/internal/infra/repository"
 	"github.com/yrnThiago/api-server-go/internal/models"
-	"github.com/yrnThiago/api-server-go/internal/usecase"
 )
 
 func main() {
 	config.Init()
 	chiserver.CreateLogger()
+	config.DatabaseInit()
 
 	// Can u please make a proper palce to config NATs
 	opts := &server.Options{}
@@ -42,24 +38,8 @@ func main() {
 	pub.PublisherInit()
 	sub := sub.Connect()
 
-	db, err := gorm.Open(mysql.Open(config.GetDatabaseUrl()), &gorm.Config{})
-	if err != nil {
-		panic("failed to connect database")
-	}
-
 	// Maybe this would be better in another place right??
-	db.Migrator().AutoMigrate(&models.Product{}, &models.Order{}, &models.OrderItems{})
-	repositoryProducts := repository.NewProductRepositoryMysql(db)
-	productUseCase := usecase.NewProductUseCase(repositoryProducts)
-	productHandlers := handlers.NewProductHandlers(productUseCase)
-
-	repositoryOrders := repository.NewOrderRepositoryMysql(db)
-	orderUseCase := usecase.NewOrderUseCase(repositoryOrders)
-	orderHandlers := handlers.NewOrderHandlers(orderUseCase)
-
-	healthHandlers := handlers.NewHealthHandlers()
-
-	go chiserver.CreateServer(healthHandlers, productHandlers, orderHandlers)
+	go chiserver.CreateServer()
 
 	go sub.ReceiveMessage(msgChan, os.Getenv("NEW_ORDERS_TOPIC"))
 
@@ -72,6 +52,5 @@ func main() {
 		}
 
 		fmt.Println(order)
-		repositoryOrders.UpdateById(order, map[string]any{"Status": "Pagamento Aprovado"})
 	}
 }
