@@ -8,6 +8,7 @@ import (
 	"github.com/go-chi/chi/v5"
 
 	"github.com/yrnThiago/api-server-go/internal/config"
+	"github.com/yrnThiago/api-server-go/internal/config/routes"
 	"github.com/yrnThiago/api-server-go/internal/handlers"
 )
 
@@ -62,7 +63,8 @@ func setupHandlers(
 	orderHandlers *handlers.OrderHandlers,
 ) {
 	chi.Use(loggingMiddleware, errorMiddleware)
-	chi.Get("/ping", healthHandlers.Ping)
+	chi.Mount("/health", configroutes.HealthRouter())
+	// chi.Get("/ping", healthHandlers.Ping)
 
 	chi.Post("/checkout", orderHandlers.Add)
 	chi.Get("/orders", orderHandlers.GetMany)
