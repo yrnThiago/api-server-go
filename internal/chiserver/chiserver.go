@@ -1,6 +1,7 @@
 package chiserver
 
 import (
+	"fmt"
 	"log/slog"
 	"net/http"
 	"os"
@@ -8,7 +9,7 @@ import (
 	"github.com/go-chi/chi/v5"
 
 	"github.com/yrnThiago/api-server-go/internal/config"
-	"github.com/yrnThiago/api-server-go/internal/config/routes"
+	configroutes "github.com/yrnThiago/api-server-go/internal/config/routes"
 )
 
 type Server struct {
@@ -39,6 +40,7 @@ func errorMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			next.ServeHTTP(w, r)
+			fmt.Println("Testando group...")
 		},
 	)
 }
@@ -51,12 +53,31 @@ func loggingMiddleware(next http.Handler) http.Handler {
 	})
 }
 
+// To do auth with context
+func authMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(
+		func(w http.ResponseWriter, r *http.Request) {
+			next.ServeHTTP(w, r)
+			fmt.Println("Private route...")
+		},
+	)
+}
+
 func setupHandlers(
-	chi *chi.Mux,
+	router *chi.Mux,
 ) {
 
-	chi.Use(loggingMiddleware, errorMiddleware)
-	chi.Mount("/health", configroutes.HealthRouter())
-	chi.Mount("/orders", configroutes.OrderRouter())
-	chi.Mount("/products", configroutes.ProductRouter())
+	router.Use(loggingMiddleware)
+
+	// public routes
+	router.Group(func(router chi.Router) {
+		router.Mount("/health", configroutes.HealthRouter())
+	})
+
+	// private routes
+	router.Group(func(router chi.Router) {
+		router.Use(authMiddleware)
+		router.Mount("/orders", configroutes.OrderRouter())
+		router.Mount("/products", configroutes.ProductRouter())
+	})
 }
