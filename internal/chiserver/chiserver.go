@@ -1,73 +1,24 @@
 package chiserver
 
 import (
-	"fmt"
-	"log/slog"
 	"net/http"
-	"os"
 
 	"github.com/go-chi/chi/v5"
 
 	"github.com/yrnThiago/api-server-go/internal/config"
 	configroutes "github.com/yrnThiago/api-server-go/internal/config/routes"
+	"github.com/yrnThiago/api-server-go/internal/middlewares"
+	"go.uber.org/zap"
 )
 
-type Server struct {
-	Logger *slog.Logger
-}
-
-var Logger *slog.Logger
-
-func CreateLogger() {
-	jsonHandler := slog.NewJSONHandler(os.Stderr, nil)
-	myslog := slog.New(jsonHandler)
-
-	Logger = myslog
-}
-
-func CreateServer() {
-	chi := chi.NewRouter()
-	Logger.Info("Server listening", "port", config.Env.PORT)
-
-	setupHandlers(chi)
-	err := http.ListenAndServe(":"+config.Env.PORT, chi)
-	if err != nil {
-		Logger.Error("Servidor deu merda!")
-	}
-}
-
-func errorMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(
-		func(w http.ResponseWriter, r *http.Request) {
-			next.ServeHTTP(w, r)
-			fmt.Println("Testando group...")
-		},
+func Init() {
+	router := chi.NewRouter()
+	config.Logger.Info(
+		"Server listening",
+		zap.String("port", config.Env.PORT),
 	)
-}
 
-func loggingMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		Logger.Info("Request received", "method", r.Method, "path", r.URL.Path)
-		next.ServeHTTP(w, r)
-		Logger.Info("Request completed", "method", r.Method, "path", r.URL.Path)
-	})
-}
-
-// To do auth with context
-func authMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(
-		func(w http.ResponseWriter, r *http.Request) {
-			next.ServeHTTP(w, r)
-			fmt.Println("Private route...")
-		},
-	)
-}
-
-func setupHandlers(
-	router *chi.Mux,
-) {
-
-	router.Use(loggingMiddleware)
+	router.Use(middlewares.LoggingMiddleware)
 
 	// public routes
 	router.Group(func(router chi.Router) {
@@ -76,8 +27,13 @@ func setupHandlers(
 
 	// private routes
 	router.Group(func(router chi.Router) {
-		router.Use(authMiddleware)
+		router.Use(middlewares.AuthMiddleware)
 		router.Mount("/orders", configroutes.OrderRouter())
 		router.Mount("/products", configroutes.ProductRouter())
 	})
+
+	err := http.ListenAndServe(":"+config.Env.PORT, router)
+	if err != nil {
+		config.Logger.Error("Servidor deu merda!")
+	}
 }

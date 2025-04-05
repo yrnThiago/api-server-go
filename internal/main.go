@@ -18,8 +18,10 @@ import (
 
 func main() {
 	config.Init()
-	chiserver.CreateLogger()
 	config.DatabaseInit()
+	config.LoggerInit()
+
+	go chiserver.Init()
 
 	// Can u please make a proper palce to config NATs
 	opts := &server.Options{}
@@ -37,9 +39,6 @@ func main() {
 
 	pub.PublisherInit()
 	sub := sub.Connect()
-
-	// Maybe this would be better in another place right??
-	go chiserver.CreateServer()
 
 	go sub.ReceiveMessage(msgChan, os.Getenv("NEW_ORDERS_TOPIC"))
 
