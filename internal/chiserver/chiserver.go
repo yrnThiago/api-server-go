@@ -13,10 +13,6 @@ import (
 
 func Init() {
 	router := chi.NewRouter()
-	config.Logger.Info(
-		"Server listening",
-		zap.String("port", config.Env.PORT),
-	)
 
 	router.Use(middlewares.LoggingMiddleware)
 
@@ -32,8 +28,13 @@ func Init() {
 		router.Mount("/products", configroutes.ProductRouter())
 	})
 
+	config.Logger.Info(
+		"server listening",
+		zap.String("port", config.Env.PORT),
+	)
+
 	err := http.ListenAndServe(":"+config.Env.PORT, router)
 	if err != nil {
-		config.Logger.Error("Servidor deu merda!")
+		config.Logger.Fatal("server connect failed")
 	}
 }

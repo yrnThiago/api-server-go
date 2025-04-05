@@ -3,6 +3,7 @@ package usecase
 import (
 	"gorm.io/gorm"
 
+	"github.com/yrnThiago/api-server-go/internal/config"
 	"github.com/yrnThiago/api-server-go/internal/models"
 )
 
@@ -39,6 +40,7 @@ func (u *ProductUseCase) Add(
 		return nil, err
 	}
 
+	config.Logger.Info("adding new product")
 	return product, nil
 }
 
