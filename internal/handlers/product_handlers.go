@@ -87,6 +87,7 @@ func (p *ProductHandlers) UpdateById(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(new)
 }
+
 func (p *ProductHandlers) DeleteById(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 	err := p.ProductUseCase.DeleteById(id)

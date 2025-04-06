@@ -2,6 +2,8 @@ package usecase
 
 import "github.com/yrnThiago/api-server-go/internal/models"
 
+var WAITING_PAYMENT = "Aguardando pagamento"
+
 type OrderInputDto struct {
 	Items  []models.OrderItems
 	Status string
@@ -26,7 +28,7 @@ func NewOrderUseCase(orderRepository models.OrderRepository) *OrderUseCase {
 func (u *OrderUseCase) Add(
 	input OrderInputDto,
 ) (*OrderOutputDto, error) {
-	order := models.NewOrder(input.Items, "Aguardando pagamento")
+	order := models.NewOrder(input.Items, WAITING_PAYMENT)
 	err := u.orderRepository.Add(order)
 	if err != nil {
 		return nil, err

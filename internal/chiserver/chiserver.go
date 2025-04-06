@@ -26,6 +26,7 @@ func Init() {
 		router.Use(middlewares.AuthMiddleware)
 		router.Mount("/orders", configroutes.OrderRouter())
 		router.Mount("/products", configroutes.ProductRouter())
+		router.Mount("/protected", configroutes.ProtectedRouter())
 	})
 
 	config.Logger.Info(
