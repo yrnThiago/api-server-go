@@ -16,7 +16,8 @@ func AuthMiddleware(next http.Handler) http.Handler {
 			userAuthorization, _ := utils.GetCookie(r, config.Env.COOKIE_NAME)
 			err := utils.VerifyJWT(userAuthorization)
 			if err != nil {
-				ctx := context.WithValue(r.Context(), keys.ErrorKey, http.StatusForbidden)
+				errorInfo := utils.NewErrorInfo(http.StatusForbidden, "access denied")
+				ctx := context.WithValue(r.Context(), keys.ErrorKey, errorInfo)
 				*r = *r.WithContext(ctx)
 				return
 			}

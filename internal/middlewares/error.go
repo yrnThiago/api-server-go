@@ -1,10 +1,13 @@
 package middlewares
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/yrnThiago/api-server-go/internal/config"
 	"github.com/yrnThiago/api-server-go/internal/keys"
+	"github.com/yrnThiago/api-server-go/internal/utils"
+	"go.uber.org/zap"
 )
 
 func ErrorMiddleware(next http.Handler) http.Handler {
@@ -15,16 +18,21 @@ func ErrorMiddleware(next http.Handler) http.Handler {
 			ctx := r.Context()
 			contextError := ctx.Value(keys.ErrorKey)
 			if contextError != nil {
-				codeError := contextError.(int)
+				contextError := contextError.(*utils.ErrorInfo)
 
-				switch codeError {
+				switch contextError.StatusCode {
 				case http.StatusForbidden:
-					http.Error(w, "access denied", http.StatusForbidden)
+					w.WriteHeader(http.StatusForbidden)
+					json.NewEncoder(w).Encode(contextError)
 				default:
-					http.Error(w, "something went wrong", http.StatusForbidden)
+					w.WriteHeader(http.StatusInternalServerError)
+					json.NewEncoder(w).Encode(contextError)
 				}
 
-				config.Logger.Info("error middleware catch error")
+				config.Logger.Info("error occured",
+					zap.Int("status", contextError.StatusCode),
+					zap.String("message", contextError.Message),
+				)
 			}
 		},
 	)
