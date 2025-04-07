@@ -10,8 +10,6 @@ import (
 	"github.com/yrnThiago/api-server-go/internal/keys"
 )
 
-var errorMessage string
-
 func ErrorMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
@@ -20,17 +18,16 @@ func ErrorMiddleware(next http.Handler) http.Handler {
 			ctx := r.Context()
 			contextError := ctx.Value(keys.ErrorKey)
 			if contextError != nil {
-				errorStatusCode := contextError.(int)
+				codeError := contextError.(int)
 
-				if errorStatusCode == http.StatusForbidden {
-					errorMessage = "access denied"
+				switch codeError {
+				case http.StatusForbidden:
+					http.Error(w, "access denied", http.StatusForbidden)
+				default:
+					http.Error(w, "something went wrong", http.StatusForbidden)
 				}
-				config.Logger.Info(
-					errorMessage,
-				)
 
-				http.Error(w, errorMessage, errorStatusCode)
-				return
+				config.Logger.Info("error middleware catch error")
 			}
 		},
 	)
