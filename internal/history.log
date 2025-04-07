@@ -1,0 +1,106 @@
+{"level":"info","ts":"2025-04-07T07:50:51.836-0300","caller":"chiserver/chiserver.go:38","msg":"server listening","port":"3333"}
+{"level":"info","ts":"2025-04-07T07:51:48.855-0300","caller":"middlewares/middlewares.go:38","msg":"request received","method":"GET","path":"/health/ping"}
+{"level":"info","ts":"2025-04-07T07:51:48.857-0300","caller":"middlewares/middlewares.go:46","msg":"request completed","method":"GET","path":"/health/ping"}
+{"level":"info","ts":"2025-04-07T07:51:48.905-0300","caller":"middlewares/middlewares.go:38","msg":"request received","method":"GET","path":"/favicon.ico"}
+{"level":"info","ts":"2025-04-07T07:51:48.905-0300","caller":"middlewares/middlewares.go:46","msg":"request completed","method":"GET","path":"/favicon.ico"}
+{"level":"info","ts":"2025-04-07T07:55:19.925-0300","caller":"middlewares/middlewares.go:38","msg":"request received","method":"GET","path":"/health/ping"}
+{"level":"info","ts":"2025-04-07T07:55:19.925-0300","caller":"middlewares/middlewares.go:46","msg":"request completed","method":"GET","path":"/health/ping"}
+{"level":"info","ts":"2025-04-07T07:58:24.873-0300","caller":"middlewares/middlewares.go:38","msg":"request received","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T07:58:24.873-0300","caller":"middlewares/middlewares.go:30","msg":"error middleware catch error"}
+{"level":"info","ts":"2025-04-07T07:58:24.873-0300","caller":"middlewares/middlewares.go:46","msg":"request completed","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T08:00:23.901-0300","caller":"chiserver/chiserver.go:38","msg":"server listening","port":"3333"}
+{"level":"info","ts":"2025-04-07T08:00:38.614-0300","caller":"middlewares/middlewares.go:38","msg":"request received","method":"GET","path":"/auth/login"}
+{"level":"info","ts":"2025-04-07T08:00:38.614-0300","caller":"middlewares/middlewares.go:46","msg":"request completed","method":"GET","path":"/auth/login"}
+{"level":"info","ts":"2025-04-07T08:01:03.371-0300","caller":"middlewares/middlewares.go:38","msg":"request received","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T08:01:03.371-0300","caller":"middlewares/middlewares.go:30","msg":"error middleware catch error"}
+{"level":"info","ts":"2025-04-07T08:01:03.372-0300","caller":"middlewares/middlewares.go:46","msg":"request completed","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T08:01:57.261-0300","caller":"chiserver/chiserver.go:38","msg":"server listening","port":"3333"}
+{"level":"info","ts":"2025-04-07T08:02:17.136-0300","caller":"middlewares/middlewares.go:38","msg":"request received","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T08:02:17.147-0300","caller":"middlewares/middlewares.go:30","msg":"error middleware catch error"}
+{"level":"info","ts":"2025-04-07T08:02:17.148-0300","caller":"middlewares/middlewares.go:46","msg":"request completed","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T08:08:30.492-0300","caller":"chiserver/chiserver.go:38","msg":"server listening","port":"3333"}
+{"level":"info","ts":"2025-04-07T08:08:39.288-0300","caller":"middlewares/middlewares.go:38","msg":"request received","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T08:08:39.288-0300","caller":"middlewares/middlewares.go:30","msg":"error middleware catch error"}
+{"level":"info","ts":"2025-04-07T08:08:39.288-0300","caller":"middlewares/middlewares.go:46","msg":"request completed","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T08:08:43.736-0300","caller":"middlewares/middlewares.go:38","msg":"request received","method":"GET","path":"/auth/login"}
+{"level":"info","ts":"2025-04-07T08:08:43.736-0300","caller":"middlewares/middlewares.go:46","msg":"request completed","method":"GET","path":"/auth/login"}
+{"level":"info","ts":"2025-04-07T08:09:09.516-0300","caller":"middlewares/middlewares.go:38","msg":"request received","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T08:09:09.517-0300","caller":"middlewares/middlewares.go:30","msg":"error middleware catch error"}
+{"level":"info","ts":"2025-04-07T08:09:09.517-0300","caller":"middlewares/middlewares.go:46","msg":"request completed","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T08:13:01.329-0300","caller":"chiserver/chiserver.go:38","msg":"server listening","port":"3333"}
+{"level":"info","ts":"2025-04-07T08:13:13.369-0300","caller":"middlewares/middlewares.go:38","msg":"request received","method":"GET","path":"/auth/login"}
+{"level":"info","ts":"2025-04-07T08:13:13.374-0300","caller":"middlewares/middlewares.go:46","msg":"request completed","method":"GET","path":"/auth/login"}
+{"level":"info","ts":"2025-04-07T08:13:26.019-0300","caller":"middlewares/middlewares.go:38","msg":"request received","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T08:13:26.019-0300","caller":"middlewares/middlewares.go:81","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T08:13:26.024-0300","caller":"middlewares/middlewares.go:38","msg":"request received","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T08:13:26.025-0300","caller":"middlewares/middlewares.go:81","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T08:13:27.129-0300","caller":"middlewares/middlewares.go:38","msg":"request received","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T08:13:27.130-0300","caller":"middlewares/middlewares.go:81","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T08:13:27.143-0300","caller":"middlewares/middlewares.go:38","msg":"request received","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T08:13:27.152-0300","caller":"middlewares/middlewares.go:81","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T08:13:32.180-0300","caller":"middlewares/middlewares.go:38","msg":"request received","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T08:13:32.181-0300","caller":"middlewares/middlewares.go:81","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T08:13:32.195-0300","caller":"middlewares/middlewares.go:38","msg":"request received","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T08:13:32.196-0300","caller":"middlewares/middlewares.go:81","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T08:14:02.243-0300","caller":"middlewares/middlewares.go:38","msg":"request received","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T08:14:02.243-0300","caller":"middlewares/middlewares.go:81","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T08:14:02.249-0300","caller":"middlewares/middlewares.go:38","msg":"request received","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T08:14:02.250-0300","caller":"middlewares/middlewares.go:81","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T08:14:33.092-0300","caller":"chiserver/chiserver.go:38","msg":"server listening","port":"3333"}
+{"level":"info","ts":"2025-04-07T08:14:48.895-0300","caller":"middlewares/middlewares.go:38","msg":"request received","method":"GET","path":"/auth/login"}
+{"level":"info","ts":"2025-04-07T08:14:48.896-0300","caller":"middlewares/middlewares.go:46","msg":"request completed","method":"GET","path":"/auth/login"}
+{"level":"info","ts":"2025-04-07T08:14:52.251-0300","caller":"middlewares/middlewares.go:38","msg":"request received","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T08:14:52.251-0300","caller":"middlewares/middlewares.go:81","msg":"ctx","user id: ":"12345"}
+{"level":"info","ts":"2025-04-07T08:14:52.252-0300","caller":"middlewares/middlewares.go:67","msg":"access granted","user id":"12345"}
+{"level":"info","ts":"2025-04-07T08:14:52.253-0300","caller":"middlewares/middlewares.go:46","msg":"request completed","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T08:27:48.517-0300","caller":"chiserver/chiserver.go:38","msg":"server listening","port":"3333"}
+{"level":"info","ts":"2025-04-07T08:28:02.308-0300","caller":"middlewares/middlewares.go:38","msg":"request received","method":"GET","path":"/auth/login"}
+{"level":"info","ts":"2025-04-07T08:28:02.310-0300","caller":"middlewares/middlewares.go:46","msg":"request completed","method":"GET","path":"/auth/login"}
+{"level":"info","ts":"2025-04-07T08:30:09.808-0300","caller":"chiserver/chiserver.go:38","msg":"server listening","port":"3333"}
+{"level":"info","ts":"2025-04-07T08:30:16.978-0300","caller":"middlewares/middlewares.go:38","msg":"request received","method":"GET","path":"/auth/login"}
+{"level":"info","ts":"2025-04-07T08:30:16.979-0300","caller":"middlewares/middlewares.go:46","msg":"request completed","method":"GET","path":"/auth/login"}
+{"level":"info","ts":"2025-04-07T08:31:59.690-0300","caller":"chiserver/chiserver.go:38","msg":"server listening","port":"3333"}
+{"level":"info","ts":"2025-04-07T08:32:11.861-0300","caller":"middlewares/middlewares.go:38","msg":"request received","method":"GET","path":"/auth/login"}
+{"level":"info","ts":"2025-04-07T08:32:11.861-0300","caller":"middlewares/middlewares.go:46","msg":"request completed","method":"GET","path":"/auth/login"}
+{"level":"info","ts":"2025-04-07T08:32:32.427-0300","caller":"middlewares/middlewares.go:38","msg":"request received","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T08:32:32.429-0300","caller":"middlewares/middlewares.go:81","msg":"ctx","user id: ":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxMTE5MzEsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.8ftYmazl-PvPoaY3PVmW3tz905xrc6udp-SFqD2NRyc"}
+{"level":"info","ts":"2025-04-07T08:32:32.430-0300","caller":"middlewares/middlewares.go:67","msg":"access granted","user id":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxMTE5MzEsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.8ftYmazl-PvPoaY3PVmW3tz905xrc6udp-SFqD2NRyc"}
+{"level":"info","ts":"2025-04-07T08:32:32.430-0300","caller":"middlewares/middlewares.go:46","msg":"request completed","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T08:39:03.103-0300","caller":"chiserver/chiserver.go:38","msg":"server listening","port":"3333"}
+{"level":"info","ts":"2025-04-07T08:39:13.155-0300","caller":"middlewares/middlewares.go:38","msg":"request received","method":"GET","path":"/auth/login"}
+{"level":"info","ts":"2025-04-07T08:39:13.158-0300","caller":"middlewares/middlewares.go:46","msg":"request completed","method":"GET","path":"/auth/login"}
+{"level":"info","ts":"2025-04-07T08:39:19.127-0300","caller":"middlewares/middlewares.go:38","msg":"request received","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T08:39:19.140-0300","caller":"middlewares/middlewares.go:81","msg":"ctx","user id: ":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxMTIzNTMsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.R63cs6ags1uC0rtHxESFjv03o_6jCtsQSpHiph4RtxI"}
+{"level":"info","ts":"2025-04-07T08:39:19.143-0300","caller":"middlewares/middlewares.go:67","msg":"access granted","user id":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxMTIzNTMsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.R63cs6ags1uC0rtHxESFjv03o_6jCtsQSpHiph4RtxI"}
+{"level":"info","ts":"2025-04-07T08:39:19.144-0300","caller":"middlewares/middlewares.go:46","msg":"request completed","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T08:47:53.851-0300","caller":"chiserver/chiserver.go:38","msg":"server listening","port":"3333"}
+{"level":"info","ts":"2025-04-07T08:48:04.889-0300","caller":"middlewares/middlewares.go:39","msg":"request received","method":"GET","path":"/auth/login"}
+{"level":"info","ts":"2025-04-07T08:48:04.893-0300","caller":"middlewares/middlewares.go:47","msg":"request completed","method":"GET","path":"/auth/login"}
+{"level":"info","ts":"2025-04-07T08:48:14.372-0300","caller":"middlewares/middlewares.go:39","msg":"request received","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T08:48:14.372-0300","caller":"middlewares/middlewares.go:83","msg":"ctx","user id: ":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxMTI4ODQsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.__A2VvAPGWyphye8LCo90KXFg65haW5vaX5jeao36JI"}
+{"level":"info","ts":"2025-04-07T08:48:14.373-0300","caller":"middlewares/middlewares.go:69","msg":"access granted","user id":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxMTI4ODQsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.__A2VvAPGWyphye8LCo90KXFg65haW5vaX5jeao36JI"}
+{"level":"info","ts":"2025-04-07T08:48:14.374-0300","caller":"middlewares/middlewares.go:47","msg":"request completed","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T08:49:04.168-0300","caller":"middlewares/middlewares.go:39","msg":"request received","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T08:49:04.169-0300","caller":"middlewares/middlewares.go:31","msg":"error middleware catch error"}
+{"level":"info","ts":"2025-04-07T08:49:04.170-0300","caller":"middlewares/middlewares.go:47","msg":"request completed","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T08:49:04.199-0300","caller":"middlewares/middlewares.go:39","msg":"request received","method":"GET","path":"/favicon.ico"}
+{"level":"info","ts":"2025-04-07T08:49:04.199-0300","caller":"middlewares/middlewares.go:47","msg":"request completed","method":"GET","path":"/favicon.ico"}
+{"level":"info","ts":"2025-04-07T08:49:14.577-0300","caller":"middlewares/middlewares.go:39","msg":"request received","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T08:49:14.578-0300","caller":"middlewares/middlewares.go:31","msg":"error middleware catch error"}
+{"level":"info","ts":"2025-04-07T08:49:14.578-0300","caller":"middlewares/middlewares.go:47","msg":"request completed","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T08:51:17.236-0300","caller":"middlewares/middlewares.go:39","msg":"request received","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T08:51:17.237-0300","caller":"middlewares/middlewares.go:31","msg":"error middleware catch error"}
+{"level":"info","ts":"2025-04-07T08:51:17.238-0300","caller":"middlewares/middlewares.go:47","msg":"request completed","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T08:55:12.811-0300","caller":"chiserver/chiserver.go:38","msg":"server listening","port":"3333"}
+{"level":"info","ts":"2025-04-07T08:55:42.924-0300","caller":"middlewares/middlewares.go:39","msg":"request received","method":"GET","path":"/auth/login"}
+{"level":"info","ts":"2025-04-07T08:55:42.925-0300","caller":"middlewares/middlewares.go:47","msg":"request completed","method":"GET","path":"/auth/login"}
+{"level":"info","ts":"2025-04-07T08:55:51.506-0300","caller":"middlewares/middlewares.go:39","msg":"request received","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T08:55:51.507-0300","caller":"middlewares/middlewares.go:83","msg":"ctx","user id: ":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxMTMzNDIsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.6z6Ay229I-1E3AYX4ZKUmrRX1KRhgMZHfFBvBlG97qc"}
+{"level":"info","ts":"2025-04-07T08:55:51.507-0300","caller":"middlewares/middlewares.go:69","msg":"access granted","user id":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxMTMzNDIsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.6z6Ay229I-1E3AYX4ZKUmrRX1KRhgMZHfFBvBlG97qc"}
+{"level":"info","ts":"2025-04-07T08:55:51.508-0300","caller":"middlewares/middlewares.go:47","msg":"request completed","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T08:56:13.816-0300","caller":"middlewares/middlewares.go:39","msg":"request received","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T08:56:13.817-0300","caller":"middlewares/middlewares.go:31","msg":"error middleware catch error"}
+{"level":"info","ts":"2025-04-07T08:56:13.818-0300","caller":"middlewares/middlewares.go:47","msg":"request completed","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T08:56:19.964-0300","caller":"middlewares/middlewares.go:39","msg":"request received","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T08:56:19.966-0300","caller":"middlewares/middlewares.go:31","msg":"error middleware catch error"}
+{"level":"info","ts":"2025-04-07T08:56:19.966-0300","caller":"middlewares/middlewares.go:47","msg":"request completed","method":"GET","path":"/products"}

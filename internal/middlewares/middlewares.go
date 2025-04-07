@@ -8,6 +8,7 @@ import (
 
 	"github.com/yrnThiago/api-server-go/internal/config"
 	"github.com/yrnThiago/api-server-go/internal/keys"
+	"github.com/yrnThiago/api-server-go/internal/utils"
 )
 
 func ErrorMiddleware(next http.Handler) http.Handler {
@@ -54,8 +55,9 @@ func LoggingMiddleware(next http.Handler) http.Handler {
 func AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
-			userAuthorization := r.Header.Get("Authorization")
-			if userAuthorization == "" {
+			userAuthorization, _ := utils.GetCookie(r, config.Env.COOKIE_NAME)
+			err := utils.VerifyJWT(userAuthorization)
+			if err != nil {
 				ctx := context.WithValue(r.Context(), keys.ErrorKey, http.StatusForbidden)
 				*r = *r.WithContext(ctx)
 				return
