@@ -2,7 +2,6 @@ package middlewares
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 
 	"go.uber.org/zap"
@@ -11,11 +10,28 @@ import (
 	"github.com/yrnThiago/api-server-go/internal/keys"
 )
 
+var errorMessage string
+
 func ErrorMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			next.ServeHTTP(w, r)
-			fmt.Println("Testando group...")
+
+			ctx := r.Context()
+			contextError := ctx.Value(keys.ErrorKey)
+			if contextError != nil {
+				errorStatusCode := contextError.(int)
+
+				if errorStatusCode == http.StatusForbidden {
+					errorMessage = "access denied"
+				}
+				config.Logger.Info(
+					errorMessage,
+				)
+
+				http.Error(w, errorMessage, errorStatusCode)
+				return
+			}
 		},
 	)
 }
@@ -23,7 +39,7 @@ func ErrorMiddleware(next http.Handler) http.Handler {
 func LoggingMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		config.Logger.Info(
-			"Request received",
+			"request received",
 			zap.String("method", r.Method),
 			zap.String("path", r.URL.Path),
 		)
@@ -31,20 +47,46 @@ func LoggingMiddleware(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 
 		config.Logger.Info(
-			"Request completed",
+			"request completed",
 			zap.String("method", r.Method),
 			zap.String("path", r.URL.Path),
 		)
 	})
 }
 
-// To do auth with context
 func AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
-			ctx := context.WithValue(r.Context(), keys.UserIDKey, "12346")
+			userAuthorization := r.Header.Get("Authorization")
+			if userAuthorization == "" {
+				ctx := context.WithValue(r.Context(), keys.ErrorKey, http.StatusForbidden)
+				*r = *r.WithContext(ctx)
+				return
+			}
+
+			ctx := context.WithValue(r.Context(), keys.UserIDKey, userAuthorization)
 			next.ServeHTTP(w, r.WithContext(ctx))
-			fmt.Println("Private route...")
+
+			config.Logger.Info(
+				"access granted",
+				zap.String("user id", ctx.Value(keys.UserIDKey).(string)),
+			)
+		},
+	)
+}
+
+func ContextMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(
+		func(w http.ResponseWriter, r *http.Request) {
+			ctx := r.Context()
+			userId, _ := ctx.Value(keys.UserIDKey).(string)
+
+			config.Logger.Info(
+				"ctx",
+				zap.String("user id: ", userId),
+			)
+
+			next.ServeHTTP(w, r.WithContext(ctx))
 		},
 	)
 }
