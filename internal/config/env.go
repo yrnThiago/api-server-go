@@ -15,6 +15,7 @@ type EnvVariables struct {
 	DB_PORT        string
 	DB_NAME        string
 	COOKIE_NAME    string
+	SECRET_KEY     string
 	LOGS_FILE_NAME string
 }
 
@@ -34,6 +35,7 @@ func Init() {
 		DB_PORT:        os.Getenv("DB_PORT"),
 		DB_NAME:        os.Getenv("DB_NAME"),
 		COOKIE_NAME:    os.Getenv("COOKIE_NAME"),
+		SECRET_KEY:     os.Getenv("SECRET_KEY"),
 		LOGS_FILE_NAME: os.Getenv("LOGS_FILE_NAME"),
 	}
 }

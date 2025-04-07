@@ -6,9 +6,10 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt"
+	"github.com/yrnThiago/api-server-go/internal/config"
 )
 
-var sampleSecretKey = []byte("SecretYouShouldHide")
+var SECRET_KEY = []byte(config.Env.SECRET_KEY)
 
 func GetCookie(r *http.Request, cookieName string) (string, error) {
 	cookie, err := r.Cookie(cookieName)
@@ -26,7 +27,7 @@ func GenerateJWT() (string, error) {
 			"exp":      time.Now().Add(time.Hour * 24).Unix(),
 		})
 
-	tokenString, err := token.SignedString(sampleSecretKey)
+	tokenString, err := token.SignedString(SECRET_KEY)
 	if err != nil {
 		return "", err
 	}
@@ -36,7 +37,7 @@ func GenerateJWT() (string, error) {
 
 func VerifyJWT(tokenString string) error {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		return sampleSecretKey, nil
+		return SECRET_KEY, nil
 	})
 
 	if err != nil {
