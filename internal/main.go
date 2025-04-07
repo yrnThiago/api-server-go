@@ -9,10 +9,10 @@ import (
 	"github.com/nats-io/nats-server/v2/server"
 	"github.com/nats-io/nats.go"
 
-	"github.com/yrnThiago/api-server-go/internal/chiserver"
 	"github.com/yrnThiago/api-server-go/internal/cmd/pub"
 	"github.com/yrnThiago/api-server-go/internal/cmd/sub"
 	"github.com/yrnThiago/api-server-go/internal/config"
+	"github.com/yrnThiago/api-server-go/internal/fiber"
 	"github.com/yrnThiago/api-server-go/internal/models"
 )
 
@@ -21,7 +21,7 @@ func main() {
 	config.DatabaseInit()
 	config.LoggerInit()
 
-	go chiserver.Init()
+	go fiber.Init()
 
 	// Can u please make a proper palce to config NATs
 	opts := &server.Options{}

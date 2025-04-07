@@ -2,22 +2,23 @@ package utils
 
 import (
 	"fmt"
-	"net/http"
 	"time"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt"
+
 	"github.com/yrnThiago/api-server-go/internal/config"
 )
 
 var SECRET_KEY = []byte(config.Env.SECRET_KEY)
 
-func GetCookie(r *http.Request, cookieName string) (string, error) {
-	cookie, err := r.Cookie(cookieName)
-	if err != nil {
+func GetCookie(c *fiber.Ctx, cookieName string) (string, error) {
+	cookie := c.Cookies(cookieName)
+	if cookie == "" {
 		fmt.Println("Error getting cookie")
-		return "", err
+		return "", fmt.Errorf("cookie %s not found", cookieName)
 	}
-	return cookie.Value, nil
+	return cookie, nil
 }
 
 func GenerateJWT() (string, error) {
@@ -39,7 +40,6 @@ func VerifyJWT(tokenString string) error {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		return SECRET_KEY, nil
 	})
-
 	if err != nil {
 		return err
 	}

@@ -1,11 +1,7 @@
 package handlers
 
 import (
-	"encoding/json"
-	"net/http"
-
-	"github.com/go-chi/chi/v5"
-
+	"github.com/gofiber/fiber/v2"
 	"github.com/yrnThiago/api-server-go/internal/cmd/pub"
 	"github.com/yrnThiago/api-server-go/internal/usecase"
 )
@@ -22,82 +18,74 @@ func NewOrderHandlers(
 	}
 }
 
-func (p *OrderHandlers) Add(w http.ResponseWriter, r *http.Request) {
+func (p *OrderHandlers) Add(c *fiber.Ctx) error {
 	var input usecase.OrderInputDto
-	err := json.NewDecoder(r.Body).Decode(&input)
+	err := c.BodyParser(&input)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "invalid order body"})
 	}
 
 	output, err := p.OrderUseCase.Add(input)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "invalid order body"})
 	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(output)
 
 	go pub.SendMessage(output)
+
+	c.Set("Content-Type", "application/json")
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": "new order created"})
 }
 
-func (p *OrderHandlers) GetMany(w http.ResponseWriter, r *http.Request) {
+func (p *OrderHandlers) GetMany(c *fiber.Ctx) error {
 	output, err := p.OrderUseCase.GetMany()
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "something went wrong"})
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(output)
+	c.Set("Content-Type", "application/json")
+	return c.Status(fiber.StatusOK).JSON(output)
 }
 
-func (p *OrderHandlers) GetById(w http.ResponseWriter, r *http.Request) {
-	id := chi.URLParam(r, "id")
+func (p *OrderHandlers) GetById(c *fiber.Ctx) error {
+	id := c.Params("id")
 	output, err := p.OrderUseCase.GetById(id)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "something went wrong"})
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(output)
+	c.Set("Content-Type", "application/json")
+	return c.Status(fiber.StatusOK).JSON(output)
 }
 
-func (p *OrderHandlers) UpdateById(w http.ResponseWriter, r *http.Request) {
+func (p *OrderHandlers) UpdateById(c *fiber.Ctx) error {
 	var input map[string]any
-	err := json.NewDecoder(r.Body).Decode(&input)
+	err := c.BodyParser(&input)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "invalid order body"})
 	}
 
-	id := chi.URLParam(r, "id")
+	id := c.Params("id")
 	output, err := p.OrderUseCase.GetById(id)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "something went wrong"})
 	}
 
 	err = p.OrderUseCase.UpdateById(output, input)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "something went wrong"})
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(output)
+	c.Set("Content-Type", "application/json")
+	return c.Status(fiber.StatusOK).JSON(output)
 }
 
-func (p *OrderHandlers) DeleteById(w http.ResponseWriter, r *http.Request) {
-	id := chi.URLParam(r, "id")
+func (p *OrderHandlers) DeleteById(c *fiber.Ctx) error {
+	id := c.Params("id")
 	err := p.OrderUseCase.DeleteById(id)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "something went wrong"})
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode("Order removed")
+	c.Set("Content-Type", "application/json")
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "order deleted"})
 }

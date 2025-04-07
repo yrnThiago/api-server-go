@@ -1,26 +1,28 @@
 package middlewares
 
 import (
-	"net/http"
-
+	"github.com/gofiber/fiber/v2"
 	"github.com/yrnThiago/api-server-go/internal/config"
 	"go.uber.org/zap"
 )
 
-func LoggingMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		config.Logger.Info(
-			"request received",
-			zap.String("method", r.Method),
-			zap.String("path", r.URL.Path),
-		)
+func LoggingMiddleware(c *fiber.Ctx) error {
+	config.Logger.Info(
+		"request received",
+		zap.String("method", c.Method()),
+		zap.String("path", c.Path()),
+	)
 
-		next.ServeHTTP(w, r)
+	// Processa o próximo handler
+	err := c.Next()
 
-		config.Logger.Info(
-			"request completed",
-			zap.String("method", r.Method),
-			zap.String("path", r.URL.Path),
-		)
-	})
+	// Após a requisição ser tratada
+	config.Logger.Info(
+		"request completed",
+		zap.String("method", c.Method()),
+		zap.String("path", c.Path()),
+		zap.Int("status", c.Response().StatusCode()),
+	)
+
+	return err
 }

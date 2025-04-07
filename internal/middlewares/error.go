@@ -1,39 +1,36 @@
 package middlewares
 
 import (
-	"encoding/json"
-	"net/http"
-
+	"github.com/gofiber/fiber/v2"
 	"github.com/yrnThiago/api-server-go/internal/config"
 	"github.com/yrnThiago/api-server-go/internal/keys"
 	"github.com/yrnThiago/api-server-go/internal/utils"
 	"go.uber.org/zap"
 )
 
-func ErrorMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(
-		func(w http.ResponseWriter, r *http.Request) {
-			next.ServeHTTP(w, r)
+func ErrorMiddleware(c *fiber.Ctx) error {
+	// Executa o próximo handler/middleware
+	err := c.Next()
 
-			ctx := r.Context()
-			contextError := ctx.Value(keys.ErrorKey)
-			if contextError != nil {
-				contextError := contextError.(*utils.ErrorInfo)
+	// Verifica se foi registrado um erro no contexto
+	contextErrorVal := c.Locals(string(keys.ErrorKey))
+	if contextErrorVal != nil {
+		contextError := contextErrorVal.(*utils.ErrorInfo)
 
-				switch contextError.StatusCode {
-				case http.StatusForbidden:
-					w.WriteHeader(http.StatusForbidden)
-					json.NewEncoder(w).Encode(contextError)
-				default:
-					w.WriteHeader(http.StatusInternalServerError)
-					json.NewEncoder(w).Encode(contextError)
-				}
+		// Log do erro
+		config.Logger.Info("error occurred",
+			zap.Int("status", contextError.StatusCode),
+			zap.String("message", contextError.Message),
+		)
 
-				config.Logger.Info("error occured",
-					zap.Int("status", contextError.StatusCode),
-					zap.String("message", contextError.Message),
-				)
-			}
-		},
-	)
+		// Responde com JSON de erro
+		return c.Status(contextError.StatusCode).JSON(contextError)
+	}
+
+	// Se tiver erro retornado por c.Next(), devolve também
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

@@ -1,13 +1,13 @@
 package configroutes
 
 import (
-	"github.com/go-chi/chi/v5"
+	"github.com/gofiber/fiber/v2"
 
 	"github.com/yrnThiago/api-server-go/internal/handlers"
 	"github.com/yrnThiago/api-server-go/internal/routes"
 )
 
-func AuthRouter() chi.Router {
+func AuthRouter() *fiber.App {
 	authHandlers := handlers.NewAuthHandlers()
 	authRouter := routes.NewAuthRouter(authHandlers)
 

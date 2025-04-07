@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"github.com/go-chi/chi/v5"
+	"github.com/gofiber/fiber/v2"
 
 	"github.com/yrnThiago/api-server-go/internal/handlers"
 )
@@ -18,14 +18,14 @@ func NewOrderRouter(orderHandlers *handlers.OrderHandlers) *OrderRouter {
 	}
 }
 
-func (o *OrderRouter) GetRouter() chi.Router {
-	router := chi.NewRouter()
+func (o *OrderRouter) GetRouter() *fiber.App {
+	router := fiber.New()
 
 	router.Post("/checkout", o.OrderHandlers.Add)
 	router.Get("/", o.OrderHandlers.GetMany)
-	router.Get("/{id}", o.OrderHandlers.GetById)
-	router.Put("/{id}", o.OrderHandlers.UpdateById)
-	router.Delete("/{id}", o.OrderHandlers.DeleteById)
+	router.Get("/:id", o.OrderHandlers.GetById)
+	router.Put("/:id", o.OrderHandlers.UpdateById)
+	router.Delete("/:id", o.OrderHandlers.DeleteById)
 
 	return router
 }

@@ -1,10 +1,7 @@
 package handlers
 
 import (
-	"encoding/json"
-	"net/http"
-
-	"github.com/go-chi/chi/v5"
+	"github.com/gofiber/fiber/v2"
 
 	"github.com/yrnThiago/api-server-go/internal/usecase"
 )
@@ -21,80 +18,78 @@ func NewProductHandlers(
 	}
 }
 
-func (p *ProductHandlers) Add(w http.ResponseWriter, r *http.Request) {
+func (p *ProductHandlers) Add(c *fiber.Ctx) error {
 	var input usecase.ProductInputDto
-	err := json.NewDecoder(r.Body).Decode(&input)
+	err := c.BodyParser(&input)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "invalid product body"})
 	}
 
 	output, err := p.ProductUseCase.Add(input)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
+		return c.Status(fiber.StatusInternalServerError).
+			JSON(fiber.Map{"error": "something went wrong"})
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(output)
+	c.Set("Content-Type", "application/json")
+	return c.Status(fiber.StatusCreated).JSON(output)
 }
 
-func (p *ProductHandlers) GetMany(w http.ResponseWriter, r *http.Request) {
+func (p *ProductHandlers) GetMany(c *fiber.Ctx) error {
 	output, err := p.ProductUseCase.GetMany()
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
+		return c.Status(fiber.StatusInternalServerError).
+			JSON(fiber.Map{"error": "something went wrong"})
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(output)
+	c.Set("Content-Type", "application/json")
+	return c.Status(fiber.StatusCreated).JSON(output)
 }
 
-func (p *ProductHandlers) GetById(w http.ResponseWriter, r *http.Request) {
-	id := chi.URLParam(r, "id")
+func (p *ProductHandlers) GetById(c *fiber.Ctx) error {
+	id := c.Params("id")
 	output, err := p.ProductUseCase.GetById(id)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		return c.Status(fiber.StatusInternalServerError).
+			JSON(fiber.Map{"error": "something went wrong"})
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(output)
+	c.Set("Content-Type", "application/json")
+	return c.Status(fiber.StatusOK).JSON(output)
 }
 
-func (p *ProductHandlers) UpdateById(w http.ResponseWriter, r *http.Request) {
+func (p *ProductHandlers) UpdateById(c *fiber.Ctx) error {
 	var input usecase.ProductInputDto
-	err := json.NewDecoder(r.Body).Decode(&input)
+	err := c.BodyParser(&input)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "invalid product body"})
 	}
 
-	id := chi.URLParam(r, "id")
+	id := c.Params("id")
 	_, err = p.ProductUseCase.GetById(id)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
+		return c.Status(fiber.StatusInternalServerError).
+			JSON(fiber.Map{"error": "something went wrong"})
 	}
 
 	new, err := p.ProductUseCase.UpdateById(id, &input)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
+		return c.Status(fiber.StatusInternalServerError).
+			JSON(fiber.Map{"error": "something went wrong"})
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(new)
+	c.Set("Content-Type", "application/json")
+	return c.Status(fiber.StatusCreated).JSON(new)
 }
 
-func (p *ProductHandlers) DeleteById(w http.ResponseWriter, r *http.Request) {
-	id := chi.URLParam(r, "id")
+func (p *ProductHandlers) DeleteById(c *fiber.Ctx) error {
+	id := c.Params("id")
 	err := p.ProductUseCase.DeleteById(id)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		return c.Status(fiber.StatusInternalServerError).
+			JSON(fiber.Map{"error": "something went wrong"})
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode("Product removed")
+	c.Set("Content-Type", "application/json")
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "product deleted"})
 }

@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"github.com/go-chi/chi/v5"
+	"github.com/gofiber/fiber/v2"
 
 	"github.com/yrnThiago/api-server-go/internal/handlers"
 )
@@ -18,8 +18,8 @@ func NewAuthRouter(authHandlers *handlers.AuthHandler) *AuthRouter {
 	}
 }
 
-func (h *AuthRouter) GetRouter() chi.Router {
-	router := chi.NewRouter()
+func (h *AuthRouter) GetRouter() *fiber.App {
+	router := fiber.New()
 	router.Get("/login", h.AuthHandlers.Login)
 
 	return router

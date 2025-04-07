@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"github.com/go-chi/chi/v5"
+	"github.com/gofiber/fiber/v2"
 
 	"github.com/yrnThiago/api-server-go/internal/handlers"
 )
@@ -18,14 +18,14 @@ func NewProductRouter(productHandlers *handlers.ProductHandlers) *ProductRouter 
 	}
 }
 
-func (p *ProductRouter) GetRouter() chi.Router {
-	router := chi.NewRouter()
+func (p *ProductRouter) GetRouter() *fiber.App {
+	router := fiber.New()
 
 	router.Post("/", p.ProductHandlers.Add)
 	router.Get("/", p.ProductHandlers.GetMany)
-	router.Get("/{id}", p.ProductHandlers.GetById)
-	router.Put("/{id}", p.ProductHandlers.UpdateById)
-	router.Delete("/{id}", p.ProductHandlers.DeleteById)
+	router.Get("/:id", p.ProductHandlers.GetById)
+	router.Put("/:id", p.ProductHandlers.UpdateById)
+	router.Delete("/:id", p.ProductHandlers.DeleteById)
 
 	return router
 }

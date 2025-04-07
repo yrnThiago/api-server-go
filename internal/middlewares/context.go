@@ -1,25 +1,20 @@
 package middlewares
 
 import (
-	"net/http"
+	"github.com/gofiber/fiber/v2"
+	"go.uber.org/zap"
 
 	"github.com/yrnThiago/api-server-go/internal/config"
 	"github.com/yrnThiago/api-server-go/internal/keys"
-	"go.uber.org/zap"
 )
 
-func ContextMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(
-		func(w http.ResponseWriter, r *http.Request) {
-			ctx := r.Context()
-			userId, _ := ctx.Value(keys.UserIDKey).(string)
+func ContextMiddleware(c *fiber.Ctx) error {
+	userId, _ := c.Locals(keys.UserIDKey).(string)
 
-			config.Logger.Info(
-				"ctx",
-				zap.String("user id: ", userId),
-			)
-
-			next.ServeHTTP(w, r.WithContext(ctx))
-		},
+	config.Logger.Info(
+		"ctx",
+		zap.String("user id: ", userId),
 	)
+
+	return c.Next()
 }

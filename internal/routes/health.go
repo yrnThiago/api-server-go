@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"github.com/go-chi/chi/v5"
+	"github.com/gofiber/fiber/v2"
 
 	"github.com/yrnThiago/api-server-go/internal/handlers"
 )
@@ -18,8 +18,8 @@ func NewHealthRouter(healthHandlers *handlers.HealthHandler) *HealthRouter {
 	}
 }
 
-func (h *HealthRouter) GetRouter() chi.Router {
-	router := chi.NewRouter()
+func (h *HealthRouter) GetRouter() *fiber.App {
+	router := fiber.New()
 	router.Get("/ping", h.HealthHandlers.Ping)
 
 	return router

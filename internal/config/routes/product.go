@@ -1,7 +1,7 @@
 package configroutes
 
 import (
-	"github.com/go-chi/chi/v5"
+	"github.com/gofiber/fiber/v2"
 
 	"github.com/yrnThiago/api-server-go/internal/config"
 	"github.com/yrnThiago/api-server-go/internal/handlers"
@@ -10,7 +10,7 @@ import (
 	"github.com/yrnThiago/api-server-go/internal/usecase"
 )
 
-func ProductRouter() chi.Router {
+func ProductRouter() *fiber.App {
 	repositoryProducts := repository.NewProductRepositoryMysql(config.DB)
 	productUseCase := usecase.NewProductUseCase(repositoryProducts)
 	productHandlers := handlers.NewProductHandlers(productUseCase)
