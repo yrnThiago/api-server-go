@@ -57,6 +57,10 @@ func (p *ProductHandlers) GetMany(c *fiber.Ctx) error {
 
 func (p *ProductHandlers) GetById(c *fiber.Ctx) error {
 	id := c.Params("id")
+	if id == ":id" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "product id missing"})
+	}
+
 	output, err := p.ProductUseCase.GetById(id)
 	if err != nil {
 		errorInfo := utils.NewErrorInfo(fiber.StatusBadRequest, fiber.ErrBadRequest.Message)
@@ -78,6 +82,10 @@ func (p *ProductHandlers) UpdateById(c *fiber.Ctx) error {
 	}
 
 	id := c.Params("id")
+	if id == ":id" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "product id missing"})
+	}
+
 	_, err = p.ProductUseCase.GetById(id)
 	if err != nil {
 		errorInfo := utils.NewErrorInfo(
@@ -101,6 +109,9 @@ func (p *ProductHandlers) UpdateById(c *fiber.Ctx) error {
 
 func (p *ProductHandlers) DeleteById(c *fiber.Ctx) error {
 	id := c.Params("id")
+	if id == ":id" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "product id missing"})
+	}
 	err := p.ProductUseCase.DeleteById(id)
 	if err != nil {
 		errorInfo := utils.NewErrorInfo(fiber.StatusBadRequest, fiber.ErrBadRequest.Message)

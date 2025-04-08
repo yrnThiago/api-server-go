@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"os"
 	"time"
 
 	"github.com/nats-io/nats.go"
 
 	"github.com/yrnThiago/api-server-go/internal/usecase"
+	"github.com/yrnThiago/api-server-go/internal/config"
 )
 
 var Pub *nats.Conn
@@ -31,7 +31,7 @@ func SendMessage(order *usecase.OrderOutputDto) {
 	}
 
 	fmt.Sprintf("New order: %s", order.ID)
-	err = Pub.Publish(os.Getenv("NEW_ORDERS_TOPIC"), []byte(orderStr))
+	err = Pub.Publish(config.Env.NEW_ORDERS_TOPIC, []byte(orderStr))
 	if err != nil {
 		log.Fatal(err)
 	}
