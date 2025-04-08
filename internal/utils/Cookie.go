@@ -15,7 +15,6 @@ var SECRET_KEY = []byte(config.Env.SECRET_KEY)
 func GetCookie(c *fiber.Ctx, cookieName string) (string, error) {
 	cookie := c.Cookies(cookieName)
 	if cookie == "" {
-		fmt.Println("Error getting cookie")
 		return "", fmt.Errorf("cookie %s not found", cookieName)
 	}
 	return cookie, nil
@@ -37,7 +36,7 @@ func GenerateJWT() (string, error) {
 }
 
 func VerifyJWT(tokenString string) error {
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (any, error) {
 		return SECRET_KEY, nil
 	})
 	if err != nil {

@@ -1,10 +1,10 @@
 package handlers
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"go.uber.org/zap"
 
 	"github.com/yrnThiago/api-server-go/internal/config"
 	"github.com/yrnThiago/api-server-go/internal/utils"
@@ -19,8 +19,12 @@ func NewAuthHandlers() *AuthHandler {
 func (h *AuthHandler) Login(c *fiber.Ctx) error {
 	userAuthorization, err := utils.GenerateJWT()
 	if err != nil {
-		fmt.Println("Error creating a new tokens", err)
+		config.Logger.Warn(
+			"jwt token not generated",
+			zap.Error(err),
+		)
 	}
+
 	cookie := &fiber.Cookie{}
 	cookie.Name = config.Env.COOKIE_NAME
 	cookie.Value = userAuthorization

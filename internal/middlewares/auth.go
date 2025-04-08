@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
@@ -19,9 +20,7 @@ func AuthMiddleware(c *fiber.Ctx) error {
 		errorInfo := utils.NewErrorInfo(http.StatusForbidden, "access denied")
 		// Armazenando erro no contexto para middlewares futuros, se necessário
 		c.Locals(string(keys.ErrorKey), errorInfo)
-		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{
-			"error": errorInfo.Message,
-		})
+		return errors.New(errorInfo.Message)
 	}
 
 	// Armazenando o userAuthorization (user ID) no contexto

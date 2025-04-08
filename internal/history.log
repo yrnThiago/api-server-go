@@ -99,3 +99,187 @@
 {"level":"info","ts":"2025-04-07T18:20:43.681-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"GET","path":"/favicon.ico"}
 {"level":"info","ts":"2025-04-07T18:20:43.681-0300","caller":"middlewares/error.go:21","msg":"error occurred","status":403,"message":"access denied"}
 {"level":"info","ts":"2025-04-07T18:20:43.681-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"GET","path":"/favicon.ico","status":403}
+{"level":"info","ts":"2025-04-07T22:10:29.858-0300","caller":"fiber/fiber.go:31","msg":"server listening","port":"3333"}
+{"level":"info","ts":"2025-04-07T22:10:31.878-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"GET","path":"/orders"}
+{"level":"info","ts":"2025-04-07T22:10:31.878-0300","caller":"middlewares/auth.go:29","msg":"access granted","user id":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxNDYwNzcsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.MwXDwfJkCPTl9bvxt5mH-vbaywbBEYi-4oBJb80yhe8"}
+{"level":"info","ts":"2025-04-07T22:10:31.879-0300","caller":"middlewares/context.go:14","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T22:10:31.879-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"GET","path":"/orders","status":200}
+{"level":"info","ts":"2025-04-07T22:10:36.984-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"GET","path":"/orders"}
+{"level":"info","ts":"2025-04-07T22:10:36.984-0300","caller":"middlewares/auth.go:29","msg":"access granted","user id":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxNDYwNzcsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.MwXDwfJkCPTl9bvxt5mH-vbaywbBEYi-4oBJb80yhe8"}
+{"level":"info","ts":"2025-04-07T22:10:36.984-0300","caller":"middlewares/context.go:14","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T22:10:36.985-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"GET","path":"/orders","status":200}
+{"level":"info","ts":"2025-04-07T22:10:47.756-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"GET","path":"/orders"}
+{"level":"info","ts":"2025-04-07T22:10:47.756-0300","caller":"middlewares/error.go:21","msg":"error occurred","status":403,"message":"access denied"}
+{"level":"info","ts":"2025-04-07T22:10:47.756-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"GET","path":"/orders","status":403}
+{"level":"info","ts":"2025-04-07T22:10:47.798-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"GET","path":"/favicon.ico"}
+{"level":"info","ts":"2025-04-07T22:10:47.798-0300","caller":"middlewares/error.go:21","msg":"error occurred","status":403,"message":"access denied"}
+{"level":"info","ts":"2025-04-07T22:10:47.798-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"GET","path":"/favicon.ico","status":403}
+{"level":"info","ts":"2025-04-07T22:10:47.918-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"GET","path":"/orders"}
+{"level":"info","ts":"2025-04-07T22:10:47.918-0300","caller":"middlewares/error.go:21","msg":"error occurred","status":403,"message":"access denied"}
+{"level":"info","ts":"2025-04-07T22:10:47.918-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"GET","path":"/orders","status":403}
+{"level":"info","ts":"2025-04-07T22:10:47.955-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"GET","path":"/favicon.ico"}
+{"level":"info","ts":"2025-04-07T22:10:47.955-0300","caller":"middlewares/error.go:21","msg":"error occurred","status":403,"message":"access denied"}
+{"level":"info","ts":"2025-04-07T22:10:47.955-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"GET","path":"/favicon.ico","status":403}
+{"level":"info","ts":"2025-04-07T22:10:49.340-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"GET","path":"/orders"}
+{"level":"info","ts":"2025-04-07T22:10:49.340-0300","caller":"middlewares/error.go:21","msg":"error occurred","status":403,"message":"access denied"}
+{"level":"info","ts":"2025-04-07T22:10:49.340-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"GET","path":"/orders","status":403}
+{"level":"info","ts":"2025-04-07T22:10:49.370-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"GET","path":"/favicon.ico"}
+{"level":"info","ts":"2025-04-07T22:10:49.370-0300","caller":"middlewares/error.go:21","msg":"error occurred","status":403,"message":"access denied"}
+{"level":"info","ts":"2025-04-07T22:10:49.370-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"GET","path":"/favicon.ico","status":403}
+{"level":"info","ts":"2025-04-07T22:10:50.586-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"GET","path":"/orders"}
+{"level":"info","ts":"2025-04-07T22:10:50.586-0300","caller":"middlewares/error.go:21","msg":"error occurred","status":403,"message":"access denied"}
+{"level":"info","ts":"2025-04-07T22:10:50.586-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"GET","path":"/orders","status":403}
+{"level":"info","ts":"2025-04-07T22:10:50.614-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"GET","path":"/favicon.ico"}
+{"level":"info","ts":"2025-04-07T22:10:50.614-0300","caller":"middlewares/error.go:21","msg":"error occurred","status":403,"message":"access denied"}
+{"level":"info","ts":"2025-04-07T22:10:50.614-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"GET","path":"/favicon.ico","status":403}
+{"level":"info","ts":"2025-04-07T22:19:19.616-0300","caller":"fiber/fiber.go:31","msg":"server listening","port":"3333"}
+{"level":"info","ts":"2025-04-07T22:19:39.778-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"POST","path":"/products"}
+{"level":"info","ts":"2025-04-07T22:19:39.778-0300","caller":"middlewares/auth.go:29","msg":"access granted","user id":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxNDYwNzcsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.MwXDwfJkCPTl9bvxt5mH-vbaywbBEYi-4oBJb80yhe8"}
+{"level":"info","ts":"2025-04-07T22:19:39.779-0300","caller":"middlewares/context.go:14","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T22:19:39.779-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"POST","path":"/products","status":200}
+{"level":"info","ts":"2025-04-07T22:24:51.932-0300","caller":"fiber/fiber.go:31","msg":"server listening","port":"3333"}
+{"level":"info","ts":"2025-04-07T22:24:54.588-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"POST","path":"/products"}
+{"level":"info","ts":"2025-04-07T22:24:54.588-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"POST","path":"/products","status":200}
+{"level":"info","ts":"2025-04-07T22:25:05.560-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T22:25:05.561-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"GET","path":"/products","status":200}
+{"level":"info","ts":"2025-04-07T22:25:11.216-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"GET","path":"/orders"}
+{"level":"info","ts":"2025-04-07T22:25:11.216-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"GET","path":"/orders","status":200}
+{"level":"info","ts":"2025-04-07T22:25:11.242-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"GET","path":"/favicon.ico"}
+{"level":"info","ts":"2025-04-07T22:25:11.242-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"GET","path":"/favicon.ico","status":200}
+{"level":"info","ts":"2025-04-07T22:25:14.550-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"GET","path":"/orders"}
+{"level":"info","ts":"2025-04-07T22:25:14.550-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"GET","path":"/orders","status":200}
+{"level":"info","ts":"2025-04-07T22:25:14.591-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"GET","path":"/favicon.ico"}
+{"level":"info","ts":"2025-04-07T22:25:14.591-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"GET","path":"/favicon.ico","status":200}
+{"level":"info","ts":"2025-04-07T22:26:46.720-0300","caller":"fiber/fiber.go:31","msg":"server listening","port":"3333"}
+{"level":"info","ts":"2025-04-07T22:26:56.162-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"POST","path":"/products"}
+{"level":"info","ts":"2025-04-07T22:26:56.163-0300","caller":"middlewares/auth.go:29","msg":"access granted","user id":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxNDYwNzcsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.MwXDwfJkCPTl9bvxt5mH-vbaywbBEYi-4oBJb80yhe8"}
+{"level":"info","ts":"2025-04-07T22:26:56.163-0300","caller":"middlewares/context.go:14","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T22:26:56.163-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"POST","path":"/products","status":200}
+{"level":"info","ts":"2025-04-07T22:27:32.805-0300","caller":"fiber/fiber.go:31","msg":"server listening","port":"3333"}
+{"level":"info","ts":"2025-04-07T22:27:34.981-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"POST","path":"/products"}
+{"level":"info","ts":"2025-04-07T22:27:34.981-0300","caller":"middlewares/auth.go:29","msg":"access granted","user id":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxNDYwNzcsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.MwXDwfJkCPTl9bvxt5mH-vbaywbBEYi-4oBJb80yhe8"}
+{"level":"info","ts":"2025-04-07T22:27:34.982-0300","caller":"middlewares/context.go:14","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T22:27:34.982-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"POST","path":"/products","status":200}
+{"level":"info","ts":"2025-04-07T22:27:42.037-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"POST","path":"/products"}
+{"level":"info","ts":"2025-04-07T22:27:42.037-0300","caller":"middlewares/auth.go:29","msg":"access granted","user id":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxNDYwNzcsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.MwXDwfJkCPTl9bvxt5mH-vbaywbBEYi-4oBJb80yhe8"}
+{"level":"info","ts":"2025-04-07T22:27:42.037-0300","caller":"middlewares/context.go:14","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T22:27:42.038-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"POST","path":"/products","status":200}
+{"level":"info","ts":"2025-04-07T22:27:46.644-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T22:27:46.644-0300","caller":"middlewares/auth.go:29","msg":"access granted","user id":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxNDYwNzcsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.MwXDwfJkCPTl9bvxt5mH-vbaywbBEYi-4oBJb80yhe8"}
+{"level":"info","ts":"2025-04-07T22:27:46.644-0300","caller":"middlewares/context.go:14","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T22:27:46.645-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"GET","path":"/products","status":201}
+{"level":"info","ts":"2025-04-07T22:28:12.364-0300","caller":"fiber/fiber.go:31","msg":"server listening","port":"3333"}
+{"level":"info","ts":"2025-04-07T22:28:15.828-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T22:28:15.829-0300","caller":"middlewares/auth.go:29","msg":"access granted","user id":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxNDYwNzcsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.MwXDwfJkCPTl9bvxt5mH-vbaywbBEYi-4oBJb80yhe8"}
+{"level":"info","ts":"2025-04-07T22:28:15.829-0300","caller":"middlewares/context.go:14","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T22:28:15.830-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"GET","path":"/products","status":201}
+{"level":"info","ts":"2025-04-07T22:28:20.547-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"POST","path":"/products"}
+{"level":"info","ts":"2025-04-07T22:28:20.547-0300","caller":"middlewares/auth.go:29","msg":"access granted","user id":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxNDYwNzcsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.MwXDwfJkCPTl9bvxt5mH-vbaywbBEYi-4oBJb80yhe8"}
+{"level":"info","ts":"2025-04-07T22:28:20.547-0300","caller":"middlewares/context.go:14","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T22:28:20.547-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"POST","path":"/products","status":200}
+{"level":"info","ts":"2025-04-07T22:28:22.395-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"POST","path":"/products"}
+{"level":"info","ts":"2025-04-07T22:28:22.396-0300","caller":"middlewares/auth.go:29","msg":"access granted","user id":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxNDYwNzcsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.MwXDwfJkCPTl9bvxt5mH-vbaywbBEYi-4oBJb80yhe8"}
+{"level":"info","ts":"2025-04-07T22:28:22.396-0300","caller":"middlewares/context.go:14","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T22:28:22.396-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"POST","path":"/products","status":200}
+{"level":"info","ts":"2025-04-07T22:28:30.665-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"GET","path":"/orders"}
+{"level":"info","ts":"2025-04-07T22:28:30.666-0300","caller":"middlewares/error.go:19","msg":"error occurred","status":403,"message":"access denied"}
+{"level":"info","ts":"2025-04-07T22:28:30.666-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"GET","path":"/orders","status":403}
+{"level":"info","ts":"2025-04-07T22:28:30.696-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"GET","path":"/favicon.ico"}
+{"level":"info","ts":"2025-04-07T22:28:30.696-0300","caller":"middlewares/error.go:19","msg":"error occurred","status":403,"message":"access denied"}
+{"level":"info","ts":"2025-04-07T22:28:30.696-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"GET","path":"/favicon.ico","status":403}
+{"level":"info","ts":"2025-04-07T22:52:15.905-0300","caller":"fiber/fiber.go:31","msg":"server listening","port":"3333"}
+{"level":"info","ts":"2025-04-07T22:52:19.187-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"POST","path":"/products"}
+{"level":"info","ts":"2025-04-07T22:52:19.188-0300","caller":"middlewares/auth.go:29","msg":"access granted","user id":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxNDYwNzcsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.MwXDwfJkCPTl9bvxt5mH-vbaywbBEYi-4oBJb80yhe8"}
+{"level":"info","ts":"2025-04-07T22:52:19.188-0300","caller":"middlewares/context.go:14","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T22:52:19.188-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"POST","path":"/products","status":200}
+{"level":"info","ts":"2025-04-07T22:52:29.359-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T22:52:29.359-0300","caller":"middlewares/auth.go:29","msg":"access granted","user id":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxNDYwNzcsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.MwXDwfJkCPTl9bvxt5mH-vbaywbBEYi-4oBJb80yhe8"}
+{"level":"info","ts":"2025-04-07T22:52:29.359-0300","caller":"middlewares/context.go:14","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T22:52:29.360-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"GET","path":"/products","status":201}
+{"level":"info","ts":"2025-04-07T22:52:31.977-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T22:52:31.978-0300","caller":"middlewares/auth.go:29","msg":"access granted","user id":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxNDYwNzcsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.MwXDwfJkCPTl9bvxt5mH-vbaywbBEYi-4oBJb80yhe8"}
+{"level":"info","ts":"2025-04-07T22:52:31.978-0300","caller":"middlewares/context.go:14","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T22:52:31.979-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"GET","path":"/products","status":201}
+{"level":"info","ts":"2025-04-07T22:52:37.279-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T22:52:37.279-0300","caller":"middlewares/auth.go:29","msg":"access granted","user id":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxNDYwNzcsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.MwXDwfJkCPTl9bvxt5mH-vbaywbBEYi-4oBJb80yhe8"}
+{"level":"info","ts":"2025-04-07T22:52:37.279-0300","caller":"middlewares/context.go:14","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T22:52:37.280-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"GET","path":"/products","status":201}
+{"level":"info","ts":"2025-04-07T22:53:31.301-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T22:53:31.301-0300","caller":"middlewares/auth.go:29","msg":"access granted","user id":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxNDYwNzcsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.MwXDwfJkCPTl9bvxt5mH-vbaywbBEYi-4oBJb80yhe8"}
+{"level":"info","ts":"2025-04-07T22:53:31.301-0300","caller":"middlewares/context.go:14","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T22:53:31.302-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"GET","path":"/products","status":201}
+{"level":"info","ts":"2025-04-07T22:53:38.583-0300","caller":"fiber/fiber.go:31","msg":"server listening","port":"3333"}
+{"level":"info","ts":"2025-04-07T22:53:44.392-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T22:53:44.392-0300","caller":"middlewares/auth.go:29","msg":"access granted","user id":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxNDYwNzcsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.MwXDwfJkCPTl9bvxt5mH-vbaywbBEYi-4oBJb80yhe8"}
+{"level":"info","ts":"2025-04-07T22:53:44.392-0300","caller":"middlewares/context.go:14","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T22:53:44.393-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"GET","path":"/products","status":200}
+{"level":"info","ts":"2025-04-07T22:53:51.079-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"POST","path":"/products"}
+{"level":"info","ts":"2025-04-07T22:53:51.079-0300","caller":"middlewares/auth.go:29","msg":"access granted","user id":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxNDYwNzcsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.MwXDwfJkCPTl9bvxt5mH-vbaywbBEYi-4oBJb80yhe8"}
+{"level":"info","ts":"2025-04-07T22:53:51.079-0300","caller":"middlewares/context.go:14","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T22:53:51.079-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"POST","path":"/products","status":200}
+{"level":"info","ts":"2025-04-07T22:54:01.397-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"POST","path":"/products"}
+{"level":"info","ts":"2025-04-07T22:54:01.397-0300","caller":"middlewares/auth.go:29","msg":"access granted","user id":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxNDYwNzcsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.MwXDwfJkCPTl9bvxt5mH-vbaywbBEYi-4oBJb80yhe8"}
+{"level":"info","ts":"2025-04-07T22:54:01.397-0300","caller":"middlewares/context.go:14","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T22:54:01.403-0300","caller":"usecase/product.go:43","msg":"adding new product"}
+{"level":"info","ts":"2025-04-07T22:54:01.403-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"POST","path":"/products","status":201}
+{"level":"info","ts":"2025-04-07T22:54:11.505-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"POST","path":"/products"}
+{"level":"info","ts":"2025-04-07T22:54:11.506-0300","caller":"middlewares/auth.go:29","msg":"access granted","user id":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxNDYwNzcsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.MwXDwfJkCPTl9bvxt5mH-vbaywbBEYi-4oBJb80yhe8"}
+{"level":"info","ts":"2025-04-07T22:54:11.506-0300","caller":"middlewares/context.go:14","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T22:54:11.506-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"POST","path":"/products","status":200}
+{"level":"info","ts":"2025-04-07T22:54:18.808-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"POST","path":"/products"}
+{"level":"info","ts":"2025-04-07T22:54:18.808-0300","caller":"middlewares/auth.go:29","msg":"access granted","user id":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxNDYwNzcsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.MwXDwfJkCPTl9bvxt5mH-vbaywbBEYi-4oBJb80yhe8"}
+{"level":"info","ts":"2025-04-07T22:54:18.808-0300","caller":"middlewares/context.go:14","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T22:54:18.835-0300","caller":"usecase/product.go:43","msg":"adding new product"}
+{"level":"info","ts":"2025-04-07T22:54:18.835-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"POST","path":"/products","status":201}
+{"level":"info","ts":"2025-04-07T22:54:27.562-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T22:54:27.562-0300","caller":"middlewares/auth.go:29","msg":"access granted","user id":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxNDYwNzcsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.MwXDwfJkCPTl9bvxt5mH-vbaywbBEYi-4oBJb80yhe8"}
+{"level":"info","ts":"2025-04-07T22:54:27.562-0300","caller":"middlewares/context.go:14","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T22:54:27.563-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"GET","path":"/products","status":200}
+{"level":"info","ts":"2025-04-07T22:54:34.748-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"GET","path":"/orders"}
+{"level":"info","ts":"2025-04-07T22:54:34.748-0300","caller":"middlewares/error.go:19","msg":"error occurred","status":403,"message":"access denied"}
+{"level":"info","ts":"2025-04-07T22:54:34.748-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"GET","path":"/orders","status":403}
+{"level":"info","ts":"2025-04-07T22:54:34.775-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"GET","path":"/favicon.ico"}
+{"level":"info","ts":"2025-04-07T22:54:34.775-0300","caller":"middlewares/error.go:19","msg":"error occurred","status":403,"message":"access denied"}
+{"level":"info","ts":"2025-04-07T22:54:34.775-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"GET","path":"/favicon.ico","status":403}
+{"level":"info","ts":"2025-04-07T22:57:20.725-0300","caller":"fiber/fiber.go:31","msg":"server listening","port":"3333"}
+{"level":"info","ts":"2025-04-07T22:57:28.576-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"POST","path":"/products"}
+{"level":"info","ts":"2025-04-07T22:57:28.576-0300","caller":"middlewares/auth.go:29","msg":"access granted","user id":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxNDYwNzcsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.MwXDwfJkCPTl9bvxt5mH-vbaywbBEYi-4oBJb80yhe8"}
+{"level":"info","ts":"2025-04-07T22:57:28.577-0300","caller":"middlewares/context.go:14","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T22:57:28.577-0300","caller":"middlewares/error.go:19","msg":"error occurred","status":400,"message":"Bad Request"}
+{"level":"info","ts":"2025-04-07T22:57:28.577-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"POST","path":"/products","status":400}
+{"level":"info","ts":"2025-04-07T23:03:34.810-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"POST","path":"/products"}
+{"level":"info","ts":"2025-04-07T23:03:34.811-0300","caller":"middlewares/auth.go:29","msg":"access granted","user id":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxNDYwNzcsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.MwXDwfJkCPTl9bvxt5mH-vbaywbBEYi-4oBJb80yhe8"}
+{"level":"info","ts":"2025-04-07T23:03:34.811-0300","caller":"middlewares/context.go:14","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T23:03:34.811-0300","caller":"middlewares/error.go:19","msg":"error occurred","status":400,"message":"Bad Request"}
+{"level":"info","ts":"2025-04-07T23:03:34.811-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"POST","path":"/products","status":400}
+{"level":"info","ts":"2025-04-07T23:03:45.703-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"GET","path":"/products/dcb068c5-fec2-457e-bcd0-0c9e62d4dd6d"}
+{"level":"info","ts":"2025-04-07T23:03:45.703-0300","caller":"middlewares/auth.go:29","msg":"access granted","user id":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxNDYwNzcsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.MwXDwfJkCPTl9bvxt5mH-vbaywbBEYi-4oBJb80yhe8"}
+{"level":"info","ts":"2025-04-07T23:03:45.703-0300","caller":"middlewares/context.go:14","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T23:03:45.704-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"GET","path":"/products/dcb068c5-fec2-457e-bcd0-0c9e62d4dd6d","status":200}
+{"level":"info","ts":"2025-04-07T23:03:56.331-0300","caller":"fiber/fiber.go:31","msg":"server listening","port":"3333"}
+{"level":"info","ts":"2025-04-07T23:03:58.765-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"GET","path":"/products/dcb068c5-fec2-457e-bcd0-0c9e62d4dd6d"}
+{"level":"info","ts":"2025-04-07T23:03:58.766-0300","caller":"middlewares/auth.go:29","msg":"access granted","user id":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxNDYwNzcsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.MwXDwfJkCPTl9bvxt5mH-vbaywbBEYi-4oBJb80yhe8"}
+{"level":"info","ts":"2025-04-07T23:03:58.766-0300","caller":"middlewares/context.go:14","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T23:03:58.767-0300","caller":"middlewares/error.go:19","msg":"error occurred","status":400,"message":"Bad Request"}
+{"level":"info","ts":"2025-04-07T23:03:58.767-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"GET","path":"/products/dcb068c5-fec2-457e-bcd0-0c9e62d4dd6d","status":400}
+{"level":"info","ts":"2025-04-07T23:04:06.068-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"GET","path":"/products/:id"}
+{"level":"info","ts":"2025-04-07T23:04:06.068-0300","caller":"middlewares/auth.go:29","msg":"access granted","user id":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxNDYwNzcsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.MwXDwfJkCPTl9bvxt5mH-vbaywbBEYi-4oBJb80yhe8"}
+{"level":"info","ts":"2025-04-07T23:04:06.068-0300","caller":"middlewares/context.go:14","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T23:04:06.069-0300","caller":"middlewares/error.go:19","msg":"error occurred","status":400,"message":"Bad Request"}
+{"level":"info","ts":"2025-04-07T23:04:06.069-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"GET","path":"/products/:id","status":400}
+{"level":"info","ts":"2025-04-07T23:04:26.921-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"GET","path":"/products"}
+{"level":"info","ts":"2025-04-07T23:04:26.921-0300","caller":"middlewares/auth.go:29","msg":"access granted","user id":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxNDYwNzcsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.MwXDwfJkCPTl9bvxt5mH-vbaywbBEYi-4oBJb80yhe8"}
+{"level":"info","ts":"2025-04-07T23:04:26.921-0300","caller":"middlewares/context.go:14","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T23:04:26.921-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"GET","path":"/products","status":200}
+{"level":"info","ts":"2025-04-07T23:05:58.582-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"GET","path":"/orders"}
+{"level":"info","ts":"2025-04-07T23:05:58.583-0300","caller":"middlewares/auth.go:29","msg":"access granted","user id":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxNDYwNzcsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.MwXDwfJkCPTl9bvxt5mH-vbaywbBEYi-4oBJb80yhe8"}
+{"level":"info","ts":"2025-04-07T23:05:58.583-0300","caller":"middlewares/context.go:14","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T23:05:58.584-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"GET","path":"/orders","status":200}
+{"level":"info","ts":"2025-04-07T23:06:13.423-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"POST","path":"/orders/checkout"}
+{"level":"info","ts":"2025-04-07T23:06:13.423-0300","caller":"middlewares/auth.go:29","msg":"access granted","user id":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxNDYwNzcsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.MwXDwfJkCPTl9bvxt5mH-vbaywbBEYi-4oBJb80yhe8"}
+{"level":"info","ts":"2025-04-07T23:06:13.423-0300","caller":"middlewares/context.go:14","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T23:06:13.431-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"POST","path":"/orders/checkout","status":201}
+{"level":"info","ts":"2025-04-07T23:06:32.603-0300","caller":"middlewares/logging.go:10","msg":"request received","method":"GET","path":"/orders"}
+{"level":"info","ts":"2025-04-07T23:06:32.603-0300","caller":"middlewares/auth.go:29","msg":"access granted","user id":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQxNDYwNzcsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.MwXDwfJkCPTl9bvxt5mH-vbaywbBEYi-4oBJb80yhe8"}
+{"level":"info","ts":"2025-04-07T23:06:32.603-0300","caller":"middlewares/context.go:14","msg":"ctx","user id: ":""}
+{"level":"info","ts":"2025-04-07T23:06:32.605-0300","caller":"middlewares/logging.go:20","msg":"request completed","method":"GET","path":"/orders","status":200}
