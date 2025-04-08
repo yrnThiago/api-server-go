@@ -2,9 +2,8 @@ package config
 
 import (
 	"fmt"
-
-	"github.com/glebarez/sqlite"
 	"github.com/yrnThiago/api-server-go/internal/models"
+	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
@@ -21,7 +20,7 @@ func getDatabaseUrl() string {
 }
 
 func DatabaseInit() {
-	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
+	db, err := gorm.Open(mysql.Open(getDatabaseUrl()), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
 	}
