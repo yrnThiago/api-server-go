@@ -33,7 +33,7 @@ func Init() {
 	public.Mount("/auth", configroutes.AuthRouter())
 
 	// Rotas privadas
-	private := app.Group("/", middlewares.AuthMiddleware, middlewares.ContextMiddleware)
+	private := app.Group("/", middlewares.AuthMiddleware)
 	private.Mount("/orders", configroutes.OrderRouter())
 	private.Mount("/products", configroutes.ProductRouter())
 
