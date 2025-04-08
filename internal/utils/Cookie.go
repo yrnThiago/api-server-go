@@ -8,6 +8,7 @@ import (
 	"github.com/golang-jwt/jwt"
 
 	"github.com/yrnThiago/api-server-go/internal/config"
+	"go.uber.org/zap"
 )
 
 var SECRET_KEY = []byte(config.Env.SECRET_KEY)
@@ -18,6 +19,18 @@ func GetCookie(c *fiber.Ctx, cookieName string) (string, error) {
 		return "", fmt.Errorf("cookie %s not found", cookieName)
 	}
 	return cookie, nil
+}
+
+func SetCookie(c *fiber.Ctx, cookie *fiber.Cookie) (string, error) {
+	c.Cookie(cookie)
+	newCookie, err := GetCookie(c, cookie.Name)
+
+	config.Logger.Info(
+		"set cookie",
+		zap.String("name", cookie.Name),
+		zap.String("value", cookie.Value),
+	)
+	return newCookie, err
 }
 
 func GenerateJWT() (string, error) {

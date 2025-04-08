@@ -33,7 +33,6 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 	cookie.HTTPOnly = true
 	cookie.Path = "/"
 
-	c.Cookie(cookie)
-
+	utils.SetCookie(c, cookie)
 	return c.JSON(TestResponse{"user logged in"})
 }
