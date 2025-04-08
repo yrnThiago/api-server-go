@@ -4,6 +4,8 @@ import (
 	"log"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/requestid"
+	"github.com/gofiber/fiber/v2/utils"
 	"go.uber.org/zap"
 
 	"github.com/yrnThiago/api-server-go/internal/config"
@@ -13,6 +15,13 @@ import (
 
 func Init() {
 	app := fiber.New()
+
+	app.Use(requestid.New(requestid.Config{
+		Next:       nil,
+		Header:     fiber.HeaderXRequestID,
+		Generator:  utils.UUID,
+		ContextKey: "requestid",
+	}))
 
 	// Middlewares globais
 	app.Use(middlewares.LoggingMiddleware)

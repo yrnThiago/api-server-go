@@ -2,13 +2,15 @@ package middlewares
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/yrnThiago/api-server-go/internal/config"
 	"go.uber.org/zap"
+
+	"github.com/yrnThiago/api-server-go/internal/config"
 )
 
 func LoggingMiddleware(c *fiber.Ctx) error {
 	config.Logger.Info(
 		"request received",
+		zap.String("request id", c.Locals("requestid").(string)),
 		zap.String("method", c.Method()),
 		zap.String("path", c.Path()),
 	)
@@ -19,9 +21,9 @@ func LoggingMiddleware(c *fiber.Ctx) error {
 	// Após a requisição ser tratada
 	config.Logger.Info(
 		"request completed",
+		zap.String("request id", c.Locals("requestid").(string)),
 		zap.String("method", c.Method()),
 		zap.String("path", c.Path()),
-		zap.Int("status", c.Response().StatusCode()),
 	)
 
 	return err
