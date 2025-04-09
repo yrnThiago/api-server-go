@@ -3,7 +3,6 @@ package config
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 
 	"github.com/joho/godotenv"
 )
@@ -24,9 +23,7 @@ type EnvVariables struct {
 var Env EnvVariables
 
 func Init() {
-	rootPath, _ := filepath.Abs(filepath.Join(".", "..", ".."))
-
-	err := godotenv.Load(filepath.Join(rootPath, ".env"))
+	err := godotenv.Load()
 	if err != nil {
 		fmt.Println("Error loading .env file")
 	}
