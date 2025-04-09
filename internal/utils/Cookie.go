@@ -7,7 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt"
 
-	"github.com/yrnThiago/api-server-go/internal/config"
+	"github.com/yrnThiago/api-server-go/config"
 	"go.uber.org/zap"
 )
 

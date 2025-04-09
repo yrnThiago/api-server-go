@@ -8,8 +8,8 @@ import (
 
 	"github.com/nats-io/nats.go"
 
+	"github.com/yrnThiago/api-server-go/config"
 	"github.com/yrnThiago/api-server-go/internal/usecase"
-	"github.com/yrnThiago/api-server-go/internal/config"
 )
 
 var Pub *nats.Conn

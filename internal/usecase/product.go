@@ -3,7 +3,7 @@ package usecase
 import (
 	"gorm.io/gorm"
 
-	"github.com/yrnThiago/api-server-go/internal/config"
+	"github.com/yrnThiago/api-server-go/config"
 	"github.com/yrnThiago/api-server-go/internal/models"
 )
 

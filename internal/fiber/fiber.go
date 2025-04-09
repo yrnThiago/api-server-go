@@ -8,8 +8,8 @@ import (
 	"github.com/gofiber/fiber/v2/utils"
 	"go.uber.org/zap"
 
-	"github.com/yrnThiago/api-server-go/internal/config"
-	configroutes "github.com/yrnThiago/api-server-go/internal/config/routes"
+	"github.com/yrnThiago/api-server-go/config"
+	configroutes "github.com/yrnThiago/api-server-go/config/routes"
 	"github.com/yrnThiago/api-server-go/internal/middlewares"
 )
 

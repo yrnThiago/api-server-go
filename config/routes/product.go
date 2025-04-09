@@ -3,7 +3,7 @@ package configroutes
 import (
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/yrnThiago/api-server-go/internal/config"
+	"github.com/yrnThiago/api-server-go/config"
 	"github.com/yrnThiago/api-server-go/internal/handlers"
 	"github.com/yrnThiago/api-server-go/internal/infra/repository"
 	"github.com/yrnThiago/api-server-go/internal/routes"

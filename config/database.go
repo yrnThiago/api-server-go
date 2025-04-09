@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+
 	"github.com/yrnThiago/api-server-go/internal/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"

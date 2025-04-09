@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/yrnThiago/api-server-go/internal/cmd/pub"
-	"github.com/yrnThiago/api-server-go/internal/cmd/sub"
-	"github.com/yrnThiago/api-server-go/internal/config"
+	"github.com/yrnThiago/api-server-go/cmd/pub"
+	"github.com/yrnThiago/api-server-go/cmd/sub"
+	"github.com/yrnThiago/api-server-go/config"
 	"github.com/yrnThiago/api-server-go/internal/fiber"
 	"github.com/yrnThiago/api-server-go/internal/models"
 )

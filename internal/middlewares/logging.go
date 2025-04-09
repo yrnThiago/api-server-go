@@ -4,7 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
 
-	"github.com/yrnThiago/api-server-go/internal/config"
+	"github.com/yrnThiago/api-server-go/config"
 )
 
 func LoggingMiddleware(c *fiber.Ctx) error {

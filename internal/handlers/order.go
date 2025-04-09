@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/yrnThiago/api-server-go/internal/cmd/pub"
+	"github.com/yrnThiago/api-server-go/cmd/pub"
 	"github.com/yrnThiago/api-server-go/internal/keys"
 	"github.com/yrnThiago/api-server-go/internal/usecase"
 	"github.com/yrnThiago/api-server-go/internal/utils"
