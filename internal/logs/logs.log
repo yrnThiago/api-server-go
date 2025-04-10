@@ -1,0 +1,5 @@
+{"level":"info","ts":"2025-04-09T21:13:59.870-0300","caller":"fiber/fiber.go:40","msg":"server listening","port":"3333"}
+{"level":"info","ts":"2025-04-09T21:14:03.796-0300","caller":"middlewares/logging.go:11","msg":"request received","request id":"2f0b82d9-bc75-4c07-a218-ad8ce3db827f","method":"GET","path":"/health/ping"}
+{"level":"info","ts":"2025-04-09T21:14:03.797-0300","caller":"middlewares/logging.go:22","msg":"request completed","request id":"2f0b82d9-bc75-4c07-a218-ad8ce3db827f","method":"GET","path":"/health/ping"}
+{"level":"info","ts":"2025-04-09T21:14:05.153-0300","caller":"middlewares/logging.go:11","msg":"request received","request id":"300b82d9-bc75-4c07-a218-ad8ce3db827f","method":"GET","path":"/health/ping"}
+{"level":"info","ts":"2025-04-09T21:14:05.166-0300","caller":"middlewares/logging.go:22","msg":"request completed","request id":"300b82d9-bc75-4c07-a218-ad8ce3db827f","method":"GET","path":"/health/ping"}

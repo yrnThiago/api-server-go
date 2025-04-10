@@ -1,6 +1,0 @@
-{"level":"info","ts":"2025-04-09T12:41:28.428-0300","caller":"fiber/fiber.go:40","msg":"server listening","port":"3333"}
-{"level":"info","ts":"2025-04-09T12:41:45.642-0300","caller":"middlewares/logging.go:11","msg":"request received","request id":"35bbce75-584b-4d4d-90ab-ff81193048e8","method":"GET","path":"/health/ping"}
-{"level":"info","ts":"2025-04-09T12:41:45.642-0300","caller":"middlewares/logging.go:22","msg":"request completed","request id":"35bbce75-584b-4d4d-90ab-ff81193048e8","method":"GET","path":"/health/ping"}
-{"level":"info","ts":"2025-04-09T12:41:51.323-0300","caller":"middlewares/logging.go:11","msg":"request received","request id":"36bbce75-584b-4d4d-90ab-ff81193048e8","method":"GET","path":"/products"}
-{"level":"info","ts":"2025-04-09T12:41:51.540-0300","caller":"middlewares/auth.go:29","msg":"access granted","user id":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDQyMjA5NDcsInVzZXJuYW1lIjoidGVzdGV1c2VybiJ9.TiYOZp1Q7zvWFErHAJ5gbdu3A3cAqgpzIk9ZtVYRZLM"}
-{"level":"info","ts":"2025-04-09T12:41:51.542-0300","caller":"middlewares/logging.go:22","msg":"request completed","request id":"36bbce75-584b-4d4d-90ab-ff81193048e8","method":"GET","path":"/products"}
