@@ -22,12 +22,10 @@ func AuthMiddleware(c *fiber.Ctx) error {
 	err := utils.VerifyJWT(userAuthorization)
 	if err != nil {
 		errorInfo := utils.NewErrorInfo(http.StatusForbidden, "access denied")
-		// Armazenando erro no contexto para middlewares futuros, se necessário
 		c.Locals(string(keys.ErrorKey), errorInfo)
 		return errors.New(errorInfo.Message)
 	}
 
-	// Armazenando o userAuthorization (user ID) no contexto
 	c.Locals(string(keys.UserIDKey), userAuthorization)
 
 	config.Logger.Info(

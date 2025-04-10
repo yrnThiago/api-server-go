@@ -15,10 +15,8 @@ func LoggingMiddleware(c *fiber.Ctx) error {
 		zap.String("path", c.Path()),
 	)
 
-	// Processa o próximo handler
 	err := c.Next()
 
-	// Após a requisição ser tratada
 	config.Logger.Info(
 		"request completed",
 		zap.String("request id", c.Locals("requestid").(string)),
