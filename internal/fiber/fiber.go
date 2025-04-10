@@ -28,12 +28,12 @@ func Init() {
 	app.Use(middlewares.ErrorMiddleware)
 
 	// Rotas públicas
-	public := app.Group("/")
+	public := app.Group("/public")
 	public.Mount("/health", configroutes.HealthRouter())
 	public.Mount("/auth", configroutes.AuthRouter())
 
 	// Rotas privadas
-	private := app.Group("/", middlewares.AuthMiddleware)
+	private := app.Group("/private", middlewares.AuthMiddleware)
 	private.Mount("/orders", configroutes.OrderRouter())
 	private.Mount("/products", configroutes.ProductRouter())
 

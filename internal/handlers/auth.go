@@ -17,7 +17,8 @@ func NewAuthHandlers() *AuthHandler {
 }
 
 func (h *AuthHandler) Login(c *fiber.Ctx) error {
-	userAuthorization, err := utils.GenerateJWT()
+	authToken, err := utils.GenerateJWT()
+	userAuthorization := utils.BEARER_KEY + authToken
 	if err != nil {
 		config.Logger.Warn(
 			"jwt token not generated",

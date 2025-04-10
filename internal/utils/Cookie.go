@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -11,7 +12,10 @@ import (
 	"go.uber.org/zap"
 )
 
+type Option func(c fiber.Cookie) fiber.Cookie
+
 var SECRET_KEY = []byte(config.Env.SECRET_KEY)
+var BEARER_KEY = "Bearer "
 
 func GetCookie(c *fiber.Ctx, cookieName string) (string, error) {
 	cookie := c.Cookies(cookieName)
@@ -33,6 +37,17 @@ func SetCookie(c *fiber.Ctx, cookie *fiber.Cookie) (string, error) {
 	return newCookie, err
 }
 
+func SetBearerCookie(c *fiber.Ctx, cookie *fiber.Cookie) (string, error) {
+	c.Cookie(cookie)
+	newCookie, err := GetCookie(c, cookie.Name)
+
+	config.Logger.Info(
+		"set cookie",
+		zap.String("name", cookie.Name),
+		zap.String("value", cookie.Value),
+	)
+	return newCookie, err
+}
 func GenerateJWT() (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		jwt.MapClaims{
@@ -61,4 +76,8 @@ func VerifyJWT(tokenString string) error {
 	}
 
 	return nil
+}
+
+func GetFormattedAuthToken(token string) (string, error) {
+	return strings.Replace(token, BEARER_KEY, "", 1), nil
 }
