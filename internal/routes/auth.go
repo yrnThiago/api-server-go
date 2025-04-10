@@ -20,7 +20,7 @@ func NewAuthRouter(authHandlers *handlers.AuthHandler) *AuthRouter {
 
 func (h *AuthRouter) GetRouter() *fiber.App {
 	router := fiber.New()
-	router.Get("/login", h.AuthHandlers.Login)
+	router.Post("/login", h.AuthHandlers.Login)
 
 	return router
 }

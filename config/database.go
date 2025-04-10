@@ -26,6 +26,6 @@ func DatabaseInit() {
 		panic("failed to connect database")
 	}
 
-	db.Migrator().AutoMigrate(&models.Product{}, &models.Order{}, &models.OrderItems{})
+	db.Migrator().AutoMigrate(&models.User{}, &models.Product{}, &models.Order{}, &models.OrderItems{})
 	DB = db
 }
