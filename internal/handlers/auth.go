@@ -33,12 +33,17 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 		return err
 	}
 
+	if !utils.CheckPasswordHash(userInputDto.Password, output.Password) {
+		config.Logger.Warn("wrong credentials")
+		return err
+	}
+
 	config.Logger.Info(
 		"user logged in",
 		zap.String("user id", output.ID),
 	)
 
-	authToken, err := utils.GenerateJWT()
+	authToken, err := utils.GenerateJWT(output.ID)
 	userAuthorization := utils.BEARER_KEY + authToken
 	if err != nil {
 		config.Logger.Warn(

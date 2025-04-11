@@ -36,6 +36,7 @@ func Init() {
 	private := app.Group("/private", middlewares.AuthMiddleware)
 	private.Mount("/orders", configroutes.OrderRouter())
 	private.Mount("/products", configroutes.ProductRouter())
+	private.Mount("/users", configroutes.UserRouter())
 
 	config.Logger.Info(
 		"server listening",

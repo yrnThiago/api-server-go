@@ -2,7 +2,6 @@ package middlewares
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
@@ -16,8 +15,6 @@ import (
 func AuthMiddleware(c *fiber.Ctx) error {
 	authCookieValue, _ := utils.GetCookie(c, config.Env.COOKIE_NAME)
 	userAuthorization, _ := utils.GetFormattedAuthToken(authCookieValue)
-
-	fmt.Println(authCookieValue, userAuthorization)
 
 	err := utils.VerifyJWT(userAuthorization)
 	if err != nil {

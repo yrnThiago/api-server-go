@@ -48,10 +48,10 @@ func SetBearerCookie(c *fiber.Ctx, cookie *fiber.Cookie) (string, error) {
 	)
 	return newCookie, err
 }
-func GenerateJWT() (string, error) {
+func GenerateJWT(userID string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		jwt.MapClaims{
-			"username": "testeusern",
+			"username": userID,
 			"exp":      time.Now().Add(time.Hour * 24).Unix(),
 		})
 
