@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
-	"go.uber.org/zap"
+	"github.com/golang-jwt/jwt"
 
 	"github.com/yrnThiago/api-server-go/config"
 	"github.com/yrnThiago/api-server-go/internal/keys"
@@ -16,19 +16,17 @@ func AuthMiddleware(c *fiber.Ctx) error {
 	authCookieValue, _ := utils.GetCookie(c, config.Env.COOKIE_NAME)
 	userAuthorization, _ := utils.GetFormattedAuthToken(authCookieValue)
 
-	err := utils.VerifyJWT(userAuthorization)
+	token, err := utils.VerifyJWT(userAuthorization)
 	if err != nil {
 		errorInfo := utils.NewErrorInfo(http.StatusForbidden, "access denied")
 		c.Locals(string(keys.ErrorKey), errorInfo)
 		return errors.New(errorInfo.Message)
 	}
 
-	c.Locals(string(keys.UserIDKey), userAuthorization)
+	claims := token.Claims.(jwt.MapClaims)
+	userID := claims[string(keys.UserIDKey)]
 
-	config.Logger.Info(
-		"access granted",
-		zap.String("user id", userAuthorization),
-	)
+	c.Locals(string(keys.UserIDKey), userID)
 
 	return c.Next()
 }

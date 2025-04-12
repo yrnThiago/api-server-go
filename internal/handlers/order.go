@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/yrnThiago/api-server-go/cmd/pub"
+	"github.com/yrnThiago/api-server-go/cmd/publisher"
 	"github.com/yrnThiago/api-server-go/internal/keys"
 	"github.com/yrnThiago/api-server-go/internal/usecase"
 	"github.com/yrnThiago/api-server-go/internal/utils"
@@ -38,7 +38,7 @@ func (p *OrderHandlers) Add(c *fiber.Ctx) error {
 		return err
 	}
 
-	go pub.SendMessage(output)
+	go publisher.Publish(output.ID)
 
 	c.Set("Content-Type", "application/json")
 	return c.Status(fiber.StatusCreated).JSON(output)

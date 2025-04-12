@@ -1,14 +1,14 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
+	"os"
+	"os/signal"
+	"syscall"
 
-	"github.com/yrnThiago/api-server-go/cmd/pub"
-	"github.com/yrnThiago/api-server-go/cmd/sub"
+	"github.com/yrnThiago/api-server-go/cmd/consumer"
+	"github.com/yrnThiago/api-server-go/cmd/publisher"
 	"github.com/yrnThiago/api-server-go/config"
 	"github.com/yrnThiago/api-server-go/internal/fiber"
-	"github.com/yrnThiago/api-server-go/internal/models"
 )
 
 func main() {
@@ -17,21 +17,14 @@ func main() {
 	config.LoggerInit()
 	config.NatsInit()
 
+	publisher.StartOrdersPublisher()
+	consumer.StartOrdersConsumer()
+	go consumer.ConsumeMsgs()
 	go fiber.Init()
 
-	pub.PublisherInit()
-	sub := sub.Connect()
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
+	<-quit
 
-	go sub.ReceiveMessage(config.MsgChan, config.Env.NEW_ORDERS_TOPIC)
-
-	for msg := range config.MsgChan {
-		var order *models.Order
-
-		err := json.Unmarshal(msg.Data, &order)
-		if err != nil {
-			return
-		}
-
-		fmt.Println(order)
-	}
+	config.CloseNatsConections()
 }

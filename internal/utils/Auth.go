@@ -3,16 +3,17 @@ package utils
 import (
 	"fmt"
 	"time"
-	"golang.org/x/crypto/bcrypt"
 
 	"github.com/golang-jwt/jwt"
+	"github.com/yrnThiago/api-server-go/internal/keys"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func GenerateJWT(userID string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		jwt.MapClaims{
-			"username": userID,
-			"exp":      time.Now().Add(time.Hour * 24).Unix(),
+			string(keys.UserIDKey): userID,
+			"exp":                  time.Now().Add(time.Hour * 24).Unix(),
 		})
 
 	tokenString, err := token.SignedString(SECRET_KEY)
@@ -23,19 +24,19 @@ func GenerateJWT(userID string) (string, error) {
 	return tokenString, nil
 }
 
-func VerifyJWT(tokenString string) error {
+func VerifyJWT(tokenString string) (*jwt.Token, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (any, error) {
 		return SECRET_KEY, nil
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if !token.Valid {
-		return fmt.Errorf("invalid token")
+		return nil, fmt.Errorf("invalid token")
 	}
 
-	return nil
+	return token, nil
 }
 
 func GenerateHashPassword(password string) (string, error) {

@@ -1,41 +1,34 @@
 package config
 
 import (
-	"time"
+	"log"
 
-	"github.com/nats-io/nats-server/v2/server"
 	"github.com/nats-io/nats.go"
+	"github.com/nats-io/nats.go/jetstream"
 )
 
-var MsgChan chan *nats.Msg
+var (
+	NC *nats.Conn
+	JS jetstream.JetStream
+)
 
 func NatsInit() {
-	opts := &server.Options{}
-	ns, err := server.NewServer(opts)
+	var err error
+	NC, err = nats.Connect("connect.ngs.global", nats.UserCredentials("./user.creds"))
 	if err != nil {
-		panic(err)
-	}
-	go ns.Start()
-
-	if !ns.ReadyForConnections(4 * time.Second) {
-		panic("not ready for connection")
+		log.Fatal(err)
 	}
 
-	MsgChan = make(chan *nats.Msg)
+	// defer nc.Close()
+	JS, err = jetstream.New(NC)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
 
-	// pub.PublisherInit()
-	// sub := sub.Connect()
-	//
-	// go sub.ReceiveMessage(msgChan, Env.NEW_ORDERS_TOPIC)
-	//
-	// for msg := range msgChan {
-	// 	var order *models.Order
-	//
-	// 	err = json.Unmarshal(msg.Data, &order)
-	// 	if err != nil {
-	// 		return
-	// 	}
-	//
-	// 	fmt.Println(order)
-	// }
+func CloseNatsConections() {
+	Logger.Info("Closing all nats connections")
+	NC.Close()
+	JS.Conn().Close()
+	Logger.Info("Connections closed")
 }

@@ -38,9 +38,11 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 		return err
 	}
 
+	c.Locals(string(keys.UserIDKey), output.ID)
+
 	config.Logger.Info(
 		"user logged in",
-		zap.String("user id", output.ID),
+		zap.String("user id", c.Locals(string(keys.UserIDKey)).(string)),
 	)
 
 	authToken, err := utils.GenerateJWT(output.ID)
