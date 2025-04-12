@@ -5,8 +5,9 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt"
-	"github.com/yrnThiago/api-server-go/internal/keys"
 	"golang.org/x/crypto/bcrypt"
+
+	"github.com/yrnThiago/api-server-go/internal/keys"
 )
 
 func GenerateJWT(userID string) (string, error) {
@@ -48,8 +49,4 @@ func CheckPasswordHash(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 
 	return err == nil
-}
-
-func ValidCredentials(password, hash string) bool {
-	return CheckPasswordHash(password, hash)
 }
