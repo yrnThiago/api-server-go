@@ -23,20 +23,23 @@ func Init() {
 		ContextKey: "requestid",
 	}))
 
-	// Middlewares globais
+	// Global middlewares
 	app.Use(middlewares.LoggingMiddleware)
 	app.Use(middlewares.ErrorMiddleware)
 
-	// Rotas públicas
+	// Public routes
 	public := app.Group("/public")
 	public.Mount("/health", configroutes.HealthRouter())
 	public.Mount("/auth", configroutes.AuthRouter())
 
-	// Rotas privadas
+	// Private routes
 	private := app.Group("/private", middlewares.AuthMiddleware)
 	private.Mount("/orders", configroutes.OrderRouter())
 	private.Mount("/products", configroutes.ProductRouter())
 	private.Mount("/users", configroutes.UserRouter())
+
+	// Global not found middleware
+	app.Use(middlewares.NotFoundMiddleware)
 
 	config.Logger.Info(
 		"server listening",

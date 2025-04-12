@@ -9,8 +9,10 @@ import (
 	"github.com/yrnThiago/api-server-go/config"
 )
 
-var ConsumerContext jetstream.ConsumeContext
-var Consumer jetstream.Consumer
+var (
+	ConsumerContext jetstream.ConsumeContext
+	Consumer        jetstream.Consumer
+)
 
 func StartOrdersConsumer() {
 	ctx := context.Background()

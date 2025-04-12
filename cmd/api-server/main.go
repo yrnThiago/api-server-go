@@ -19,6 +19,7 @@ func main() {
 
 	publisher.StartOrdersPublisher()
 	consumer.StartOrdersConsumer()
+
 	go consumer.ConsumeMsgs()
 	go fiber.Init()
 
