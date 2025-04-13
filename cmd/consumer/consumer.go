@@ -3,10 +3,12 @@ package consumer
 import (
 	"context"
 	"log"
+	"strings"
 
 	"github.com/nats-io/nats.go/jetstream"
 
 	"github.com/yrnThiago/api-server-go/config"
+	"go.uber.org/zap"
 )
 
 var (
@@ -36,7 +38,13 @@ func StartOrdersConsumer() {
 func ConsumeMsgs() {
 	var err error
 	ConsumerContext, err = Consumer.Consume(func(msg jetstream.Msg) {
-		log.Printf("Received message: %s", string(msg.Subject()))
+		orderID := strings.Replace(string(msg.Subject()), "orders.", "", 1)
+
+		config.Logger.Info(
+			"new order received",
+			zap.String("order id", orderID),
+		)
+
 		msg.Ack()
 	})
 	if err != nil {

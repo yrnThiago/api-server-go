@@ -6,8 +6,8 @@ import (
 	"log"
 
 	"github.com/nats-io/nats.go/jetstream"
-
 	"github.com/yrnThiago/api-server-go/config"
+	"go.uber.org/zap"
 )
 
 func Publish(orderId string) {
@@ -17,7 +17,10 @@ func Publish(orderId string) {
 		log.Println(err)
 	}
 
-	log.Printf("Published message %s", orderId)
+	config.Logger.Info(
+		"publishing new order",
+		zap.String("order id", orderId),
+	)
 }
 
 func StartOrdersPublisher() {
