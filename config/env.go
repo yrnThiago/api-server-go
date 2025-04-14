@@ -17,6 +17,9 @@ type EnvVariables struct {
 	COOKIE_NAME      string
 	SECRET_KEY       string
 	NEW_ORDERS_TOPIC string
+	RDB_ADDRESS      string
+	RDB_PASSWORD     string
+	RDB_DB           string
 	LOGS_FILE_NAME   string
 }
 
@@ -38,6 +41,9 @@ func Init() {
 		COOKIE_NAME:      os.Getenv("COOKIE_NAME"),
 		SECRET_KEY:       os.Getenv("SECRET_KEY"),
 		NEW_ORDERS_TOPIC: os.Getenv("NEW_ORDERS_TOPIC"),
+		RDB_ADDRESS:      os.Getenv("RDB_ADDRESS"),
+		RDB_PASSWORD:     os.Getenv("RDB_PASSWORD"),
+		RDB_DB:           os.Getenv("RDB_DB"),
 		LOGS_FILE_NAME:   os.Getenv("LOGS_FILE_NAME"),
 	}
 }

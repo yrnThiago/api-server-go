@@ -3,6 +3,7 @@ package config
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	"github.com/redis/go-redis/v9"
 )
@@ -26,7 +27,9 @@ func NewRedisClient(addr, password string, db int) *Redis {
 }
 
 func RedisInit() {
-	RedisClient = NewRedisClient("localhost:6379", "", 0)
+	rdbDb, _ := strconv.Atoi(Env.RDB_DB)
+	RedisClient = NewRedisClient(Env.RDB_ADDRESS, Env.RDB_PASSWORD, rdbDb)
+
 }
 
 func (r *Redis) Set(ctx context.Context, key, value string) {
