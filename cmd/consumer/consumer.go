@@ -11,17 +11,15 @@ import (
 	"github.com/yrnThiago/api-server-go/config"
 )
 
-type Cons struct {
-	Js     jetstream.JetStream
-	Ctx    context.Context
-	Config jetstream.ConsumerConfig
+type Consumer struct {
+	Js          jetstream.JetStream
+	Ctx         context.Context
+	Config      jetstream.ConsumerConfig
+	ConsumerCtx jetstream.Consumer
 }
 
-var Consumer jetstream.Consumer
-var ConsumerContext jetstream.ConsumeContext
-
-func NewConsumer(name, durable, filterSubject string) *Cons {
-	return &Cons{
+func NewConsumer(name, durable, filterSubject string) *Consumer {
+	return &Consumer{
 		Js:  config.JS,
 		Ctx: context.Background(),
 		Config: jetstream.ConsumerConfig{
@@ -34,22 +32,21 @@ func NewConsumer(name, durable, filterSubject string) *Cons {
 	}
 }
 
-func (c *Cons) CreateStream() {
+func (c *Consumer) CreateStream() {
 	stream, err := c.Js.Stream(c.Ctx, "orders")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	Consumer, err = stream.CreateOrUpdateConsumer(c.Ctx, c.Config)
+	c.ConsumerCtx, err = stream.CreateOrUpdateConsumer(c.Ctx, c.Config)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func (c *Cons) ConsumeSubject() {
-	var err error
-	ConsumerContext, err = Consumer.Consume(func(msg jetstream.Msg) {
-		orderID := strings.Replace(string(msg.Subject()), c.Config.FilterSubject, "", 1)
+func (c *Consumer) ConsumeSubject() {
+	_, err := c.ConsumerCtx.Consume(func(msg jetstream.Msg) {
+		orderID := strings.Replace(string(msg.Subject()), "orders.", "", 1)
 
 		config.Logger.Info(
 			"new order received",
@@ -62,7 +59,6 @@ func (c *Cons) ConsumeSubject() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 }
 
 func ConsumerInit() {
