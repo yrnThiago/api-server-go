@@ -6,39 +6,50 @@ import (
 	"strings"
 
 	"github.com/nats-io/nats.go/jetstream"
+	"go.uber.org/zap"
 
 	"github.com/yrnThiago/api-server-go/config"
-	"go.uber.org/zap"
 )
 
-var (
-	ConsumerContext jetstream.ConsumeContext
-	Consumer        jetstream.Consumer
-)
+type Cons struct {
+	Js     jetstream.JetStream
+	Ctx    context.Context
+	Config jetstream.ConsumerConfig
+}
 
-func StartOrdersConsumer() {
-	ctx := context.Background()
-	stream, err := config.JS.Stream(ctx, "orders")
+var Consumer jetstream.Consumer
+var ConsumerContext jetstream.ConsumeContext
+
+func NewConsumer(name, durable, filterSubject string) *Cons {
+	return &Cons{
+		Js:  config.JS,
+		Ctx: context.Background(),
+		Config: jetstream.ConsumerConfig{
+			Name:          name,
+			Durable:       durable,
+			FilterSubject: filterSubject,
+			AckPolicy:     jetstream.AckExplicitPolicy,
+			DeliverPolicy: jetstream.DeliverAllPolicy,
+		},
+	}
+}
+
+func (c *Cons) CreateStream() {
+	stream, err := c.Js.Stream(c.Ctx, "orders")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	Consumer, err = stream.CreateOrUpdateConsumer(ctx, jetstream.ConsumerConfig{
-		Name:          "order_processor",
-		Durable:       "order_processor",
-		FilterSubject: "orders.>",
-		AckPolicy:     jetstream.AckExplicitPolicy,
-		DeliverPolicy: jetstream.DeliverAllPolicy,
-	})
+	Consumer, err = stream.CreateOrUpdateConsumer(c.Ctx, c.Config)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func ConsumeMsgs() {
+func (c *Cons) ConsumeSubject() {
 	var err error
 	ConsumerContext, err = Consumer.Consume(func(msg jetstream.Msg) {
-		orderID := strings.Replace(string(msg.Subject()), "orders.", "", 1)
+		orderID := strings.Replace(string(msg.Subject()), c.Config.FilterSubject, "", 1)
 
 		config.Logger.Info(
 			"new order received",
@@ -47,7 +58,15 @@ func ConsumeMsgs() {
 
 		msg.Ack()
 	})
+
 	if err != nil {
 		log.Fatal(err)
 	}
+
+}
+
+func ConsumerInit() {
+	ordersConsumer := NewConsumer("order_processor", "order_processor", "orders.>")
+	ordersConsumer.CreateStream()
+	ordersConsumer.ConsumeSubject()
 }

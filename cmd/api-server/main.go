@@ -17,10 +17,9 @@ func main() {
 	config.LoggerInit()
 	config.NatsInit()
 
-	publisher.StartOrdersPublisher()
-	consumer.StartOrdersConsumer()
+	publisher.PubInit()
+	consumer.ConsumerInit()
 
-	go consumer.ConsumeMsgs()
 	go fiber.Init()
 
 	quit := make(chan os.Signal, 1)

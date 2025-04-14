@@ -5,35 +5,58 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/jetstream"
-	"github.com/yrnThiago/api-server-go/config"
 	"go.uber.org/zap"
+
+	"github.com/yrnThiago/api-server-go/config"
 )
 
-func Publish(orderId string) {
-	ctx := context.Background()
-	_, err := config.JS.Publish(ctx, fmt.Sprintf("orders.%s", orderId), []byte("new order"))
+var OrdersPub *Pub
+
+type Pub struct {
+	NatsConn *nats.Conn
+	Js       jetstream.JetStream
+	Ctx      context.Context
+	Config   jetstream.StreamConfig
+}
+
+func NewPub(name, description, subject string) *Pub {
+	return &Pub{
+		NatsConn: config.NC,
+		Js:       config.JS,
+		Ctx:      context.Background(),
+		Config: jetstream.StreamConfig{
+			Name:        name,
+			Description: description,
+			Subjects: []string{
+				subject,
+			},
+			MaxBytes: 1024 * 1024 * 1024,
+		},
+	}
+}
+
+func (p *Pub) Publish(msg string) {
+	_, err := p.Js.Publish(p.Ctx, fmt.Sprintf("orders.%s", msg), []byte("new order"))
 	if err != nil {
 		log.Println(err)
 	}
 
 	config.Logger.Info(
 		"publishing new order",
-		zap.String("order id", orderId),
+		zap.String("order id", msg),
 	)
 }
 
-func StartOrdersPublisher() {
-	ctx := context.Background()
-	_, err := config.JS.CreateOrUpdateStream(ctx, jetstream.StreamConfig{
-		Name:        "orders",
-		Description: "Messages for orders",
-		Subjects: []string{
-			"orders.>",
-		},
-		MaxBytes: 1024 * 1024 * 1024,
-	})
+func (p *Pub) CreateStream() {
+	_, err := p.Js.CreateOrUpdateStream(p.Ctx, p.Config)
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func PubInit() {
+	OrdersPub = NewPub("orders", "Msgs for orders", "orders.>")
+	OrdersPub.CreateStream()
 }

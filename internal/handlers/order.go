@@ -38,7 +38,7 @@ func (p *OrderHandlers) Add(c *fiber.Ctx) error {
 		return err
 	}
 
-	go publisher.Publish(output.ID)
+	go publisher.OrdersPub.Publish(output.ID)
 
 	c.Set("Content-Type", "application/json")
 	return c.Status(fiber.StatusCreated).JSON(output)
