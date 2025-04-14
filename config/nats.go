@@ -19,7 +19,6 @@ func NatsInit() {
 		log.Fatal(err)
 	}
 
-	// defer nc.Close()
 	JS, err = jetstream.New(NC)
 	if err != nil {
 		log.Fatal(err)

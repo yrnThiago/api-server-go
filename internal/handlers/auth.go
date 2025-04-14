@@ -1,6 +1,9 @@
 package handlers
 
 import (
+	"context"
+	"encoding/json"
+	"log"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -53,6 +56,13 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 			zap.Error(err),
 		)
 	}
+
+	userJson, err := json.Marshal(output)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	config.RedisClient.Set(context.Background(), "user-"+output.ID, string(userJson))
 
 	cookie := &fiber.Cookie{}
 	cookie.Name = config.Env.COOKIE_NAME

@@ -16,6 +16,7 @@ func main() {
 	config.DatabaseInit()
 	config.LoggerInit()
 	config.NatsInit()
+	config.RedisInit()
 
 	publisher.PubInit()
 	consumer.ConsumerInit()
