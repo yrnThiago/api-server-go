@@ -21,6 +21,7 @@ func NewAuthRouter(authHandlers *handlers.AuthHandler) *AuthRouter {
 func (h *AuthRouter) GetRouter() *fiber.App {
 	router := fiber.New()
 	router.Post("/login", h.AuthHandlers.Login)
+	router.Get("/logout", h.AuthHandlers.Logout)
 
 	return router
 }

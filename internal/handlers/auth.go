@@ -75,3 +75,14 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 	utils.SetCookie(c, cookie)
 	return c.JSON(TestResponse{"user logged in"})
 }
+
+func (h *AuthHandler) Logout(c *fiber.Ctx) error {
+	cookie := &fiber.Cookie{}
+	cookie.Name = config.Env.COOKIE_NAME
+	cookie.Value = "deleted"
+	cookie.Expires = time.Now().Add(-3 * time.Second)
+	cookie.HTTPOnly = true
+
+	utils.SetCookie(c, cookie)
+	return c.JSON(TestResponse{"user logout"})
+}
