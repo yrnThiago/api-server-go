@@ -13,8 +13,8 @@ import (
 
 func main() {
 	config.Init()
-	config.DatabaseInit()
 	config.LoggerInit()
+	config.DatabaseInit()
 	config.NatsInit()
 	config.RedisInit()
 

@@ -2,7 +2,6 @@ package consumer
 
 import (
 	"context"
-	"log"
 	"strings"
 
 	"github.com/nats-io/nats.go/jetstream"
@@ -35,12 +34,12 @@ func NewConsumer(name, durable, filterSubject string) *Consumer {
 func (c *Consumer) CreateStream() {
 	stream, err := c.Js.Stream(c.Ctx, "orders")
 	if err != nil {
-		log.Fatal(err)
+		config.Logger.Fatal("err", zap.Error(err))
 	}
 
 	c.ConsumerCtx, err = stream.CreateOrUpdateConsumer(c.Ctx, c.Config)
 	if err != nil {
-		log.Fatal(err)
+		config.Logger.Fatal("err", zap.Error(err))
 	}
 }
 
@@ -55,9 +54,8 @@ func (c *Consumer) ConsumeSubject() {
 
 		msg.Ack()
 	})
-
 	if err != nil {
-		log.Fatal(err)
+		config.Logger.Fatal("err", zap.Error(err))
 	}
 }
 
@@ -65,4 +63,8 @@ func ConsumerInit() {
 	ordersConsumer := NewConsumer("order_processor", "order_processor", "orders.>")
 	ordersConsumer.CreateStream()
 	ordersConsumer.ConsumeSubject()
+
+	config.Logger.Info(
+		"consumers successfully initialized",
+	)
 }

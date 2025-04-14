@@ -3,7 +3,6 @@ package publisher
 import (
 	"context"
 	"fmt"
-	"log"
 
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/jetstream"
@@ -40,7 +39,10 @@ func NewPub(name, description, subject string) *Pub {
 func (p *Pub) Publish(msg string) {
 	_, err := p.Js.Publish(p.Ctx, fmt.Sprintf("orders.%s", msg), []byte("new order"))
 	if err != nil {
-		log.Println(err)
+		config.Logger.Warn(
+			"msg cant be published",
+			zap.Error(err),
+		)
 	}
 
 	config.Logger.Info(
@@ -52,11 +54,18 @@ func (p *Pub) Publish(msg string) {
 func (p *Pub) CreateStream() {
 	_, err := p.Js.CreateOrUpdateStream(p.Ctx, p.Config)
 	if err != nil {
-		log.Fatal(err)
+		config.Logger.Fatal(
+			"publisher cant be initialized",
+			zap.Error(err),
+		)
 	}
 }
 
 func PubInit() {
 	OrdersPub = NewPub("orders", "Msgs for orders", "orders.>")
 	OrdersPub.CreateStream()
+
+	config.Logger.Info(
+		"publishers successfully initialized",
+	)
 }

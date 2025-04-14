@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/yrnThiago/api-server-go/internal/models"
+	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -23,9 +24,16 @@ func getDatabaseUrl() string {
 func DatabaseInit() {
 	db, err := gorm.Open(mysql.Open(getDatabaseUrl()), &gorm.Config{})
 	if err != nil {
-		panic("failed to connect database")
+		Logger.Panic("failed to connect to database")
 	}
 
 	db.Migrator().AutoMigrate(&models.User{}, &models.Product{}, &models.Order{}, &models.OrderItems{})
 	DB = db
+
+	Logger.Info(
+		"db successfully initialized",
+		zap.String("host", Env.DB_HOST),
+		zap.String("port", Env.DB_PORT),
+		zap.String("db name", Env.DB_NAME),
+	)
 }
