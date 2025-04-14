@@ -4,7 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type TestResponse struct {
+type ResponseMsg struct {
 	Message string `json:"message"`
 }
 
@@ -15,5 +15,5 @@ func NewHealthHandlers() *HealthHandler {
 }
 
 func (h *HealthHandler) Ping(c *fiber.Ctx) error {
-	return c.JSON(&TestResponse{"pong"})
+	return c.JSON(&ResponseMsg{"pong"})
 }
