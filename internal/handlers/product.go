@@ -51,6 +51,10 @@ func (p *ProductHandlers) GetMany(c *fiber.Ctx) error {
 		return err
 	}
 
+	if output == nil {
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "no product was created"})
+	}
+
 	c.Set("Content-Type", "application/json")
 	return c.Status(fiber.StatusOK).JSON(output)
 }

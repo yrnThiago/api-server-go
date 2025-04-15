@@ -31,6 +31,10 @@ func (p *OrderHandlers) Add(c *fiber.Ctx) error {
 		return err
 	}
 
+	if len(input.Items) == 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.ErrBadRequest)
+	}
+
 	output, err := p.OrderUseCase.Add(input)
 	if err != nil {
 		errorInfo := utils.NewErrorInfo(fiber.StatusBadRequest, fiber.ErrBadRequest.Message)
@@ -53,6 +57,10 @@ func (p *OrderHandlers) GetMany(c *fiber.Ctx) error {
 		)
 		c.Locals(string(keys.ErrorKey), errorInfo)
 		return err
+	}
+
+	if output == nil {
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "no order was created"})
 	}
 
 	c.Set("Content-Type", "application/json")

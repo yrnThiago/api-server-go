@@ -13,9 +13,9 @@ type UserInputDto struct {
 }
 
 type UserOutputDto struct {
-	gorm.Model
 	ID    string
 	email string
+	gorm.Model
 }
 
 type UserUseCase struct {

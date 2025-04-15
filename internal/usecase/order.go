@@ -1,6 +1,9 @@
 package usecase
 
-import "github.com/yrnThiago/api-server-go/internal/models"
+import (
+	"github.com/yrnThiago/api-server-go/internal/models"
+	"gorm.io/gorm"
+)
 
 var WAITING_PAYMENT = "Aguardando pagamento"
 
@@ -13,6 +16,7 @@ type OrderOutputDto struct {
 	ID     string
 	Status string
 	Items  []models.OrderItems
+	gorm.Model
 }
 
 type OrderUseCase struct {

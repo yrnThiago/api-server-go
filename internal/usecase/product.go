@@ -14,11 +14,11 @@ type ProductInputDto struct {
 }
 
 type ProductOutputDto struct {
-	gorm.Model
 	ID    string
 	Name  string
 	Price float64
 	Stock int
+	gorm.Model
 }
 
 type ProductUseCase struct {
