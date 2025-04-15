@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"fmt"
+
 	"github.com/yrnThiago/api-server-go/internal/models"
 	"gorm.io/gorm"
 )
@@ -20,18 +22,44 @@ type OrderOutputDto struct {
 }
 
 type OrderUseCase struct {
-	orderRepository models.OrderRepository
+	orderRepository   models.OrderRepository
+	productRepository models.ProductRepository
 }
 
-func NewOrderUseCase(orderRepository models.OrderRepository) *OrderUseCase {
+func NewOrderUseCase(orderRepository models.OrderRepository, productRepository models.ProductRepository) *OrderUseCase {
 	return &OrderUseCase{
-		orderRepository: orderRepository,
+		orderRepository:   orderRepository,
+		productRepository: productRepository,
 	}
+}
+
+func (u *OrderUseCase) validateOrderItems(items []models.OrderItems) error {
+	for _, item := range items {
+		_, err := u.productRepository.GetById(item.Product.ID)
+		if err != nil {
+			return err
+		}
+
+		if item.Qty == 0 {
+			return fmt.Errorf("qty item must be 1 or more")
+		}
+	}
+
+	return nil
 }
 
 func (u *OrderUseCase) Add(
 	input OrderInputDto,
 ) (*OrderOutputDto, error) {
+
+	if len(input.Items) == 0 {
+		return nil, fmt.Errorf("order must contain at least one item")
+	}
+
+	if err := u.validateOrderItems(input.Items); err != nil {
+		return nil, err
+	}
+
 	order := models.NewOrder(input.Items, WAITING_PAYMENT)
 	err := u.orderRepository.Add(order)
 	if err != nil {

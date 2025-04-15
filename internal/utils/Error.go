@@ -1,8 +1,8 @@
 package utils
 
 type ErrorInfo struct {
-	StatusCode int
-	Message    string
+	StatusCode int    `json:"statusCode"`
+	Message    string `json:"message"`
 }
 
 func NewErrorInfo(statusCode int, message string) *ErrorInfo {

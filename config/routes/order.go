@@ -10,8 +10,10 @@ import (
 )
 
 func OrderRouter() *fiber.App {
+	productRepository := repository.NewProductRepositoryMysql(config.DB)
+
 	repositoryOrders := repository.NewOrderRepositoryMysql(config.DB)
-	orderUseCase := usecase.NewOrderUseCase(repositoryOrders)
+	orderUseCase := usecase.NewOrderUseCase(repositoryOrders, productRepository)
 	orderHandlers := handlers.NewOrderHandlers(orderUseCase)
 	orderRouter := routes.NewOrderRouter(orderHandlers)
 

@@ -30,14 +30,14 @@ func (p *OrderHandlers) Add(c *fiber.Ctx) error {
 		c.Locals(string(keys.ErrorKey), errorInfo)
 		return err
 	}
-
-	if len(input.Items) == 0 {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.ErrBadRequest)
-	}
-
+	//
+	// if len(input.Items) == 0 {
+	// 	return c.Status(fiber.StatusBadRequest).JSON(fiber.ErrBadRequest)
+	// }
+	//
 	output, err := p.OrderUseCase.Add(input)
 	if err != nil {
-		errorInfo := utils.NewErrorInfo(fiber.StatusBadRequest, fiber.ErrBadRequest.Message)
+		errorInfo := utils.NewErrorInfo(fiber.StatusBadRequest, err.Error())
 		c.Locals(string(keys.ErrorKey), errorInfo)
 		return err
 	}
@@ -45,7 +45,9 @@ func (p *OrderHandlers) Add(c *fiber.Ctx) error {
 	go publisher.OrdersPub.Publish(output.ID)
 
 	c.Set("Content-Type", "application/json")
+
 	return c.Status(fiber.StatusCreated).JSON(output)
+	// return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": fmt.Sprintf("order id: %s created", output.ID)})
 }
 
 func (p *OrderHandlers) GetMany(c *fiber.Ctx) error {

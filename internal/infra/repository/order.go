@@ -20,7 +20,7 @@ func NewOrderRepositoryMysql(db *gorm.DB) *OrderRepositoryMysql {
 }
 
 func (r *OrderRepositoryMysql) Add(order *models.Order) error {
-	res := r.DB.Create(order)
+	res := r.DB.Create(order).Omit("Items.Product")
 
 	if res.Error != nil {
 		return res.Error
