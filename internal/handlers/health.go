@@ -4,10 +4,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type ResponseMsg struct {
-	Message string `json:"message"`
-}
-
 type HealthHandler struct{}
 
 func NewHealthHandlers() *HealthHandler {
@@ -15,5 +11,5 @@ func NewHealthHandlers() *HealthHandler {
 }
 
 func (h *HealthHandler) Ping(c *fiber.Ctx) error {
-	return c.JSON(&ResponseMsg{"pong"})
+	return c.JSON(fiber.Map{"message": "pong"})
 }

@@ -73,7 +73,7 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 	cookie.Path = "/"
 
 	utils.SetCookie(c, cookie)
-	return c.JSON(ResponseMsg{"user logged in"})
+	return c.JSON(fiber.Map{"message": "user logged in"})
 }
 
 func (h *AuthHandler) Logout(c *fiber.Ctx) error {
@@ -84,5 +84,5 @@ func (h *AuthHandler) Logout(c *fiber.Ctx) error {
 	cookie.HTTPOnly = true
 
 	utils.SetCookie(c, cookie)
-	return c.JSON(ResponseMsg{"user logout"})
+	return c.JSON(fiber.Map{"message": "user logout"})
 }
