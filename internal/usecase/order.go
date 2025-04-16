@@ -1,8 +1,7 @@
 package usecase
 
 import (
-	"fmt"
-
+	"github.com/google/uuid"
 	"github.com/yrnThiago/api-server-go/internal/models"
 	"gorm.io/gorm"
 )
@@ -10,8 +9,15 @@ import (
 var WAITING_PAYMENT = "Aguardando pagamento"
 
 type OrderInputDto struct {
-	Items  []models.OrderItems
+	Items  []OrderItemInputDto `validate:"required,dive"`
 	Status string
+}
+
+type OrderItemInputDto struct {
+	OrderID   string         `gorm:"index"                json:"-"`
+	ProductID string         `json:"-"`
+	Product   models.Product `gorm:"foreignKey:ProductID" validate:"required"`
+	Qty       int            `json:"qty" validate:"required,min=1"`
 }
 
 type OrderOutputDto struct {
@@ -33,15 +39,31 @@ func NewOrderUseCase(orderRepository models.OrderRepository, productRepository m
 	}
 }
 
-func (u *OrderUseCase) validateOrderItems(items []models.OrderItems) error {
+func (u *OrderUseCase) NewOrderItems(items []OrderItemInputDto) []models.OrderItems {
+	var orderItems []models.OrderItems
+	for _, item := range items {
+		orderItems = append(orderItems, models.OrderItems{
+			ProductID: item.Product.ID,
+			Qty:       item.Qty,
+		})
+	}
+
+	return orderItems
+}
+
+func (u *OrderUseCase) NewOrder(items []OrderItemInputDto, status string) *models.Order {
+	return &models.Order{
+		ID:     uuid.New().String(),
+		Status: status,
+		Items:  u.NewOrderItems(items),
+	}
+}
+
+func (u *OrderUseCase) validateOrderItems(items []OrderItemInputDto) error {
 	for _, item := range items {
 		_, err := u.productRepository.GetById(item.Product.ID)
 		if err != nil {
 			return err
-		}
-
-		if item.Qty == 0 {
-			return fmt.Errorf("qty item must be 1 or more")
 		}
 	}
 
@@ -52,15 +74,11 @@ func (u *OrderUseCase) Add(
 	input OrderInputDto,
 ) (*OrderOutputDto, error) {
 
-	if len(input.Items) == 0 {
-		return nil, fmt.Errorf("order must contain at least one item")
-	}
-
 	if err := u.validateOrderItems(input.Items); err != nil {
 		return nil, err
 	}
 
-	order := models.NewOrder(input.Items, WAITING_PAYMENT)
+	order := u.NewOrder(input.Items, WAITING_PAYMENT)
 	err := u.orderRepository.Add(order)
 	if err != nil {
 		return nil, err

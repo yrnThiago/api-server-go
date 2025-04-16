@@ -8,9 +8,9 @@ import (
 )
 
 type ProductInputDto struct {
-	Name  string
-	Price float64
-	Stock int
+	Name  string  `validate:"required"`
+	Price float64 `validate:"required,gt=0"`
+	Stock int     `validate:"required"`
 }
 
 type ProductOutputDto struct {

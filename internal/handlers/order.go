@@ -30,11 +30,12 @@ func (p *OrderHandlers) Add(c *fiber.Ctx) error {
 		c.Locals(string(keys.ErrorKey), errorInfo)
 		return err
 	}
-	//
-	// if len(input.Items) == 0 {
-	// 	return c.Status(fiber.StatusBadRequest).JSON(fiber.ErrBadRequest)
-	// }
-	//
+
+	err = utils.ValidateStruct(input)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+
 	output, err := p.OrderUseCase.Add(input)
 	if err != nil {
 		errorInfo := utils.NewErrorInfo(fiber.StatusBadRequest, err.Error())

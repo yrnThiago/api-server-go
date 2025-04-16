@@ -29,6 +29,11 @@ func (p *ProductHandlers) Add(c *fiber.Ctx) error {
 		return err
 	}
 
+	err = utils.ValidateStruct(input)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+
 	output, err := p.ProductUseCase.Add(input)
 	if err != nil {
 		errorInfo := utils.NewErrorInfo(fiber.StatusBadRequest, fiber.ErrBadRequest.Message)

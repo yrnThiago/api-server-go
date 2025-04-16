@@ -1,7 +1,6 @@
 package models
 
 import (
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -25,12 +24,4 @@ type Order struct {
 	Status string
 	Items  []OrderItems `gorm:"foreignKey:OrderID"`
 	gorm.Model
-}
-
-func NewOrder(items []OrderItems, status string) *Order {
-	return &Order{
-		ID:     uuid.New().String(),
-		Status: status,
-		Items:  items,
-	}
 }
