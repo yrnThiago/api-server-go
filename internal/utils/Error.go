@@ -2,12 +2,12 @@ package utils
 
 type ErrorInfo struct {
 	StatusCode int    `json:"statusCode"`
-	Message    string `json:"message"`
+	Error      string `json:"error"`
 }
 
-func NewErrorInfo(statusCode int, message string) *ErrorInfo {
+func NewErrorInfo(statusCode int, err string) *ErrorInfo {
 	return &ErrorInfo{
 		StatusCode: statusCode,
-		Message:    message,
+		Error:      err,
 	}
 }

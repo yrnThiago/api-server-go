@@ -18,10 +18,10 @@ func ErrorMiddleware(c *fiber.Ctx) error {
 
 		config.Logger.Info("error occurred",
 			zap.Int("status", contextError.StatusCode),
-			zap.String("message", contextError.Message),
+			zap.String("message", contextError.Error),
 		)
 
-		return c.Status(contextError.StatusCode).JSON(contextError)
+		return c.Status(contextError.StatusCode).JSON(fiber.Map{"error": contextError.Error})
 	}
 
 	return nil

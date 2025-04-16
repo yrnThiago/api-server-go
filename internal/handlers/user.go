@@ -29,9 +29,10 @@ func (p *UserHandlers) Add(c *fiber.Ctx) error {
 		return err
 	}
 
-	err = utils.ValidateStruct(input)
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	validationError := utils.ValidateStruct(input)
+	if validationError != nil {
+		c.Locals(string(keys.ErrorKey), validationError)
+		return nil
 	}
 
 	input.Password, err = utils.GenerateHashPassword(input.Password)

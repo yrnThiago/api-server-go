@@ -20,7 +20,7 @@ func AuthMiddleware(c *fiber.Ctx) error {
 	if err != nil {
 		errorInfo := utils.NewErrorInfo(http.StatusForbidden, "access denied")
 		c.Locals(string(keys.ErrorKey), errorInfo)
-		return errors.New(errorInfo.Message)
+		return errors.New(errorInfo.Error)
 	}
 
 	claims := token.Claims.(jwt.MapClaims)
