@@ -2,8 +2,6 @@ package handlers
 
 import (
 	"github.com/gofiber/fiber/v2"
-
-	"github.com/yrnThiago/api-server-go/internal/keys"
 	"github.com/yrnThiago/api-server-go/internal/usecase"
 	"github.com/yrnThiago/api-server-go/internal/utils"
 )
@@ -24,15 +22,12 @@ func (p *UserHandlers) Add(c *fiber.Ctx) error {
 	var input usecase.UserInputDto
 	err := c.BodyParser(&input)
 	if err != nil {
-		errorInfo := utils.NewErrorInfo(fiber.ErrBadRequest.Message, fiber.StatusBadRequest, fiber.ErrBadRequest.Message)
-		c.Locals(string(keys.ErrorKey), errorInfo)
-		return err
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "user body missing"})
 	}
 
 	validationError := utils.ValidateStruct(input)
 	if validationError != nil {
-		c.Locals(string(keys.ErrorKey), validationError)
-		return nil
+		return utils.NewErrorInfo("ValidationError", validationError.Error())
 	}
 
 	input.Password, err = utils.GenerateHashPassword(input.Password)
@@ -42,8 +37,6 @@ func (p *UserHandlers) Add(c *fiber.Ctx) error {
 
 	output, err := p.UserUseCase.Add(input)
 	if err != nil {
-		errorInfo := utils.NewErrorInfo(fiber.ErrBadRequest.Message, fiber.StatusBadRequest, fiber.ErrBadRequest.Message)
-		c.Locals(string(keys.ErrorKey), errorInfo)
 		return err
 	}
 
@@ -54,12 +47,6 @@ func (p *UserHandlers) Add(c *fiber.Ctx) error {
 func (p *UserHandlers) GetMany(c *fiber.Ctx) error {
 	output, err := p.UserUseCase.GetMany()
 	if err != nil {
-		errorInfo := utils.NewErrorInfo(
-			fiber.ErrInternalServerError.Message,
-			fiber.StatusInternalServerError,
-			fiber.ErrInternalServerError.Message,
-		)
-		c.Locals(string(keys.ErrorKey), errorInfo)
 		return err
 	}
 
@@ -79,8 +66,6 @@ func (p *UserHandlers) GetById(c *fiber.Ctx) error {
 
 	output, err := p.UserUseCase.GetById(id)
 	if err != nil {
-		errorInfo := utils.NewErrorInfo(fiber.ErrBadRequest.Message, fiber.StatusBadRequest, fiber.ErrBadRequest.Message)
-		c.Locals(string(keys.ErrorKey), errorInfo)
 		return err
 	}
 
@@ -96,8 +81,6 @@ func (p *UserHandlers) GetByEmail(c *fiber.Ctx) error {
 
 	output, err := p.UserUseCase.GetByEmail(email)
 	if err != nil {
-		errorInfo := utils.NewErrorInfo(fiber.ErrBadRequest.Message, fiber.StatusBadRequest, fiber.ErrBadRequest.Message)
-		c.Locals(string(keys.ErrorKey), errorInfo)
 		return err
 	}
 
@@ -109,9 +92,7 @@ func (p *UserHandlers) UpdateById(c *fiber.Ctx) error {
 	var input usecase.UserInputDto
 	err := c.BodyParser(&input)
 	if err != nil {
-		errorInfo := utils.NewErrorInfo(fiber.ErrBadRequest.Message, fiber.StatusBadRequest, fiber.ErrBadRequest.Message)
-		c.Locals(string(keys.ErrorKey), errorInfo)
-		return err
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "user body missing"})
 	}
 
 	id := c.Params("id")
@@ -121,19 +102,11 @@ func (p *UserHandlers) UpdateById(c *fiber.Ctx) error {
 
 	_, err = p.UserUseCase.GetById(id)
 	if err != nil {
-		errorInfo := utils.NewErrorInfo(
-			fiber.ErrInternalServerError.Message,
-			fiber.StatusInternalServerError,
-			fiber.ErrInternalServerError.Message,
-		)
-		c.Locals(string(keys.ErrorKey), errorInfo)
 		return err
 	}
 
 	new, err := p.UserUseCase.UpdateById(id, &input)
 	if err != nil {
-		errorInfo := utils.NewErrorInfo(fiber.ErrBadRequest.Message, fiber.StatusBadRequest, fiber.ErrBadRequest.Message)
-		c.Locals(string(keys.ErrorKey), errorInfo)
 		return err
 	}
 
@@ -148,8 +121,6 @@ func (p *UserHandlers) DeleteById(c *fiber.Ctx) error {
 	}
 	err := p.UserUseCase.DeleteById(id)
 	if err != nil {
-		errorInfo := utils.NewErrorInfo(fiber.ErrBadRequest.Message, fiber.StatusBadRequest, fiber.ErrBadRequest.Message)
-		c.Locals(string(keys.ErrorKey), errorInfo)
 		return err
 	}
 

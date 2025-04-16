@@ -2,8 +2,6 @@ package handlers
 
 import (
 	"github.com/gofiber/fiber/v2"
-
-	"github.com/yrnThiago/api-server-go/internal/keys"
 	"github.com/yrnThiago/api-server-go/internal/usecase"
 	"github.com/yrnThiago/api-server-go/internal/utils"
 )
@@ -24,21 +22,16 @@ func (p *ProductHandlers) Add(c *fiber.Ctx) error {
 	var input usecase.ProductInputDto
 	err := c.BodyParser(&input)
 	if err != nil {
-		errorInfo := utils.NewErrorInfo(fiber.ErrBadRequest.Message, fiber.StatusBadRequest, fiber.ErrBadRequest.Message)
-		c.Locals(string(keys.ErrorKey), errorInfo)
-		return err
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "product body missing"})
 	}
 
 	validationError := utils.ValidateStruct(input)
 	if validationError != nil {
-		c.Locals(string(keys.ErrorKey), validationError)
-		return nil
+		return utils.NewErrorInfo("ValidationError", validationError.Error())
 	}
 
 	output, err := p.ProductUseCase.Add(input)
 	if err != nil {
-		errorInfo := utils.NewErrorInfo(fiber.ErrBadRequest.Message, fiber.StatusBadRequest, fiber.ErrBadRequest.Message)
-		c.Locals(string(keys.ErrorKey), errorInfo)
 		return err
 	}
 
@@ -49,12 +42,6 @@ func (p *ProductHandlers) Add(c *fiber.Ctx) error {
 func (p *ProductHandlers) GetMany(c *fiber.Ctx) error {
 	output, err := p.ProductUseCase.GetMany()
 	if err != nil {
-		errorInfo := utils.NewErrorInfo(
-			fiber.ErrInternalServerError.Message,
-			fiber.StatusInternalServerError,
-			fiber.ErrInternalServerError.Message,
-		)
-		c.Locals(string(keys.ErrorKey), errorInfo)
 		return err
 	}
 
@@ -74,8 +61,6 @@ func (p *ProductHandlers) GetById(c *fiber.Ctx) error {
 
 	output, err := p.ProductUseCase.GetById(id)
 	if err != nil {
-		errorInfo := utils.NewErrorInfo(fiber.ErrBadRequest.Message, fiber.StatusBadRequest, fiber.ErrBadRequest.Message)
-		c.Locals(string(keys.ErrorKey), errorInfo)
 		return err
 	}
 
@@ -87,9 +72,7 @@ func (p *ProductHandlers) UpdateById(c *fiber.Ctx) error {
 	var input usecase.ProductInputDto
 	err := c.BodyParser(&input)
 	if err != nil {
-		errorInfo := utils.NewErrorInfo(fiber.ErrBadRequest.Message, fiber.StatusBadRequest, fiber.ErrBadRequest.Message)
-		c.Locals(string(keys.ErrorKey), errorInfo)
-		return err
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "product body missing"})
 	}
 
 	id := c.Params("id")
@@ -99,19 +82,11 @@ func (p *ProductHandlers) UpdateById(c *fiber.Ctx) error {
 
 	_, err = p.ProductUseCase.GetById(id)
 	if err != nil {
-		errorInfo := utils.NewErrorInfo(
-			fiber.ErrInternalServerError.Message,
-			fiber.StatusInternalServerError,
-			fiber.ErrInternalServerError.Message,
-		)
-		c.Locals(string(keys.ErrorKey), errorInfo)
 		return err
 	}
 
 	new, err := p.ProductUseCase.UpdateById(id, &input)
 	if err != nil {
-		errorInfo := utils.NewErrorInfo(fiber.ErrBadRequest.Message, fiber.StatusBadRequest, fiber.ErrBadRequest.Message)
-		c.Locals(string(keys.ErrorKey), errorInfo)
 		return err
 	}
 
@@ -126,8 +101,6 @@ func (p *ProductHandlers) DeleteById(c *fiber.Ctx) error {
 	}
 	err := p.ProductUseCase.DeleteById(id)
 	if err != nil {
-		errorInfo := utils.NewErrorInfo(fiber.ErrBadRequest.Message, fiber.StatusBadRequest, fiber.ErrBadRequest.Message)
-		c.Locals(string(keys.ErrorKey), errorInfo)
 		return err
 	}
 

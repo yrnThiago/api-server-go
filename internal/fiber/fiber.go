@@ -14,7 +14,11 @@ import (
 )
 
 func Init() {
-	app := fiber.New()
+	app := fiber.New(
+		fiber.Config{
+			ErrorHandler: middlewares.ErrorMiddleware,
+		},
+	)
 
 	app.Use(requestid.New(requestid.Config{
 		Next:       nil,
@@ -25,7 +29,6 @@ func Init() {
 
 	// Global middlewares
 	app.Use(middlewares.LoggingMiddleware)
-	app.Use(middlewares.ErrorMiddleware)
 
 	// Public routes
 	public := app.Group("/public")

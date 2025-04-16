@@ -5,12 +5,11 @@ import (
 	"fmt"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/gofiber/fiber/v2"
 )
 
 var validate *validator.Validate
 
-func ValidateStruct(input any) *ErrorInfo {
+func ValidateStruct(input any) error {
 	var customError string
 	validate = validator.New()
 
@@ -22,7 +21,7 @@ func ValidateStruct(input any) *ErrorInfo {
 			}
 		}
 
-		return NewErrorInfo("ValidationError", fiber.StatusBadRequest, customError)
+		return validateErrs
 	}
 
 	return nil

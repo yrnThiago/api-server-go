@@ -1,8 +1,6 @@
 package middlewares
 
 import (
-	"errors"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt"
 
@@ -17,9 +15,7 @@ func AuthMiddleware(c *fiber.Ctx) error {
 
 	token, err := utils.VerifyJWT(userAuthorization)
 	if err != nil {
-		errorInfo := utils.NewErrorInfo(fiber.ErrForbidden.Message, fiber.StatusForbidden, "access denied")
-		c.Locals(string(keys.ErrorKey), errorInfo)
-		return errors.New(errorInfo.Error)
+		return utils.NewErrorInfo("JWT_INVALID_TOKEN", err.Error())
 	}
 
 	claims := token.Claims.(jwt.MapClaims)

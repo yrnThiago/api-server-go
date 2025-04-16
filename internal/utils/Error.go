@@ -1,15 +1,24 @@
 package utils
 
 type ErrorInfo struct {
-	Name       string `json:"name"`
-	StatusCode int    `json:"statusCode"`
-	Error      string `json:"error"`
+	Name    string `json:"name"`
+	Message string `json:"message"`
 }
 
-func NewErrorInfo(name string, statusCode int, err string) *ErrorInfo {
+func (e *ErrorInfo) Error() string {
+	return e.Message
+}
+
+func NewErrorInfo(name string, msg string) *ErrorInfo {
 	return &ErrorInfo{
-		Name:       name,
-		StatusCode: statusCode,
-		Error:      err,
+		Name:    name,
+		Message: msg,
+	}
+}
+
+func GetInternalError() *ErrorInfo {
+	return &ErrorInfo{
+		Name:    "internal server error",
+		Message: "internal server error",
 	}
 }

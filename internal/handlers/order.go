@@ -5,7 +5,6 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/yrnThiago/api-server-go/cmd/publisher"
-	"github.com/yrnThiago/api-server-go/internal/keys"
 	"github.com/yrnThiago/api-server-go/internal/usecase"
 	"github.com/yrnThiago/api-server-go/internal/utils"
 )
@@ -26,41 +25,28 @@ func (p *OrderHandlers) Add(c *fiber.Ctx) error {
 	var input usecase.OrderInputDto
 	err := c.BodyParser(&input)
 	if err != nil {
-		errorInfo := utils.NewErrorInfo(fiber.ErrBadRequest.Message, fiber.StatusBadRequest, fiber.ErrBadRequest.Message)
-		c.Locals(string(keys.ErrorKey), errorInfo)
-		return err
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "order body missing"})
 	}
 
 	validationError := utils.ValidateStruct(input)
 	if validationError != nil {
-		c.Locals(string(keys.ErrorKey), validationError)
-		return nil
+		return utils.NewErrorInfo("ValidationError", validationError.Error())
 	}
 
 	output, err := p.OrderUseCase.Add(input)
 	if err != nil {
-		errorInfo := utils.NewErrorInfo(fiber.ErrBadRequest.Message, fiber.StatusBadRequest, err.Error())
-		c.Locals(string(keys.ErrorKey), errorInfo)
 		return err
 	}
 
 	go publisher.OrdersPub.Publish(output.ID)
 
 	c.Set("Content-Type", "application/json")
-
 	return c.Status(fiber.StatusCreated).JSON(output)
-	// return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": fmt.Sprintf("order id: %s created", output.ID)})
 }
 
 func (p *OrderHandlers) GetMany(c *fiber.Ctx) error {
 	output, err := p.OrderUseCase.GetMany()
 	if err != nil {
-		errorInfo := utils.NewErrorInfo(
-			fiber.ErrInternalServerError.Message,
-			fiber.StatusInternalServerError,
-			fiber.ErrInternalServerError.Message,
-		)
-		c.Locals(string(keys.ErrorKey), errorInfo)
 		return err
 	}
 
@@ -81,8 +67,6 @@ func (p *OrderHandlers) GetById(c *fiber.Ctx) error {
 
 	output, err := p.OrderUseCase.GetById(id)
 	if err != nil {
-		errorInfo := utils.NewErrorInfo(fiber.ErrBadRequest.Message, fiber.StatusBadRequest, fiber.ErrBadRequest.Message)
-		c.Locals(string(keys.ErrorKey), errorInfo)
 		return err
 	}
 
@@ -94,9 +78,7 @@ func (p *OrderHandlers) UpdateById(c *fiber.Ctx) error {
 	var input map[string]any
 	err := c.BodyParser(&input)
 	if err != nil {
-		errorInfo := utils.NewErrorInfo(fiber.ErrBadRequest.Message, fiber.StatusBadRequest, fiber.ErrBadRequest.Message)
-		c.Locals(string(keys.ErrorKey), errorInfo)
-		return err
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "order body missing"})
 	}
 
 	id := c.Params("id")
@@ -106,19 +88,11 @@ func (p *OrderHandlers) UpdateById(c *fiber.Ctx) error {
 
 	output, err := p.OrderUseCase.GetById(id)
 	if err != nil {
-		errorInfo := utils.NewErrorInfo(
-			fiber.ErrInternalServerError.Message,
-			fiber.StatusInternalServerError,
-			fiber.ErrInternalServerError.Message,
-		)
-		c.Locals(string(keys.ErrorKey), errorInfo)
 		return err
 	}
 
 	err = p.OrderUseCase.UpdateById(output, input)
 	if err != nil {
-		errorInfo := utils.NewErrorInfo(fiber.ErrBadRequest.Message, fiber.StatusBadRequest, fiber.ErrBadRequest.Message)
-		c.Locals(string(keys.ErrorKey), errorInfo)
 		return err
 	}
 
@@ -134,8 +108,6 @@ func (p *OrderHandlers) DeleteById(c *fiber.Ctx) error {
 
 	err := p.OrderUseCase.DeleteById(id)
 	if err != nil {
-		errorInfo := utils.NewErrorInfo(fiber.ErrBadRequest.Message, fiber.StatusBadRequest, fiber.ErrBadRequest.Message)
-		c.Locals(string(keys.ErrorKey), errorInfo)
 		return err
 	}
 
