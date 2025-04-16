@@ -1,0 +1,605 @@
+{
+	"info": {
+		"_postman_id": "3c3d8549-bd03-491c-8a79-031f44eb3f43",
+		"name": "GO_API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38261799"
+	},
+	"item": [
+		{
+			"name": "Health",
+			"item": [
+				{
+					"name": "Ping",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/public/health/ping",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"public",
+								"health",
+								"ping"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"admin@admin.com\",\r\n    \"password\": \"admin123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/public/auth/login",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"public",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/public/auth/logout",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"public",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Add",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZW1haWwiOiJ0ZXN0TGlkZXJhYXNkc2Fkb0BlbWFpbC5jb20iLCJwYXNzd29yZCI6InRlc3RMaWRlcmFkb1Bhc3N3b3JkIiwicm9sZSI6IkxpZGVyIiwiaWF0IjoxNzI2MjY0Mzc1LCJleHAiOjE3MjYyNjc5NzV9.9deH8PoB9ifzUwDRr6B49LBgeDETATSwHk1GpL-cktU\";",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"test\",\r\n    \"price\": 1,\r\n    \"stock\": 10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/private/products",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"private",
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetMany",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "12344",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/private/products",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"private",
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetById",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ0ZXN0MTIzQGVtYWlsLmNvbSIsInBhc3N3b3JkIjoidGVzdDEyM2Fzc3dvcmQiLCJyb2xlIjoiQWRtaW4iLCJpYXQiOjE3MjYyNjkzNzksImV4cCI6MTcyNjI3Mjk3OX0.MOUYanZ1K-m5C8L2crGuOWuAlE73hmGMsvlmOWiMhX4\";",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/products/:id",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"products",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "ff27a167-e982-489d-a035-a7e063fdd8c0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateById",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"Notebook Update 2\",\r\n    \"Price\": 999,\r\n    \"Stock\": 9\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/private/products/:id",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"private",
+								"products",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "dcb068c5-fec2-457e-bcd0-0c9e62d4dd6d"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteById",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/private/products/:id",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"private",
+								"products",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Orders",
+			"item": [
+				{
+					"name": "Add",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZW1haWwiOiJ0ZXN0TGlkZXJhYXNkc2Fkb0BlbWFpbC5jb20iLCJwYXNzd29yZCI6InRlc3RMaWRlcmFkb1Bhc3N3b3JkIiwicm9sZSI6IkxpZGVyIiwiaWF0IjoxNzI2MjY0Mzc1LCJleHAiOjE3MjYyNjc5NzV9.9deH8PoB9ifzUwDRr6B49LBgeDETATSwHk1GpL-cktU\";",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\": \"\",\r\n    \"items\": [\r\n        {\r\n            \"Product\": {\r\n                \"ID\": \"29c93ca2-e5e9-41cf-b64f-7a4a641b20d4\"\r\n            },\r\n        \"qty\": 0\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/private/orders/checkout",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"private",
+								"orders",
+								"checkout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetMany",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token=\"I\";",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/private/orders/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"private",
+								"orders",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetById",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ0ZXN0MTIzQGVtYWlsLmNvbSIsInBhc3N3b3JkIjoidGVzdDEyM2Fzc3dvcmQiLCJyb2xlIjoiQWRtaW4iLCJpYXQiOjE3MjYyNjkzNzksImV4cCI6MTcyNjI3Mjk3OX0.MOUYanZ1K-m5C8L2crGuOWuAlE73hmGMsvlmOWiMhX4\";",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/private/orders/:id",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"private",
+								"orders",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "asdsad"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateById",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"Update 2\",\r\n    \"Price\": 999,\r\n    \"Stock\": 9\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/private/orders/:id",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"private",
+								"orders",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "e9727e6a-c991-4c78-bd8c-d77075f552bd"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteById",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/private/orders/:id",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"private",
+								"orders",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Add",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZW1haWwiOiJ0ZXN0TGlkZXJhYXNkc2Fkb0BlbWFpbC5jb20iLCJwYXNzd29yZCI6InRlc3RMaWRlcmFkb1Bhc3N3b3JkIiwicm9sZSI6IkxpZGVyIiwiaWF0IjoxNzI2MjY0Mzc1LCJleHAiOjE3MjYyNjc5NzV9.9deH8PoB9ifzUwDRr6B49LBgeDETATSwHk1GpL-cktU\";",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"testValid@test.com\",\r\n    \"password\": \"test123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/private/users",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"private",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetMany",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "12344",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/private/users",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"private",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetById",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ0ZXN0MTIzQGVtYWlsLmNvbSIsInBhc3N3b3JkIjoidGVzdDEyM2Fzc3dvcmQiLCJyb2xlIjoiQWRtaW4iLCJpYXQiOjE3MjYyNjkzNzksImV4cCI6MTcyNjI3Mjk3OX0.MOUYanZ1K-m5C8L2crGuOWuAlE73hmGMsvlmOWiMhX4\";",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/private/users/:id",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"private",
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "92275c89-f27f-48cf-9c56-887284388436"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetByEmail",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ0ZXN0MTIzQGVtYWlsLmNvbSIsInBhc3N3b3JkIjoidGVzdDEyM2Fzc3dvcmQiLCJyb2xlIjoiQWRtaW4iLCJpYXQiOjE3MjYyNjkzNzksImV4cCI6MTcyNjI3Mjk3OX0.MOUYanZ1K-m5C8L2crGuOWuAlE73hmGMsvlmOWiMhX4\";",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/private/users/:email",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"private",
+								"users",
+								":email"
+							],
+							"variable": [
+								{
+									"key": "email",
+									"value": "test@test.com"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateById",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"testUpdate@test.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/private/users/:id",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"private",
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "92275c89-f27f-48cf-9c56-887284388436"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteById",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/private/users/:id",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"private",
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "NotFound",
+			"item": [
+				{
+					"name": "NotFound",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/invalid_endpoint",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"invalid_endpoint"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
