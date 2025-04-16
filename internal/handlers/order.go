@@ -75,7 +75,7 @@ func (p *OrderHandlers) GetById(c *fiber.Ctx) error {
 }
 
 func (p *OrderHandlers) UpdateById(c *fiber.Ctx) error {
-	var input map[string]any
+	var input usecase.OrderInputDto
 	err := c.BodyParser(&input)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "order body missing"})
@@ -86,18 +86,23 @@ func (p *OrderHandlers) UpdateById(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "order id missing"})
 	}
 
+	validationError := utils.ValidateStruct(input)
+	if validationError != nil {
+		return utils.NewErrorInfo("ValidationError", validationError.Error())
+	}
+
 	output, err := p.OrderUseCase.GetById(id)
 	if err != nil {
 		return err
 	}
 
-	err = p.OrderUseCase.UpdateById(output, input)
+	newOrder, err := p.OrderUseCase.UpdateById(output, input)
 	if err != nil {
 		return err
 	}
 
 	c.Set("Content-Type", "application/json")
-	return c.Status(fiber.StatusOK).JSON(output)
+	return c.Status(fiber.StatusOK).JSON(newOrder)
 }
 
 func (p *OrderHandlers) DeleteById(c *fiber.Ctx) error {

@@ -8,7 +8,7 @@ type OrderRepository interface {
 	Add(order *Order) error
 	GetMany() ([]*Order, error)
 	GetById(id string) (*Order, error)
-	UpdateById(order *Order, body map[string]any) error
+	UpdateById(order *Order) (*Order, error)
 	DeleteById(id string) error
 }
 

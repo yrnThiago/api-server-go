@@ -100,6 +100,11 @@ func (p *UserHandlers) UpdateById(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "user id missing"})
 	}
 
+	validationError := utils.ValidateStruct(input)
+	if validationError != nil {
+		return utils.NewErrorInfo("ValidationError", validationError.Error())
+	}
+
 	_, err = p.UserUseCase.GetById(id)
 	if err != nil {
 		return err

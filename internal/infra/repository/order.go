@@ -2,8 +2,6 @@ package repository
 
 import (
 	"errors"
-	"fmt"
-
 	"gorm.io/gorm"
 
 	"github.com/yrnThiago/api-server-go/internal/models"
@@ -56,12 +54,13 @@ func (r *OrderRepositoryMysql) GetById(orderId string) (*models.Order, error) {
 
 func (r *OrderRepositoryMysql) UpdateById(
 	order *models.Order,
-	body map[string]any,
-) error {
-	fmt.Println(body)
-	r.DB.Model(&order).Omit("Items").Updates(body)
+) (*models.Order, error) {
+	res := r.DB.Save(&order)
+	if res.Error != nil {
+		return nil, res.Error
+	}
 
-	return nil
+	return order, nil
 }
 
 func (r *OrderRepositoryMysql) DeleteById(orderId string) error {

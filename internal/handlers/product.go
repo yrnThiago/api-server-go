@@ -61,7 +61,7 @@ func (p *ProductHandlers) GetById(c *fiber.Ctx) error {
 
 	output, err := p.ProductUseCase.GetById(id)
 	if err != nil {
-		return err
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "product id not found"})
 	}
 
 	c.Set("Content-Type", "application/json")
@@ -80,9 +80,14 @@ func (p *ProductHandlers) UpdateById(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "product id missing"})
 	}
 
+	validationError := utils.ValidateStruct(input)
+	if validationError != nil {
+		return utils.NewErrorInfo("ValidationError", validationError.Error())
+	}
+
 	_, err = p.ProductUseCase.GetById(id)
 	if err != nil {
-		return err
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "product id not found"})
 	}
 
 	new, err := p.ProductUseCase.UpdateById(id, &input)

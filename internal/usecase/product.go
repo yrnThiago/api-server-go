@@ -31,6 +31,14 @@ func NewProductUseCase(productRepository models.ProductRepository) *ProductUseCa
 	}
 }
 
+func NewProduct(name string, price float64, stock int) *models.Product {
+	return &models.Product{
+		Name:  name,
+		Price: price,
+		Stock: stock,
+	}
+}
+
 func (u *ProductUseCase) Add(
 	input ProductInputDto,
 ) (*models.Product, error) {
@@ -66,7 +74,7 @@ func (u *ProductUseCase) UpdateById(
 	productId string,
 	input *ProductInputDto,
 ) (*models.Product, error) {
-	newProduct := models.NewProduct(input.Name, input.Price, input.Stock)
+	newProduct := NewProduct(input.Name, input.Price, input.Stock)
 	product, err := u.ProductRepository.UpdateById(productId, newProduct)
 	if err != nil {
 		return nil, err

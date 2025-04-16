@@ -120,14 +120,18 @@ func (u *OrderUseCase) GetById(id string) (*models.Order, error) {
 
 func (u *OrderUseCase) UpdateById(
 	order *models.Order,
-	body map[string]any,
-) error {
-	err := u.orderRepository.UpdateById(order, body)
+	input OrderInputDto,
+) (*models.Order, error) {
+	newOrder := u.NewOrder(input.Items, input.Status)
+
+	order.Status = newOrder.Status
+
+	_, err := u.orderRepository.UpdateById(order)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return order, nil
 }
 
 func (u *OrderUseCase) DeleteById(
