@@ -3,7 +3,6 @@ package handlers
 import (
 	"context"
 	"encoding/json"
-	"log"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -14,6 +13,8 @@ import (
 	"github.com/yrnThiago/api-server-go/internal/usecase"
 	"github.com/yrnThiago/api-server-go/internal/utils"
 )
+
+var WRONG_CREDENTIALS_ERR = "wrong credentials"
 
 type AuthHandler struct {
 	UserUseCase *usecase.UserUseCase
@@ -31,14 +32,12 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 
 	output, err := h.UserUseCase.GetByEmail(userInputDto.Email)
 	if err != nil {
-		errorInfo := utils.NewErrorInfo(fiber.ErrBadRequest.Message, fiber.StatusBadRequest, fiber.ErrBadRequest.Message)
-		c.Locals(string(keys.ErrorKey), errorInfo)
-		return err
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": WRONG_CREDENTIALS_ERR})
 	}
 
 	if !utils.CheckPasswordHash(userInputDto.Password, output.Password) {
-		config.Logger.Warn("wrong credentials")
-		return err
+		config.Logger.Warn(WRONG_CREDENTIALS_ERR)
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": WRONG_CREDENTIALS_ERR})
 	}
 
 	c.Locals(string(keys.UserIDKey), output.ID)
@@ -49,24 +48,30 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 	)
 
 	authToken, err := utils.GenerateJWT(output.ID)
-	userAuthorization := utils.BEARER_KEY + authToken
 	if err != nil {
-		config.Logger.Warn(
+		config.Logger.Fatal(
 			"jwt token not generated",
 			zap.Error(err),
 		)
+
+		return err
 	}
 
 	userJson, err := json.Marshal(output)
 	if err != nil {
-		log.Fatal(err)
+		config.Logger.Fatal(
+			"marshal user json",
+			zap.Error(err),
+		)
+
+		return err
 	}
 
 	config.RedisClient.Set(context.Background(), "user-"+output.ID, string(userJson))
 
 	cookie := &fiber.Cookie{}
 	cookie.Name = config.Env.COOKIE_NAME
-	cookie.Value = userAuthorization
+	cookie.Value = utils.BEARER_KEY + authToken
 	cookie.Expires = time.Now().Add(365 * 24 * time.Hour)
 	cookie.Secure = false
 	cookie.HTTPOnly = true
