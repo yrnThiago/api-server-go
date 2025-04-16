@@ -16,12 +16,19 @@ func ErrorMiddleware(c *fiber.Ctx) error {
 	if contextErrorVal != nil {
 		contextError := contextErrorVal.(*utils.ErrorInfo)
 
-		config.Logger.Info("error occurred",
+		config.Logger.Info(contextError.Name,
 			zap.Int("status", contextError.StatusCode),
 			zap.String("message", contextError.Error),
 		)
 
-		return c.Status(contextError.StatusCode).JSON(fiber.Map{"error": contextError.Error})
+		switch contextError.Name {
+		case "ValidationError":
+			return c.Status(contextError.StatusCode).JSON(fiber.Map{"error": contextError.Error})
+		case fiber.ErrBadRequest.Message:
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": fiber.ErrBadRequest.Message})
+		default:
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": fiber.ErrInternalServerError.Message})
+		}
 	}
 
 	return nil

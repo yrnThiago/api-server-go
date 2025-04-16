@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/gofiber/fiber/v2"
 )
 
 var validate *validator.Validate
@@ -21,7 +22,7 @@ func ValidateStruct(input any) *ErrorInfo {
 			}
 		}
 
-		return NewErrorInfo(400, customError)
+		return NewErrorInfo("ValidationError", fiber.StatusBadRequest, customError)
 	}
 
 	return nil

@@ -24,7 +24,7 @@ func (p *ProductHandlers) Add(c *fiber.Ctx) error {
 	var input usecase.ProductInputDto
 	err := c.BodyParser(&input)
 	if err != nil {
-		errorInfo := utils.NewErrorInfo(fiber.StatusBadRequest, fiber.ErrBadRequest.Message)
+		errorInfo := utils.NewErrorInfo(fiber.ErrBadRequest.Message, fiber.StatusBadRequest, fiber.ErrBadRequest.Message)
 		c.Locals(string(keys.ErrorKey), errorInfo)
 		return err
 	}
@@ -37,7 +37,7 @@ func (p *ProductHandlers) Add(c *fiber.Ctx) error {
 
 	output, err := p.ProductUseCase.Add(input)
 	if err != nil {
-		errorInfo := utils.NewErrorInfo(fiber.StatusBadRequest, fiber.ErrBadRequest.Message)
+		errorInfo := utils.NewErrorInfo(fiber.ErrBadRequest.Message, fiber.StatusBadRequest, fiber.ErrBadRequest.Message)
 		c.Locals(string(keys.ErrorKey), errorInfo)
 		return err
 	}
@@ -50,6 +50,7 @@ func (p *ProductHandlers) GetMany(c *fiber.Ctx) error {
 	output, err := p.ProductUseCase.GetMany()
 	if err != nil {
 		errorInfo := utils.NewErrorInfo(
+			fiber.ErrInternalServerError.Message,
 			fiber.StatusInternalServerError,
 			fiber.ErrInternalServerError.Message,
 		)
@@ -73,7 +74,7 @@ func (p *ProductHandlers) GetById(c *fiber.Ctx) error {
 
 	output, err := p.ProductUseCase.GetById(id)
 	if err != nil {
-		errorInfo := utils.NewErrorInfo(fiber.StatusBadRequest, fiber.ErrBadRequest.Message)
+		errorInfo := utils.NewErrorInfo(fiber.ErrBadRequest.Message, fiber.StatusBadRequest, fiber.ErrBadRequest.Message)
 		c.Locals(string(keys.ErrorKey), errorInfo)
 		return err
 	}
@@ -86,7 +87,7 @@ func (p *ProductHandlers) UpdateById(c *fiber.Ctx) error {
 	var input usecase.ProductInputDto
 	err := c.BodyParser(&input)
 	if err != nil {
-		errorInfo := utils.NewErrorInfo(fiber.StatusBadRequest, fiber.ErrBadRequest.Message)
+		errorInfo := utils.NewErrorInfo(fiber.ErrBadRequest.Message, fiber.StatusBadRequest, fiber.ErrBadRequest.Message)
 		c.Locals(string(keys.ErrorKey), errorInfo)
 		return err
 	}
@@ -99,6 +100,7 @@ func (p *ProductHandlers) UpdateById(c *fiber.Ctx) error {
 	_, err = p.ProductUseCase.GetById(id)
 	if err != nil {
 		errorInfo := utils.NewErrorInfo(
+			fiber.ErrInternalServerError.Message,
 			fiber.StatusInternalServerError,
 			fiber.ErrInternalServerError.Message,
 		)
@@ -108,7 +110,7 @@ func (p *ProductHandlers) UpdateById(c *fiber.Ctx) error {
 
 	new, err := p.ProductUseCase.UpdateById(id, &input)
 	if err != nil {
-		errorInfo := utils.NewErrorInfo(fiber.StatusBadRequest, fiber.ErrBadRequest.Message)
+		errorInfo := utils.NewErrorInfo(fiber.ErrBadRequest.Message, fiber.StatusBadRequest, fiber.ErrBadRequest.Message)
 		c.Locals(string(keys.ErrorKey), errorInfo)
 		return err
 	}
@@ -124,7 +126,7 @@ func (p *ProductHandlers) DeleteById(c *fiber.Ctx) error {
 	}
 	err := p.ProductUseCase.DeleteById(id)
 	if err != nil {
-		errorInfo := utils.NewErrorInfo(fiber.StatusBadRequest, fiber.ErrBadRequest.Message)
+		errorInfo := utils.NewErrorInfo(fiber.ErrBadRequest.Message, fiber.StatusBadRequest, fiber.ErrBadRequest.Message)
 		c.Locals(string(keys.ErrorKey), errorInfo)
 		return err
 	}

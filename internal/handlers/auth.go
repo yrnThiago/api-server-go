@@ -31,7 +31,7 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 
 	output, err := h.UserUseCase.GetByEmail(userInputDto.Email)
 	if err != nil {
-		errorInfo := utils.NewErrorInfo(fiber.StatusBadRequest, fiber.ErrBadRequest.Message)
+		errorInfo := utils.NewErrorInfo(fiber.ErrBadRequest.Message, fiber.StatusBadRequest, fiber.ErrBadRequest.Message)
 		c.Locals(string(keys.ErrorKey), errorInfo)
 		return err
 	}
