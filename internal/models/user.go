@@ -10,7 +10,7 @@ type UserRepository interface {
 	GetMany() ([]*User, error)
 	GetById(id string) (*User, error)
 	GetByEmail(email string) (*User, error)
-	UpdateById(id string, newUser *User) (*User, error)
+	UpdateById(user, newUserBody *User) (*User, error)
 	DeleteById(id string) error
 }
 

@@ -3,7 +3,6 @@ package handlers
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/yrnThiago/api-server-go/internal/usecase"
-	"github.com/yrnThiago/api-server-go/internal/utils"
 )
 
 type UserHandlers struct {
@@ -25,23 +24,12 @@ func (p *UserHandlers) Add(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "user body missing"})
 	}
 
-	validationError := utils.ValidateStruct(input)
-	if validationError != nil {
-		return utils.NewErrorInfo("ValidationError", validationError.Error())
-	}
-
-	input.Password, err = utils.GenerateHashPassword(input.Password)
+	_, err = p.UserUseCase.Add(input)
 	if err != nil {
 		return err
 	}
 
-	output, err := p.UserUseCase.Add(input)
-	if err != nil {
-		return err
-	}
-
-	c.Set("Content-Type", "application/json")
-	return c.Status(fiber.StatusCreated).JSON(output)
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": "user created"})
 }
 
 func (p *UserHandlers) GetMany(c *fiber.Ctx) error {
@@ -54,7 +42,6 @@ func (p *UserHandlers) GetMany(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "no user was created"})
 	}
 
-	c.Set("Content-Type", "application/json")
 	return c.Status(fiber.StatusOK).JSON(output)
 }
 
@@ -69,10 +56,10 @@ func (p *UserHandlers) GetById(c *fiber.Ctx) error {
 		return err
 	}
 
-	c.Set("Content-Type", "application/json")
 	return c.Status(fiber.StatusOK).JSON(output)
 }
 
+// fix route for this pls
 func (p *UserHandlers) GetByEmail(c *fiber.Ctx) error {
 	email := c.Params("email")
 	if email == ":email" {
@@ -84,7 +71,6 @@ func (p *UserHandlers) GetByEmail(c *fiber.Ctx) error {
 		return err
 	}
 
-	c.Set("Content-Type", "application/json")
 	return c.Status(fiber.StatusOK).JSON(output)
 }
 
@@ -100,22 +86,11 @@ func (p *UserHandlers) UpdateById(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "user id missing"})
 	}
 
-	validationError := utils.ValidateStruct(input)
-	if validationError != nil {
-		return utils.NewErrorInfo("ValidationError", validationError.Error())
-	}
-
-	_, err = p.UserUseCase.GetById(id)
+	new, err := p.UserUseCase.UpdateById(id, input)
 	if err != nil {
 		return err
 	}
 
-	new, err := p.UserUseCase.UpdateById(id, &input)
-	if err != nil {
-		return err
-	}
-
-	c.Set("Content-Type", "application/json")
 	return c.Status(fiber.StatusCreated).JSON(new)
 }
 
@@ -129,6 +104,5 @@ func (p *UserHandlers) DeleteById(c *fiber.Ctx) error {
 		return err
 	}
 
-	c.Set("Content-Type", "application/json")
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "user deleted"})
 }

@@ -1,10 +1,12 @@
 package usecase
 
 import (
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 
 	"github.com/yrnThiago/api-server-go/config"
 	"github.com/yrnThiago/api-server-go/internal/models"
+	"github.com/yrnThiago/api-server-go/internal/utils"
 )
 
 type UserInputDto struct {
@@ -31,14 +33,21 @@ func NewUserUseCase(userRepository models.UserRepository) *UserUseCase {
 func (u *UserUseCase) Add(
 	input UserInputDto,
 ) (*models.User, error) {
+	validationError := utils.ValidateStruct(input)
+	if validationError != nil {
+		return nil, utils.NewErrorInfo("ValidationError", validationError.Error())
+	}
+
+	input.Password, _ = utils.GenerateHashPassword(input.Password)
+
 	user := models.NewUser(input.Email, input.Password)
 	err := u.UserRepository.Add(user)
 	if err != nil {
 		return nil, err
 	}
 
-	config.Logger.Info("adding new user")
-	return user, nil
+	config.Logger.Info("new user added")
+	return user, err
 }
 
 func (u *UserUseCase) GetMany() ([]*models.User, error) {
@@ -69,25 +78,43 @@ func (u *UserUseCase) GetByEmail(email string) (*models.User, error) {
 }
 
 func (u *UserUseCase) UpdateById(
-	userId string,
-	input *UserInputDto,
+	id string,
+	input UserInputDto,
 ) (*models.User, error) {
-	newUser := models.NewUser(input.Email, input.Password)
-	user, err := u.UserRepository.UpdateById(userId, newUser)
+
+	err := utils.ValidateStruct(input)
+	if err != nil {
+		return nil, utils.NewErrorInfo("ValidationError", err.Error())
+	}
+
+	user, err := u.GetById(id)
 	if err != nil {
 		return nil, err
 	}
 
-	return user, nil
+	newUserBody := models.NewUser(input.Email, input.Password)
+	updatedUser, err := u.UserRepository.UpdateById(user, newUserBody)
+	if err != nil {
+		return nil, err
+	}
+
+	config.Logger.Info(
+		"user updated",
+		zap.String("id", id),
+	)
+	return updatedUser, nil
 }
 
 func (u *UserUseCase) DeleteById(
-	userId string,
+	id string,
 ) error {
-	err := u.UserRepository.DeleteById(userId)
+	err := u.UserRepository.DeleteById(id)
 	if err != nil {
 		return err
 	}
 
+	config.Logger.Info("user deleted",
+		zap.String("id", id),
+	)
 	return err
 }

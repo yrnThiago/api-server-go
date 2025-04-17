@@ -68,15 +68,10 @@ func (r *UserRepositoryMysql) GetByEmail(userEmail string) (*models.User, error)
 }
 
 func (r *UserRepositoryMysql) UpdateById(
-	userID string,
-	newUser *models.User,
+	user, newUserBody *models.User,
 ) (*models.User, error) {
-	user, err := r.GetById(userID)
-	if err != nil {
-		return nil, err
-	}
 
-	r.DB.Model(&user).Omit("ID").Updates(newUser)
+	r.DB.Model(&user).Omit("ID").Updates(newUserBody)
 
 	return user, nil
 }
