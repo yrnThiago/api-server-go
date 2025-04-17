@@ -53,9 +53,9 @@ func (r *OrderRepositoryMysql) GetById(orderId string) (*models.Order, error) {
 }
 
 func (r *OrderRepositoryMysql) UpdateById(
-	order *models.Order,
+	order, newOrderBody *models.Order,
 ) (*models.Order, error) {
-	res := r.DB.Save(&order)
+	res := r.DB.Model(&order).Select("status").Omit("ID").Updates(newOrderBody)
 	if res.Error != nil {
 		return nil, res.Error
 	}

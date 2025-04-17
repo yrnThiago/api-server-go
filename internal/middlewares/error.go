@@ -2,10 +2,10 @@ package middlewares
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/yrnThiago/api-server-go/internal/utils"
 	"go.uber.org/zap"
 
 	"github.com/yrnThiago/api-server-go/config"
+	"github.com/yrnThiago/api-server-go/internal/utils"
 )
 
 func ErrorMiddleware(c *fiber.Ctx, err error) error {
@@ -25,6 +25,7 @@ func ErrorMiddleware(c *fiber.Ctx, err error) error {
 	case "JWT_INVALID_TOKEN":
 		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{"error": customError.Message})
 	default:
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": fiber.ErrInternalServerError.Message})
+		return c.Status(fiber.StatusInternalServerError).
+			JSON(fiber.Map{"error": fiber.ErrInternalServerError.Message})
 	}
 }

@@ -3,6 +3,7 @@ package usecase
 import (
 	"github.com/google/uuid"
 	"github.com/yrnThiago/api-server-go/internal/models"
+	"github.com/yrnThiago/api-server-go/internal/utils"
 	"gorm.io/gorm"
 )
 
@@ -74,12 +75,17 @@ func (u *OrderUseCase) Add(
 	input OrderInputDto,
 ) (*OrderOutputDto, error) {
 
+	err := utils.ValidateStruct(input)
+	if err != nil {
+		return nil, utils.NewErrorInfo("ValidationError", err.Error())
+	}
+
 	if err := u.validateOrderItems(input.Items); err != nil {
 		return nil, err
 	}
 
 	order := u.NewOrder(input.Items, WAITING_PAYMENT)
-	err := u.orderRepository.Add(order)
+	err = u.orderRepository.Add(order)
 	if err != nil {
 		return nil, err
 	}
@@ -119,25 +125,37 @@ func (u *OrderUseCase) GetById(id string) (*models.Order, error) {
 }
 
 func (u *OrderUseCase) UpdateById(
-	order *models.Order,
+	id string,
 	input OrderInputDto,
 ) (*models.Order, error) {
-	newOrder := u.NewOrder(input.Items, input.Status)
 
-	order.Status = newOrder.Status
+	err := utils.ValidateStruct(input)
+	if err != nil {
+		return nil, utils.NewErrorInfo("ValidationError", err.Error())
+	}
 
-	_, err := u.orderRepository.UpdateById(order)
+	if err := u.validateOrderItems(input.Items); err != nil {
+		return nil, err
+	}
+
+	order, err := u.GetById(id)
 	if err != nil {
 		return nil, err
 	}
 
-	return order, nil
+	newOrderBody := u.NewOrder(input.Items, input.Status)
+	updatedOrder, err := u.orderRepository.UpdateById(order, newOrderBody)
+	if err != nil {
+		return nil, err
+	}
+
+	return updatedOrder, nil
 }
 
 func (u *OrderUseCase) DeleteById(
-	productId string,
+	id string,
 ) error {
-	err := u.orderRepository.DeleteById(productId)
+	err := u.orderRepository.DeleteById(id)
 	if err != nil {
 		return err
 	}

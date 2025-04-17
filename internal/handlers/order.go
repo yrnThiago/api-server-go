@@ -4,9 +4,9 @@ import (
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
+
 	"github.com/yrnThiago/api-server-go/cmd/publisher"
 	"github.com/yrnThiago/api-server-go/internal/usecase"
-	"github.com/yrnThiago/api-server-go/internal/utils"
 )
 
 type OrderHandlers struct {
@@ -28,20 +28,13 @@ func (p *OrderHandlers) Add(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "order body missing"})
 	}
 
-	validationError := utils.ValidateStruct(input)
-	if validationError != nil {
-		return utils.NewErrorInfo("ValidationError", validationError.Error())
-	}
-
 	output, err := p.OrderUseCase.Add(input)
 	if err != nil {
 		return err
 	}
 
 	go publisher.OrdersPub.Publish(output.ID)
-
-	c.Set("Content-Type", "application/json")
-	return c.Status(fiber.StatusCreated).JSON(output)
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": "new order created"})
 }
 
 func (p *OrderHandlers) GetMany(c *fiber.Ctx) error {
@@ -54,7 +47,6 @@ func (p *OrderHandlers) GetMany(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "no order was created"})
 	}
 
-	c.Set("Content-Type", "application/json")
 	return c.Status(fiber.StatusOK).JSON(output)
 }
 
@@ -70,7 +62,6 @@ func (p *OrderHandlers) GetById(c *fiber.Ctx) error {
 		return err
 	}
 
-	c.Set("Content-Type", "application/json")
 	return c.Status(fiber.StatusOK).JSON(output)
 }
 
@@ -86,22 +77,11 @@ func (p *OrderHandlers) UpdateById(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "order id missing"})
 	}
 
-	validationError := utils.ValidateStruct(input)
-	if validationError != nil {
-		return utils.NewErrorInfo("ValidationError", validationError.Error())
-	}
-
-	output, err := p.OrderUseCase.GetById(id)
+	newOrder, err := p.OrderUseCase.UpdateById(id, input)
 	if err != nil {
 		return err
 	}
 
-	newOrder, err := p.OrderUseCase.UpdateById(output, input)
-	if err != nil {
-		return err
-	}
-
-	c.Set("Content-Type", "application/json")
 	return c.Status(fiber.StatusOK).JSON(newOrder)
 }
 
@@ -116,6 +96,5 @@ func (p *OrderHandlers) DeleteById(c *fiber.Ctx) error {
 		return err
 	}
 
-	c.Set("Content-Type", "application/json")
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "order deleted"})
 }
