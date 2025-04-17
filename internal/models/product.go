@@ -9,7 +9,7 @@ type ProductRepository interface {
 	Add(product *Product) error
 	GetMany() ([]*Product, error)
 	GetById(id string) (*Product, error)
-	UpdateById(id string, newProduct *Product) (*Product, error)
+	UpdateById(product, newProductBody *Product) (*Product, error)
 	DeleteById(id string) error
 }
 

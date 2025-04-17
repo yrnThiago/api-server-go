@@ -1,10 +1,12 @@
 package usecase
 
 import (
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 
 	"github.com/yrnThiago/api-server-go/config"
 	"github.com/yrnThiago/api-server-go/internal/models"
+	"github.com/yrnThiago/api-server-go/internal/utils"
 )
 
 type ProductInputDto struct {
@@ -42,13 +44,21 @@ func NewProduct(name string, price float64, stock int) *models.Product {
 func (u *ProductUseCase) Add(
 	input ProductInputDto,
 ) (*models.Product, error) {
+	validationError := utils.ValidateStruct(input)
+	if validationError != nil {
+		return nil, utils.NewErrorInfo("ValidationError", validationError.Error())
+	}
+
 	product := models.NewProduct(input.Name, input.Price, input.Stock)
 	err := u.ProductRepository.Add(product)
 	if err != nil {
 		return nil, err
 	}
 
-	config.Logger.Info("adding new product")
+	config.Logger.Info(
+		"new product added",
+		zap.String("name", input.Name),
+	)
 	return product, nil
 }
 
@@ -71,11 +81,22 @@ func (u *ProductUseCase) GetById(id string) (*models.Product, error) {
 }
 
 func (u *ProductUseCase) UpdateById(
-	productId string,
-	input *ProductInputDto,
+	id string,
+	input ProductInputDto,
 ) (*models.Product, error) {
-	newProduct := NewProduct(input.Name, input.Price, input.Stock)
-	product, err := u.ProductRepository.UpdateById(productId, newProduct)
+
+	err := utils.ValidateStruct(input)
+	if err != nil {
+		return nil, utils.NewErrorInfo("ValidationError", err.Error())
+	}
+
+	product, err := u.GetById(id)
+	if err != nil {
+		return nil, err
+	}
+
+	newProductBody := NewProduct(input.Name, input.Price, input.Stock)
+	product, err = u.ProductRepository.UpdateById(product, newProductBody)
 	if err != nil {
 		return nil, err
 	}

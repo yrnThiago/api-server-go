@@ -54,15 +54,9 @@ func (r *ProductRepositoryMysql) GetById(productID string) (*models.Product, err
 }
 
 func (r *ProductRepositoryMysql) UpdateById(
-	productID string,
-	newProduct *models.Product,
+	product, newProductBody *models.Product,
 ) (*models.Product, error) {
-	product, err := r.GetById(productID)
-	if err != nil {
-		return nil, err
-	}
-
-	r.DB.Model(&product).Omit("ID").Updates(newProduct)
+	r.DB.Model(&product).Omit("ID").Updates(newProductBody)
 
 	return product, nil
 }

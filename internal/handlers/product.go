@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"github.com/gofiber/fiber/v2"
+
 	"github.com/yrnThiago/api-server-go/internal/usecase"
-	"github.com/yrnThiago/api-server-go/internal/utils"
 )
 
 type ProductHandlers struct {
@@ -25,18 +25,11 @@ func (p *ProductHandlers) Add(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "product body missing"})
 	}
 
-	validationError := utils.ValidateStruct(input)
-	if validationError != nil {
-		return utils.NewErrorInfo("ValidationError", validationError.Error())
-	}
-
-	output, err := p.ProductUseCase.Add(input)
+	_, err = p.ProductUseCase.Add(input)
 	if err != nil {
 		return err
 	}
-
-	c.Set("Content-Type", "application/json")
-	return c.Status(fiber.StatusCreated).JSON(output)
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": "new product added"})
 }
 
 func (p *ProductHandlers) GetMany(c *fiber.Ctx) error {
@@ -49,7 +42,6 @@ func (p *ProductHandlers) GetMany(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "no product was created"})
 	}
 
-	c.Set("Content-Type", "application/json")
 	return c.Status(fiber.StatusOK).JSON(output)
 }
 
@@ -64,7 +56,6 @@ func (p *ProductHandlers) GetById(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "product id not found"})
 	}
 
-	c.Set("Content-Type", "application/json")
 	return c.Status(fiber.StatusOK).JSON(output)
 }
 
@@ -80,22 +71,11 @@ func (p *ProductHandlers) UpdateById(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "product id missing"})
 	}
 
-	validationError := utils.ValidateStruct(input)
-	if validationError != nil {
-		return utils.NewErrorInfo("ValidationError", validationError.Error())
-	}
-
-	_, err = p.ProductUseCase.GetById(id)
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "product id not found"})
-	}
-
-	new, err := p.ProductUseCase.UpdateById(id, &input)
+	new, err := p.ProductUseCase.UpdateById(id, input)
 	if err != nil {
 		return err
 	}
 
-	c.Set("Content-Type", "application/json")
 	return c.Status(fiber.StatusCreated).JSON(new)
 }
 
@@ -109,6 +89,5 @@ func (p *ProductHandlers) DeleteById(c *fiber.Ctx) error {
 		return err
 	}
 
-	c.Set("Content-Type", "application/json")
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "product deleted"})
 }
