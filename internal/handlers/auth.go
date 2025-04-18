@@ -10,7 +10,7 @@ import (
 
 	"github.com/yrnThiago/api-server-go/config"
 	"github.com/yrnThiago/api-server-go/internal/keys"
-	"github.com/yrnThiago/api-server-go/internal/usecase"
+	"github.com/yrnThiago/api-server-go/internal/usecase/user"
 	"github.com/yrnThiago/api-server-go/internal/utils"
 )
 

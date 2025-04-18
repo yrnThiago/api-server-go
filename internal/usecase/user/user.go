@@ -21,10 +21,10 @@ type UserOutputDto struct {
 }
 
 type UserUseCase struct {
-	UserRepository entity.UserRepository
+	UserRepository IUserRepository
 }
 
-func NewUserUseCase(userRepository entity.UserRepository) *UserUseCase {
+func NewUserUseCase(userRepository IUserRepository) *UserUseCase {
 	return &UserUseCase{
 		UserRepository: userRepository,
 	}
