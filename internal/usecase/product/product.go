@@ -24,10 +24,10 @@ type ProductOutputDto struct {
 }
 
 type ProductUseCase struct {
-	ProductRepository entity.ProductRepository
+	ProductRepository IProductRepository
 }
 
-func NewProductUseCase(productRepository entity.ProductRepository) *ProductUseCase {
+func NewProductUseCase(productRepository IProductRepository) *ProductUseCase {
 	return &ProductUseCase{
 		ProductRepository: productRepository,
 	}

@@ -5,14 +5,6 @@ import (
 	"gorm.io/gorm"
 )
 
-type ProductRepository interface {
-	Add(product *Product) error
-	GetMany() ([]*Product, error)
-	GetById(id string) (*Product, error)
-	UpdateById(product, newProductBody *Product) (*Product, error)
-	DeleteById(id string) error
-}
-
 type Product struct {
 	ID    string `gorm:"primaryKey"`
 	Name  string

@@ -3,6 +3,7 @@ package usecase
 import (
 	"github.com/google/uuid"
 	"github.com/yrnThiago/api-server-go/internal/entity"
+	"github.com/yrnThiago/api-server-go/internal/usecase/product"
 	"github.com/yrnThiago/api-server-go/internal/utils"
 	"gorm.io/gorm"
 )
@@ -30,10 +31,10 @@ type OrderOutputDto struct {
 
 type OrderUseCase struct {
 	orderRepository   IOrderRepository
-	productRepository entity.ProductRepository
+	productRepository usecase.IProductRepository
 }
 
-func NewOrderUseCase(orderRepository IOrderRepository, productRepository entity.ProductRepository) *OrderUseCase {
+func NewOrderUseCase(orderRepository IOrderRepository, productRepository usecase.IProductRepository) *OrderUseCase {
 	return &OrderUseCase{
 		orderRepository:   orderRepository,
 		productRepository: productRepository,
