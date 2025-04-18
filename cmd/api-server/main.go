@@ -8,7 +8,7 @@ import (
 	"github.com/yrnThiago/api-server-go/cmd/consumer"
 	"github.com/yrnThiago/api-server-go/cmd/publisher"
 	"github.com/yrnThiago/api-server-go/config"
-	"github.com/yrnThiago/api-server-go/internal/fiber"
+	"github.com/yrnThiago/api-server-go/internal/server"
 )
 
 func main() {
@@ -21,7 +21,7 @@ func main() {
 	publisher.PubInit()
 	consumer.ConsumerInit()
 
-	go fiber.Init()
+	go server.Init()
 
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)

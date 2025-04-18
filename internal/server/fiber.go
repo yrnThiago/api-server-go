@@ -1,4 +1,4 @@
-package fiber
+package server
 
 import (
 	"log"
