@@ -14,7 +14,7 @@ func AuthMiddleware(c *fiber.Ctx) error {
 
 	token, err := utils.VerifyJWT(userAuthorization)
 	if err != nil {
-		return utils.NewErrorInfo("JWT_INVALID_TOKEN", err.Error())
+		return utils.GetInvalidJwtTokenError(err.Error())
 	}
 
 	claims := token.Claims.(jwt.MapClaims)

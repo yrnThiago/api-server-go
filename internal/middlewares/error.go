@@ -22,9 +22,9 @@ func ErrorMiddleware(c *fiber.Ctx, err error) error {
 	case "RECORD_NOT_FOUND":
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": errorInfo.Message})
 	case "JWT_INVALID_TOKEN":
-		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{"error": errorInfo.Message})
+		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{"error": utils.ErrUnauthorizedMsg})
 	default:
 		return c.Status(fiber.StatusInternalServerError).
-			JSON(fiber.Map{"error": fiber.ErrInternalServerError.Message})
+			JSON(fiber.Map{"error": utils.ErrInternalServerMsg})
 	}
 }
