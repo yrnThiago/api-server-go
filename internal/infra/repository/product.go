@@ -6,6 +6,7 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/yrnThiago/api-server-go/internal/entity"
+	"github.com/yrnThiago/api-server-go/internal/utils"
 )
 
 type ProductRepositoryMysql struct {
@@ -44,7 +45,7 @@ func (r *ProductRepositoryMysql) GetById(productID string) (*entity.Product, err
 	res := r.DB.Limit(1).First(&product, "id = ?", productID)
 	if res.Error != nil {
 		if errors.Is(res.Error, gorm.ErrRecordNotFound) {
-			return nil, res.Error
+			return nil, utils.ErrProductNotFound
 		}
 
 		return nil, res.Error

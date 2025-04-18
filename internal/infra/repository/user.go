@@ -6,6 +6,7 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/yrnThiago/api-server-go/internal/entity"
+	"github.com/yrnThiago/api-server-go/internal/utils"
 )
 
 type UserRepositoryMysql struct {
@@ -44,7 +45,7 @@ func (r *UserRepositoryMysql) GetById(userID string) (*entity.User, error) {
 	res := r.DB.Limit(1).First(&user, "id = ?", userID)
 	if res.Error != nil {
 		if errors.Is(res.Error, gorm.ErrRecordNotFound) {
-			return nil, res.Error
+			return nil, utils.ErrUserNotFound
 		}
 
 		return nil, res.Error

@@ -1,24 +1,47 @@
 package utils
 
+import "strings"
+
 type ErrorInfo struct {
 	Name    string `json:"name"`
 	Message string `json:"message"`
 }
 
+var (
+	ErrProductNotFound = NewErrorInfo("RECORD_NOT_FOUND", "product id not found")
+	ErrOrderNotFound   = NewErrorInfo("RECORD_NOT_FOUND", "order id not found")
+	ErrUserNotFound    = NewErrorInfo("RECORD_NOT_FOUND", "user id not found")
+	ErrInternalServer  = NewErrorInfo("INTERNAL_SERVER_ERROR", "something went wrong")
+)
+
 func (e *ErrorInfo) Error() string {
 	return e.Message
 }
 
-func NewErrorInfo(name string, msg string) *ErrorInfo {
+func (e *ErrorInfo) GetLowerName() string {
+	return strings.ToLower(strings.ReplaceAll(e.Name, "_", " "))
+}
+
+func NewErrorInfo(name, msg string) *ErrorInfo {
 	return &ErrorInfo{
 		Name:    name,
 		Message: msg,
 	}
 }
 
-func GetInternalError() *ErrorInfo {
+func GetValidationError(msg string) *ErrorInfo {
 	return &ErrorInfo{
-		Name:    "internal server error",
-		Message: "internal server error",
+		Name:    "VALIDATION_ERROR",
+		Message: msg,
 	}
+}
+
+func AsErrorInfo(err error) *ErrorInfo {
+	errorInfo, ok := err.(*ErrorInfo)
+	if !ok {
+		return ErrInternalServer
+	}
+
+	return errorInfo
+
 }

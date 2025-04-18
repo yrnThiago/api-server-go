@@ -2,9 +2,11 @@ package repository
 
 import (
 	"errors"
+
 	"gorm.io/gorm"
 
 	"github.com/yrnThiago/api-server-go/internal/entity"
+	"github.com/yrnThiago/api-server-go/internal/utils"
 )
 
 type OrderRepositoryMysql struct {
@@ -43,7 +45,7 @@ func (r *OrderRepositoryMysql) GetById(orderId string) (*entity.Order, error) {
 	res := r.DB.Preload("Items.Product").First(&order, "id = ?", orderId)
 	if res.Error != nil {
 		if errors.Is(res.Error, gorm.ErrRecordNotFound) {
-			return nil, res.Error
+			return nil, utils.ErrOrderNotFound
 		}
 
 		return nil, res.Error

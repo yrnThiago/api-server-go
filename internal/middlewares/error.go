@@ -9,21 +9,20 @@ import (
 )
 
 func ErrorMiddleware(c *fiber.Ctx, err error) error {
-	customError, ok := err.(*utils.ErrorInfo)
-	if !ok {
-		customError = utils.GetInternalError()
-	}
+	errorInfo := utils.AsErrorInfo(err)
 
-	config.Logger.Warn(customError.Name,
+	config.Logger.Warn(errorInfo.GetLowerName(),
 		zap.String("request id", c.Locals("requestid").(string)),
-		zap.String("error", customError.Message),
+		zap.String("error", errorInfo.Message),
 	)
 
-	switch customError.Name {
-	case "ValidationError":
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": customError.Message})
+	switch errorInfo.Name {
+	case "VALIDATION_ERROR":
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": errorInfo.Message})
+	case "RECORD_NOT_FOUND":
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": errorInfo.Message})
 	case "JWT_INVALID_TOKEN":
-		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{"error": customError.Message})
+		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{"error": errorInfo.Message})
 	default:
 		return c.Status(fiber.StatusInternalServerError).
 			JSON(fiber.Map{"error": fiber.ErrInternalServerError.Message})

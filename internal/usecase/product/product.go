@@ -44,13 +44,13 @@ func NewProduct(name string, price float64, stock int) *entity.Product {
 func (u *ProductUseCase) Add(
 	input ProductInputDto,
 ) (*entity.Product, error) {
-	validationError := utils.ValidateStruct(input)
-	if validationError != nil {
-		return nil, utils.NewErrorInfo("ValidationError", validationError.Error())
+	err := utils.ValidateStruct(input)
+	if err != nil {
+		return nil, utils.GetValidationError(err.Error())
 	}
 
 	product := entity.NewProduct(input.Name, input.Price, input.Stock)
-	err := u.ProductRepository.Add(product)
+	err = u.ProductRepository.Add(product)
 	if err != nil {
 		return nil, err
 	}
@@ -87,7 +87,7 @@ func (u *ProductUseCase) UpdateById(
 
 	err := utils.ValidateStruct(input)
 	if err != nil {
-		return nil, utils.NewErrorInfo("ValidationError", err.Error())
+		return nil, utils.GetValidationError(err.Error())
 	}
 
 	product, err := u.GetById(id)
