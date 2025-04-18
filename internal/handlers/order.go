@@ -6,7 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"github.com/yrnThiago/api-server-go/cmd/publisher"
-	"github.com/yrnThiago/api-server-go/internal/usecase"
+	"github.com/yrnThiago/api-server-go/internal/usecase/order"
 )
 
 type OrderHandlers struct {

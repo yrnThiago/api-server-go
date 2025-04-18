@@ -29,11 +29,11 @@ type OrderOutputDto struct {
 }
 
 type OrderUseCase struct {
-	orderRepository   entity.OrderRepository
+	orderRepository   IOrderRepository
 	productRepository entity.ProductRepository
 }
 
-func NewOrderUseCase(orderRepository entity.OrderRepository, productRepository entity.ProductRepository) *OrderUseCase {
+func NewOrderUseCase(orderRepository IOrderRepository, productRepository entity.ProductRepository) *OrderUseCase {
 	return &OrderUseCase{
 		orderRepository:   orderRepository,
 		productRepository: productRepository,

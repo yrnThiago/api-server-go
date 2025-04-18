@@ -6,7 +6,7 @@ import (
 	"github.com/yrnThiago/api-server-go/internal/handlers"
 	"github.com/yrnThiago/api-server-go/internal/infra/repository"
 	"github.com/yrnThiago/api-server-go/internal/routes"
-	"github.com/yrnThiago/api-server-go/internal/usecase"
+	"github.com/yrnThiago/api-server-go/internal/usecase/order"
 )
 
 func OrderRouter() *fiber.App {
