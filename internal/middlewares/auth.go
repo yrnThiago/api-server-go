@@ -5,7 +5,6 @@ import (
 	"github.com/golang-jwt/jwt"
 
 	"github.com/yrnThiago/api-server-go/config"
-	"github.com/yrnThiago/api-server-go/internal/keys"
 	"github.com/yrnThiago/api-server-go/internal/utils"
 )
 
@@ -19,9 +18,9 @@ func AuthMiddleware(c *fiber.Ctx) error {
 	}
 
 	claims := token.Claims.(jwt.MapClaims)
-	userID := claims[string(keys.UserIDKey)]
+	userID := claims[utils.UserIdKeyCtx]
 
-	c.Locals(string(keys.UserIDKey), userID)
+	c.Locals(utils.UserIdKeyCtx, userID)
 
 	return c.Next()
 }

@@ -6,15 +6,15 @@ import (
 
 	"github.com/golang-jwt/jwt"
 	"golang.org/x/crypto/bcrypt"
-
-	"github.com/yrnThiago/api-server-go/internal/keys"
 )
+
+const UserIdKeyCtx string = "userID"
 
 func GenerateJWT(userID string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		jwt.MapClaims{
-			string(keys.UserIDKey): userID,
-			"exp":                  time.Now().Add(time.Hour * 24).Unix(),
+			UserIdKeyCtx: userID,
+			"exp":        time.Now().Add(time.Hour * 24).Unix(),
 		})
 
 	tokenString, err := token.SignedString(SECRET_KEY)

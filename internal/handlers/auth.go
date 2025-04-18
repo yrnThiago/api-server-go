@@ -9,7 +9,6 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/yrnThiago/api-server-go/config"
-	"github.com/yrnThiago/api-server-go/internal/keys"
 	"github.com/yrnThiago/api-server-go/internal/usecase/user"
 	"github.com/yrnThiago/api-server-go/internal/utils"
 )
@@ -40,11 +39,11 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": WRONG_CREDENTIALS_ERR})
 	}
 
-	c.Locals(string(keys.UserIDKey), output.ID)
+	c.Locals(utils.UserIdKeyCtx, output.ID)
 
 	config.Logger.Info(
 		"user logged in",
-		zap.String("user id", c.Locals(string(keys.UserIDKey)).(string)),
+		zap.String("user id", c.Locals(utils.UserIdKeyCtx).(string)),
 	)
 
 	authToken, err := utils.GenerateJWT(output.ID)
