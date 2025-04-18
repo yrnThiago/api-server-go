@@ -5,7 +5,7 @@ import (
 
 	"gorm.io/gorm"
 
-	"github.com/yrnThiago/api-server-go/internal/models"
+	"github.com/yrnThiago/api-server-go/internal/entity"
 )
 
 type ProductRepositoryMysql struct {
@@ -18,7 +18,7 @@ func NewProductRepositoryMysql(db *gorm.DB) *ProductRepositoryMysql {
 	}
 }
 
-func (r *ProductRepositoryMysql) Add(product *models.Product) error {
+func (r *ProductRepositoryMysql) Add(product *entity.Product) error {
 	res := r.DB.Create(product)
 
 	if res.Error != nil {
@@ -28,8 +28,8 @@ func (r *ProductRepositoryMysql) Add(product *models.Product) error {
 	return nil
 }
 
-func (r *ProductRepositoryMysql) GetMany() ([]*models.Product, error) {
-	var products []*models.Product
+func (r *ProductRepositoryMysql) GetMany() ([]*entity.Product, error) {
+	var products []*entity.Product
 	res := r.DB.Find(&products)
 
 	if res.Error != nil {
@@ -39,8 +39,8 @@ func (r *ProductRepositoryMysql) GetMany() ([]*models.Product, error) {
 	return products, nil
 }
 
-func (r *ProductRepositoryMysql) GetById(productID string) (*models.Product, error) {
-	var product *models.Product
+func (r *ProductRepositoryMysql) GetById(productID string) (*entity.Product, error) {
+	var product *entity.Product
 	res := r.DB.Limit(1).First(&product, "id = ?", productID)
 	if res.Error != nil {
 		if errors.Is(res.Error, gorm.ErrRecordNotFound) {
@@ -54,15 +54,15 @@ func (r *ProductRepositoryMysql) GetById(productID string) (*models.Product, err
 }
 
 func (r *ProductRepositoryMysql) UpdateById(
-	product, newProductBody *models.Product,
-) (*models.Product, error) {
+	product, newProductBody *entity.Product,
+) (*entity.Product, error) {
 	r.DB.Model(&product).Omit("ID").Updates(newProductBody)
 
 	return product, nil
 }
 
 func (r *ProductRepositoryMysql) DeleteById(productID string) error {
-	var product *models.Product
+	var product *entity.Product
 	res := r.DB.Delete(&product, "id = ?", productID)
 	if res.Error != nil {
 		return res.Error

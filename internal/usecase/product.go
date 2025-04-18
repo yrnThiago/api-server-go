@@ -5,7 +5,7 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/yrnThiago/api-server-go/config"
-	"github.com/yrnThiago/api-server-go/internal/models"
+	"github.com/yrnThiago/api-server-go/internal/entity"
 	"github.com/yrnThiago/api-server-go/internal/utils"
 )
 
@@ -24,17 +24,17 @@ type ProductOutputDto struct {
 }
 
 type ProductUseCase struct {
-	ProductRepository models.ProductRepository
+	ProductRepository entity.ProductRepository
 }
 
-func NewProductUseCase(productRepository models.ProductRepository) *ProductUseCase {
+func NewProductUseCase(productRepository entity.ProductRepository) *ProductUseCase {
 	return &ProductUseCase{
 		ProductRepository: productRepository,
 	}
 }
 
-func NewProduct(name string, price float64, stock int) *models.Product {
-	return &models.Product{
+func NewProduct(name string, price float64, stock int) *entity.Product {
+	return &entity.Product{
 		Name:  name,
 		Price: price,
 		Stock: stock,
@@ -43,13 +43,13 @@ func NewProduct(name string, price float64, stock int) *models.Product {
 
 func (u *ProductUseCase) Add(
 	input ProductInputDto,
-) (*models.Product, error) {
+) (*entity.Product, error) {
 	validationError := utils.ValidateStruct(input)
 	if validationError != nil {
 		return nil, utils.NewErrorInfo("ValidationError", validationError.Error())
 	}
 
-	product := models.NewProduct(input.Name, input.Price, input.Stock)
+	product := entity.NewProduct(input.Name, input.Price, input.Stock)
 	err := u.ProductRepository.Add(product)
 	if err != nil {
 		return nil, err
@@ -62,7 +62,7 @@ func (u *ProductUseCase) Add(
 	return product, nil
 }
 
-func (u *ProductUseCase) GetMany() ([]*models.Product, error) {
+func (u *ProductUseCase) GetMany() ([]*entity.Product, error) {
 	products, err := u.ProductRepository.GetMany()
 	if err != nil {
 		return nil, err
@@ -71,7 +71,7 @@ func (u *ProductUseCase) GetMany() ([]*models.Product, error) {
 	return products, nil
 }
 
-func (u *ProductUseCase) GetById(id string) (*models.Product, error) {
+func (u *ProductUseCase) GetById(id string) (*entity.Product, error) {
 	product, err := u.ProductRepository.GetById(id)
 	if err != nil {
 		return nil, err
@@ -83,7 +83,7 @@ func (u *ProductUseCase) GetById(id string) (*models.Product, error) {
 func (u *ProductUseCase) UpdateById(
 	id string,
 	input ProductInputDto,
-) (*models.Product, error) {
+) (*entity.Product, error) {
 
 	err := utils.ValidateStruct(input)
 	if err != nil {

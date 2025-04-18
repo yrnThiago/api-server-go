@@ -2,7 +2,7 @@ package usecase
 
 import (
 	"github.com/google/uuid"
-	"github.com/yrnThiago/api-server-go/internal/models"
+	"github.com/yrnThiago/api-server-go/internal/entity"
 	"github.com/yrnThiago/api-server-go/internal/utils"
 	"gorm.io/gorm"
 )
@@ -17,33 +17,33 @@ type OrderInputDto struct {
 type OrderItemInputDto struct {
 	OrderID   string         `gorm:"index"                json:"-"`
 	ProductID string         `json:"-"`
-	Product   models.Product `gorm:"foreignKey:ProductID" validate:"required"`
+	Product   entity.Product `gorm:"foreignKey:ProductID" validate:"required"`
 	Qty       int            `json:"qty" validate:"required,min=1"`
 }
 
 type OrderOutputDto struct {
 	ID     string
 	Status string
-	Items  []models.OrderItems
+	Items  []entity.OrderItems
 	gorm.Model
 }
 
 type OrderUseCase struct {
-	orderRepository   models.OrderRepository
-	productRepository models.ProductRepository
+	orderRepository   entity.OrderRepository
+	productRepository entity.ProductRepository
 }
 
-func NewOrderUseCase(orderRepository models.OrderRepository, productRepository models.ProductRepository) *OrderUseCase {
+func NewOrderUseCase(orderRepository entity.OrderRepository, productRepository entity.ProductRepository) *OrderUseCase {
 	return &OrderUseCase{
 		orderRepository:   orderRepository,
 		productRepository: productRepository,
 	}
 }
 
-func (u *OrderUseCase) NewOrderItems(items []OrderItemInputDto) []models.OrderItems {
-	var orderItems []models.OrderItems
+func (u *OrderUseCase) NewOrderItems(items []OrderItemInputDto) []entity.OrderItems {
+	var orderItems []entity.OrderItems
 	for _, item := range items {
-		orderItems = append(orderItems, models.OrderItems{
+		orderItems = append(orderItems, entity.OrderItems{
 			ProductID: item.Product.ID,
 			Qty:       item.Qty,
 		})
@@ -52,8 +52,8 @@ func (u *OrderUseCase) NewOrderItems(items []OrderItemInputDto) []models.OrderIt
 	return orderItems
 }
 
-func (u *OrderUseCase) NewOrder(items []OrderItemInputDto, status string) *models.Order {
-	return &models.Order{
+func (u *OrderUseCase) NewOrder(items []OrderItemInputDto, status string) *entity.Order {
+	return &entity.Order{
 		ID:     uuid.New().String(),
 		Status: status,
 		Items:  u.NewOrderItems(items),
@@ -115,7 +115,7 @@ func (u *OrderUseCase) GetMany() ([]*OrderOutputDto, error) {
 	return ordersOutput, nil
 }
 
-func (u *OrderUseCase) GetById(id string) (*models.Order, error) {
+func (u *OrderUseCase) GetById(id string) (*entity.Order, error) {
 	order, err := u.orderRepository.GetById(id)
 	if err != nil {
 		return nil, err
@@ -127,7 +127,7 @@ func (u *OrderUseCase) GetById(id string) (*models.Order, error) {
 func (u *OrderUseCase) UpdateById(
 	id string,
 	input OrderInputDto,
-) (*models.Order, error) {
+) (*entity.Order, error) {
 
 	err := utils.ValidateStruct(input)
 	if err != nil {

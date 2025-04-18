@@ -3,7 +3,7 @@ package config
 import (
 	"fmt"
 
-	"github.com/yrnThiago/api-server-go/internal/models"
+	"github.com/yrnThiago/api-server-go/internal/entity"
 	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -27,7 +27,7 @@ func DatabaseInit() {
 		Logger.Panic("failed to connect to database")
 	}
 
-	db.Migrator().AutoMigrate(&models.User{}, &models.Product{}, &models.Order{}, &models.OrderItems{})
+	db.Migrator().AutoMigrate(&entity.User{}, &entity.Product{}, &entity.Order{}, &entity.OrderItems{})
 	DB = db
 
 	Logger.Info(

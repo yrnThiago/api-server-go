@@ -4,7 +4,7 @@ import (
 	"errors"
 	"gorm.io/gorm"
 
-	"github.com/yrnThiago/api-server-go/internal/models"
+	"github.com/yrnThiago/api-server-go/internal/entity"
 )
 
 type OrderRepositoryMysql struct {
@@ -17,7 +17,7 @@ func NewOrderRepositoryMysql(db *gorm.DB) *OrderRepositoryMysql {
 	}
 }
 
-func (r *OrderRepositoryMysql) Add(order *models.Order) error {
+func (r *OrderRepositoryMysql) Add(order *entity.Order) error {
 	res := r.DB.Create(order).Omit("Items.Product")
 
 	if res.Error != nil {
@@ -27,8 +27,8 @@ func (r *OrderRepositoryMysql) Add(order *models.Order) error {
 	return nil
 }
 
-func (r *OrderRepositoryMysql) GetMany() ([]*models.Order, error) {
-	var orders []*models.Order
+func (r *OrderRepositoryMysql) GetMany() ([]*entity.Order, error) {
+	var orders []*entity.Order
 	res := r.DB.Preload("Items.Product").Find(&orders)
 
 	if res.Error != nil {
@@ -38,8 +38,8 @@ func (r *OrderRepositoryMysql) GetMany() ([]*models.Order, error) {
 	return orders, nil
 }
 
-func (r *OrderRepositoryMysql) GetById(orderId string) (*models.Order, error) {
-	var order *models.Order
+func (r *OrderRepositoryMysql) GetById(orderId string) (*entity.Order, error) {
+	var order *entity.Order
 	res := r.DB.Preload("Items.Product").First(&order, "id = ?", orderId)
 	if res.Error != nil {
 		if errors.Is(res.Error, gorm.ErrRecordNotFound) {
@@ -53,8 +53,8 @@ func (r *OrderRepositoryMysql) GetById(orderId string) (*models.Order, error) {
 }
 
 func (r *OrderRepositoryMysql) UpdateById(
-	order, newOrderBody *models.Order,
-) (*models.Order, error) {
+	order, newOrderBody *entity.Order,
+) (*entity.Order, error) {
 	res := r.DB.Model(&order).Select("status").Omit("ID").Updates(newOrderBody)
 	if res.Error != nil {
 		return nil, res.Error
@@ -64,7 +64,7 @@ func (r *OrderRepositoryMysql) UpdateById(
 }
 
 func (r *OrderRepositoryMysql) DeleteById(orderId string) error {
-	var order *models.Order
+	var order *entity.Order
 	res := r.DB.Delete(&order, "id = ?", orderId)
 	if res.Error != nil {
 		return res.Error

@@ -5,7 +5,7 @@ import (
 
 	"gorm.io/gorm"
 
-	"github.com/yrnThiago/api-server-go/internal/models"
+	"github.com/yrnThiago/api-server-go/internal/entity"
 )
 
 type UserRepositoryMysql struct {
@@ -18,7 +18,7 @@ func NewUserRepositoryMysql(db *gorm.DB) *UserRepositoryMysql {
 	}
 }
 
-func (r *UserRepositoryMysql) Add(user *models.User) error {
+func (r *UserRepositoryMysql) Add(user *entity.User) error {
 	res := r.DB.Create(user)
 
 	if res.Error != nil {
@@ -28,8 +28,8 @@ func (r *UserRepositoryMysql) Add(user *models.User) error {
 	return nil
 }
 
-func (r *UserRepositoryMysql) GetMany() ([]*models.User, error) {
-	var users []*models.User
+func (r *UserRepositoryMysql) GetMany() ([]*entity.User, error) {
+	var users []*entity.User
 	res := r.DB.Find(&users)
 
 	if res.Error != nil {
@@ -39,8 +39,8 @@ func (r *UserRepositoryMysql) GetMany() ([]*models.User, error) {
 	return users, nil
 }
 
-func (r *UserRepositoryMysql) GetById(userID string) (*models.User, error) {
-	var user *models.User
+func (r *UserRepositoryMysql) GetById(userID string) (*entity.User, error) {
+	var user *entity.User
 	res := r.DB.Limit(1).First(&user, "id = ?", userID)
 	if res.Error != nil {
 		if errors.Is(res.Error, gorm.ErrRecordNotFound) {
@@ -53,8 +53,8 @@ func (r *UserRepositoryMysql) GetById(userID string) (*models.User, error) {
 	return user, nil
 }
 
-func (r *UserRepositoryMysql) GetByEmail(userEmail string) (*models.User, error) {
-	var user *models.User
+func (r *UserRepositoryMysql) GetByEmail(userEmail string) (*entity.User, error) {
+	var user *entity.User
 	res := r.DB.Limit(1).First(&user, "email = ?", userEmail)
 	if res.Error != nil {
 		if errors.Is(res.Error, gorm.ErrRecordNotFound) {
@@ -68,8 +68,8 @@ func (r *UserRepositoryMysql) GetByEmail(userEmail string) (*models.User, error)
 }
 
 func (r *UserRepositoryMysql) UpdateById(
-	user, newUserBody *models.User,
-) (*models.User, error) {
+	user, newUserBody *entity.User,
+) (*entity.User, error) {
 
 	r.DB.Model(&user).Omit("ID").Updates(newUserBody)
 
@@ -77,7 +77,7 @@ func (r *UserRepositoryMysql) UpdateById(
 }
 
 func (r *UserRepositoryMysql) DeleteById(userID string) error {
-	var user *models.User
+	var user *entity.User
 	res := r.DB.Delete(&user, "id = ?", userID)
 	if res.Error != nil {
 		return res.Error

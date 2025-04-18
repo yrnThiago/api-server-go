@@ -5,7 +5,7 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/yrnThiago/api-server-go/config"
-	"github.com/yrnThiago/api-server-go/internal/models"
+	"github.com/yrnThiago/api-server-go/internal/entity"
 	"github.com/yrnThiago/api-server-go/internal/utils"
 )
 
@@ -21,10 +21,10 @@ type UserOutputDto struct {
 }
 
 type UserUseCase struct {
-	UserRepository models.UserRepository
+	UserRepository entity.UserRepository
 }
 
-func NewUserUseCase(userRepository models.UserRepository) *UserUseCase {
+func NewUserUseCase(userRepository entity.UserRepository) *UserUseCase {
 	return &UserUseCase{
 		UserRepository: userRepository,
 	}
@@ -32,7 +32,7 @@ func NewUserUseCase(userRepository models.UserRepository) *UserUseCase {
 
 func (u *UserUseCase) Add(
 	input UserInputDto,
-) (*models.User, error) {
+) (*entity.User, error) {
 	validationError := utils.ValidateStruct(input)
 	if validationError != nil {
 		return nil, utils.NewErrorInfo("ValidationError", validationError.Error())
@@ -40,7 +40,7 @@ func (u *UserUseCase) Add(
 
 	input.Password, _ = utils.GenerateHashPassword(input.Password)
 
-	user := models.NewUser(input.Email, input.Password)
+	user := entity.NewUser(input.Email, input.Password)
 	err := u.UserRepository.Add(user)
 	if err != nil {
 		return nil, err
@@ -50,7 +50,7 @@ func (u *UserUseCase) Add(
 	return user, err
 }
 
-func (u *UserUseCase) GetMany() ([]*models.User, error) {
+func (u *UserUseCase) GetMany() ([]*entity.User, error) {
 	users, err := u.UserRepository.GetMany()
 	if err != nil {
 		return nil, err
@@ -59,7 +59,7 @@ func (u *UserUseCase) GetMany() ([]*models.User, error) {
 	return users, nil
 }
 
-func (u *UserUseCase) GetById(id string) (*models.User, error) {
+func (u *UserUseCase) GetById(id string) (*entity.User, error) {
 	user, err := u.UserRepository.GetById(id)
 	if err != nil {
 		return nil, err
@@ -68,7 +68,7 @@ func (u *UserUseCase) GetById(id string) (*models.User, error) {
 	return user, nil
 }
 
-func (u *UserUseCase) GetByEmail(email string) (*models.User, error) {
+func (u *UserUseCase) GetByEmail(email string) (*entity.User, error) {
 	user, err := u.UserRepository.GetByEmail(email)
 	if err != nil {
 		return nil, err
@@ -80,7 +80,7 @@ func (u *UserUseCase) GetByEmail(email string) (*models.User, error) {
 func (u *UserUseCase) UpdateById(
 	id string,
 	input UserInputDto,
-) (*models.User, error) {
+) (*entity.User, error) {
 
 	err := utils.ValidateStruct(input)
 	if err != nil {
@@ -92,7 +92,7 @@ func (u *UserUseCase) UpdateById(
 		return nil, err
 	}
 
-	newUserBody := models.NewUser(input.Email, input.Password)
+	newUserBody := entity.NewUser(input.Email, input.Password)
 	updatedUser, err := u.UserRepository.UpdateById(user, newUserBody)
 	if err != nil {
 		return nil, err
