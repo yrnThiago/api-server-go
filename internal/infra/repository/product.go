@@ -40,9 +40,9 @@ func (r *ProductRepositoryMysql) GetMany() ([]*entity.Product, error) {
 	return products, nil
 }
 
-func (r *ProductRepositoryMysql) GetById(productID string) (*entity.Product, error) {
+func (r *ProductRepositoryMysql) GetById(id string) (*entity.Product, error) {
 	var product *entity.Product
-	res := r.DB.Limit(1).First(&product, "id = ?", productID)
+	res := r.DB.Limit(1).First(&product, "id = ?", id)
 	if res.Error != nil {
 		if errors.Is(res.Error, gorm.ErrRecordNotFound) {
 			return nil, utils.ErrProductNotFound
@@ -54,17 +54,18 @@ func (r *ProductRepositoryMysql) GetById(productID string) (*entity.Product, err
 	return product, nil
 }
 
-func (r *ProductRepositoryMysql) UpdateById(
-	product, newProductBody *entity.Product,
-) (*entity.Product, error) {
-	r.DB.Model(&product).Omit("ID").Updates(newProductBody)
+func (r *ProductRepositoryMysql) UpdateById(product *entity.Product) (*entity.Product, error) {
+	res := r.DB.Save(product)
+	if res.Error != nil {
+		return nil, res.Error
+	}
 
 	return product, nil
 }
 
-func (r *ProductRepositoryMysql) DeleteById(productID string) error {
+func (r *ProductRepositoryMysql) DeleteById(id string) error {
 	var product *entity.Product
-	res := r.DB.Delete(&product, "id = ?", productID)
+	res := r.DB.Delete(&product, "id = ?", id)
 	if res.Error != nil {
 		return res.Error
 	}

@@ -29,7 +29,7 @@ func (p *ProductHandlers) Add(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": "new product added"})
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": "product created successfully"})
 }
 
 func (p *ProductHandlers) GetMany(c *fiber.Ctx) error {
@@ -39,7 +39,7 @@ func (p *ProductHandlers) GetMany(c *fiber.Ctx) error {
 	}
 
 	if output == nil {
-		return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "no product was created"})
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "no products found"})
 	}
 
 	return c.Status(fiber.StatusOK).JSON(output)
@@ -71,12 +71,12 @@ func (p *ProductHandlers) UpdateById(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "product id missing"})
 	}
 
-	new, err := p.ProductUseCase.UpdateById(id, input)
+	_, err = p.ProductUseCase.UpdateById(id, input)
 	if err != nil {
 		return err
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(new)
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": "product updated successfully"})
 }
 
 func (p *ProductHandlers) DeleteById(c *fiber.Ctx) error {
@@ -84,10 +84,11 @@ func (p *ProductHandlers) DeleteById(c *fiber.Ctx) error {
 	if id == ":id" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "product id missing"})
 	}
-	err := p.ProductUseCase.DeleteById(id)
+
+	_, err := p.ProductUseCase.DeleteById(id)
 	if err != nil {
 		return err
 	}
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "product deleted"})
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "product deleted successfully"})
 }

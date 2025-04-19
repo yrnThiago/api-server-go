@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"go.uber.org/zap"
-	"gorm.io/gorm"
 
 	"github.com/yrnThiago/api-server-go/config"
 	"github.com/yrnThiago/api-server-go/internal/entity"
@@ -20,7 +19,6 @@ type ProductOutputDto struct {
 	Name  string
 	Price float64
 	Stock int
-	gorm.Model
 }
 
 type ProductUseCase struct {
@@ -43,7 +41,7 @@ func NewProduct(name string, price float64, stock int) *entity.Product {
 
 func (u *ProductUseCase) Add(
 	input ProductInputDto,
-) (*entity.Product, error) {
+) (*ProductOutputDto, error) {
 	err := utils.ValidateStruct(input)
 	if err != nil {
 		return nil, utils.GetValidationError(err.Error())
@@ -59,58 +57,95 @@ func (u *ProductUseCase) Add(
 		"new product added",
 		zap.String("name", input.Name),
 	)
-	return product, nil
+
+	return &ProductOutputDto{
+		ID:    product.ID,
+		Name:  product.Name,
+		Price: product.Price,
+		Stock: product.Stock,
+	}, nil
 }
 
-func (u *ProductUseCase) GetMany() ([]*entity.Product, error) {
+func (u *ProductUseCase) GetMany() ([]*ProductOutputDto, error) {
+	var productsDTO []*ProductOutputDto
 	products, err := u.ProductRepository.GetMany()
 	if err != nil {
 		return nil, err
 	}
 
-	return products, nil
+	for _, product := range products {
+		productDTO := &ProductOutputDto{
+			ID:    product.ID,
+			Name:  product.Name,
+			Price: product.Price,
+			Stock: product.Stock,
+		}
+
+		productsDTO = append(productsDTO, productDTO)
+	}
+
+	return productsDTO, nil
 }
 
-func (u *ProductUseCase) GetById(id string) (*entity.Product, error) {
+func (u *ProductUseCase) GetById(id string) (*ProductOutputDto, error) {
 	product, err := u.ProductRepository.GetById(id)
 	if err != nil {
 		return nil, err
 	}
 
-	return product, nil
+	return &ProductOutputDto{
+		ID:    product.ID,
+		Name:  product.Name,
+		Price: product.Price,
+		Stock: product.Stock,
+	}, nil
 }
 
 func (u *ProductUseCase) UpdateById(
 	id string,
 	input ProductInputDto,
-) (*entity.Product, error) {
+) (*ProductOutputDto, error) {
 
 	err := utils.ValidateStruct(input)
 	if err != nil {
 		return nil, utils.GetValidationError(err.Error())
 	}
 
+	product, err := u.ProductRepository.GetById(id)
+	if err != nil {
+		return nil, err
+	}
+
+	product.Name = input.Name
+	product.Price = input.Price
+	product.Stock = input.Stock
+
+	updatedProduct, err := u.ProductRepository.UpdateById(product)
+	if err != nil {
+		return nil, err
+	}
+
+	return &ProductOutputDto{
+		ID:    updatedProduct.ID,
+		Name:  updatedProduct.Name,
+		Price: updatedProduct.Price,
+		Stock: updatedProduct.Stock,
+	}, nil
+}
+
+func (u *ProductUseCase) DeleteById(
+	id string,
+) (*ProductOutputDto, error) {
+
 	product, err := u.GetById(id)
 	if err != nil {
 		return nil, err
 	}
 
-	newProductBody := NewProduct(input.Name, input.Price, input.Stock)
-	product, err = u.ProductRepository.UpdateById(product, newProductBody)
+	err = u.ProductRepository.DeleteById(id)
 	if err != nil {
 		return nil, err
 	}
 
 	return product, nil
-}
-
-func (u *ProductUseCase) DeleteById(
-	productId string,
-) error {
-	err := u.ProductRepository.DeleteById(productId)
-	if err != nil {
-		return err
-	}
-
-	return err
 }
