@@ -55,9 +55,10 @@ func (r *OrderRepositoryMysql) GetById(orderId string) (*entity.Order, error) {
 }
 
 func (r *OrderRepositoryMysql) UpdateById(
-	order, newOrderBody *entity.Order,
+	order *entity.Order,
 ) (*entity.Order, error) {
-	res := r.DB.Model(&order).Select("status").Omit("ID").Updates(newOrderBody)
+	// TODO: fix duplicating product when update
+	res := r.DB.Save(order)
 	if res.Error != nil {
 		return nil, res.Error
 	}

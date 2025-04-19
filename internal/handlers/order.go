@@ -34,7 +34,7 @@ func (p *OrderHandlers) Add(c *fiber.Ctx) error {
 	}
 
 	go publisher.OrdersPub.Publish(output.ID)
-	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": "new order created"})
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": "order created successfully"})
 }
 
 func (p *OrderHandlers) GetMany(c *fiber.Ctx) error {
@@ -44,7 +44,7 @@ func (p *OrderHandlers) GetMany(c *fiber.Ctx) error {
 	}
 
 	if output == nil {
-		return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "no order was created"})
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "no orders found"})
 	}
 
 	return c.Status(fiber.StatusOK).JSON(output)
@@ -77,12 +77,12 @@ func (p *OrderHandlers) UpdateById(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "order id missing"})
 	}
 
-	newOrder, err := p.OrderUseCase.UpdateById(id, input)
+	_, err = p.OrderUseCase.UpdateById(id, input)
 	if err != nil {
 		return err
 	}
 
-	return c.Status(fiber.StatusOK).JSON(newOrder)
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "order updated successfully"})
 }
 
 func (p *OrderHandlers) DeleteById(c *fiber.Ctx) error {
@@ -91,10 +91,10 @@ func (p *OrderHandlers) DeleteById(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "order id missing"})
 	}
 
-	err := p.OrderUseCase.DeleteById(id)
+	_, err := p.OrderUseCase.DeleteById(id)
 	if err != nil {
 		return err
 	}
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "order deleted"})
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "order deleted successfully"})
 }

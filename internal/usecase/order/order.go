@@ -1,11 +1,12 @@
 package usecase
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/yrnThiago/api-server-go/internal/entity"
 	"github.com/yrnThiago/api-server-go/internal/usecase/product"
 	"github.com/yrnThiago/api-server-go/internal/utils"
-	"gorm.io/gorm"
 )
 
 var WAITING_PAYMENT = "Aguardando pagamento"
@@ -23,10 +24,10 @@ type OrderItemInputDto struct {
 }
 
 type OrderOutputDto struct {
-	ID     string
-	Status string
-	Items  []entity.OrderItems
-	gorm.Model
+	ID        string
+	Status    string
+	Items     []entity.OrderItems
+	CreatedAt time.Time
 }
 
 type OrderUseCase struct {
@@ -92,9 +93,10 @@ func (u *OrderUseCase) Add(
 	}
 
 	return &OrderOutputDto{
-		ID:     order.ID,
-		Items:  order.Items,
-		Status: order.Status,
+		ID:        order.ID,
+		Items:     order.Items,
+		Status:    order.Status,
+		CreatedAt: order.CreatedAt,
 	}, err
 }
 
@@ -107,28 +109,34 @@ func (u *OrderUseCase) GetMany() ([]*OrderOutputDto, error) {
 	var ordersOutput []*OrderOutputDto
 	for _, order := range orders {
 		ordersOutput = append(ordersOutput, &OrderOutputDto{
-			ID:     order.ID,
-			Items:  order.Items,
-			Status: order.Status,
+			ID:        order.ID,
+			Items:     order.Items,
+			Status:    order.Status,
+			CreatedAt: order.CreatedAt,
 		})
 	}
 
 	return ordersOutput, nil
 }
 
-func (u *OrderUseCase) GetById(id string) (*entity.Order, error) {
+func (u *OrderUseCase) GetById(id string) (*OrderOutputDto, error) {
 	order, err := u.orderRepository.GetById(id)
 	if err != nil {
 		return nil, err
 	}
 
-	return order, nil
+	return &OrderOutputDto{
+		ID:        order.ID,
+		Status:    order.Status,
+		Items:     order.Items,
+		CreatedAt: order.CreatedAt,
+	}, nil
 }
 
 func (u *OrderUseCase) UpdateById(
 	id string,
 	input OrderInputDto,
-) (*entity.Order, error) {
+) (*OrderOutputDto, error) {
 
 	err := utils.ValidateStruct(input)
 	if err != nil {
@@ -139,27 +147,38 @@ func (u *OrderUseCase) UpdateById(
 		return nil, err
 	}
 
+	order, err := u.orderRepository.GetById(id)
+	if err != nil {
+		return nil, err
+	}
+
+	order.Status = input.Status
+
+	updatedOrder, err := u.orderRepository.UpdateById(order)
+	if err != nil {
+		return nil, err
+	}
+
+	return &OrderOutputDto{
+		ID:        updatedOrder.ID,
+		Status:    updatedOrder.Status,
+		Items:     updatedOrder.Items,
+		CreatedAt: updatedOrder.CreatedAt,
+	}, nil
+}
+
+func (u *OrderUseCase) DeleteById(
+	id string,
+) (*OrderOutputDto, error) {
 	order, err := u.GetById(id)
 	if err != nil {
 		return nil, err
 	}
 
-	newOrderBody := u.NewOrder(input.Items, input.Status)
-	updatedOrder, err := u.orderRepository.UpdateById(order, newOrderBody)
+	err = u.orderRepository.DeleteById(id)
 	if err != nil {
 		return nil, err
 	}
 
-	return updatedOrder, nil
-}
-
-func (u *OrderUseCase) DeleteById(
-	id string,
-) error {
-	err := u.orderRepository.DeleteById(id)
-	if err != nil {
-		return err
-	}
-
-	return err
+	return order, err
 }
