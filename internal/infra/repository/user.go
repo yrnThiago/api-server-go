@@ -54,7 +54,7 @@ func (r *UserRepositoryMysql) GetById(userID string) (*entity.User, error) {
 	return user, nil
 }
 
-func (r *UserRepositoryMysql) GetByEmail(userEmail string) (*entity.User, error) {
+func (r *UserRepositoryMysql) GetByLogin(userEmail string) (*entity.User, error) {
 	var user *entity.User
 	res := r.DB.Limit(1).First(&user, "email = ?", userEmail)
 	if res.Error != nil {
@@ -68,11 +68,11 @@ func (r *UserRepositoryMysql) GetByEmail(userEmail string) (*entity.User, error)
 	return user, nil
 }
 
-func (r *UserRepositoryMysql) UpdateById(
-	user, newUserBody *entity.User,
-) (*entity.User, error) {
-
-	r.DB.Model(&user).Omit("ID").Updates(newUserBody)
+func (r *UserRepositoryMysql) UpdateById(user *entity.User) (*entity.User, error) {
+	res := r.DB.Save(user)
+	if res.Error != nil {
+		return nil, res.Error
+	}
 
 	return user, nil
 }

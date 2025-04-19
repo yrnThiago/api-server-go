@@ -6,7 +6,7 @@ type IUserRepository interface {
 	Add(user *entity.User) error
 	GetMany() ([]*entity.User, error)
 	GetById(id string) (*entity.User, error)
-	GetByEmail(email string) (*entity.User, error)
-	UpdateById(user, newUserBody *entity.User) (*entity.User, error)
+	GetByLogin(email string) (*entity.User, error)
+	UpdateById(user *entity.User) (*entity.User, error)
 	DeleteById(id string) error
 }

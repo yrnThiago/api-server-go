@@ -24,7 +24,6 @@ func (p *UserRouter) GetRouter() *fiber.App {
 	router.Post("/", p.UserHandlers.Add)
 	router.Get("/", p.UserHandlers.GetMany)
 	router.Get("/:id", p.UserHandlers.GetById)
-	router.Get("/:email", p.UserHandlers.GetByEmail)
 	router.Put("/:id", p.UserHandlers.UpdateById)
 	router.Delete("/:id", p.UserHandlers.DeleteById)
 

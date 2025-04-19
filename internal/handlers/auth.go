@@ -29,7 +29,7 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 	var userInputDto usecase.UserInputDto
 	c.BodyParser(&userInputDto)
 
-	output, err := h.UserUseCase.GetByEmail(userInputDto.Email)
+	output, err := h.UserUseCase.GetByLogin(userInputDto.Email)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": WRONG_CREDENTIALS_ERR})
 	}

@@ -29,7 +29,7 @@ func (p *UserHandlers) Add(c *fiber.Ctx) error {
 		return err
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": "user created"})
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": "user created successfully"})
 }
 
 func (p *UserHandlers) GetMany(c *fiber.Ctx) error {
@@ -39,7 +39,7 @@ func (p *UserHandlers) GetMany(c *fiber.Ctx) error {
 	}
 
 	if output == nil {
-		return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "no user was created"})
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "no users found"})
 	}
 
 	return c.Status(fiber.StatusOK).JSON(output)
@@ -59,21 +59,6 @@ func (p *UserHandlers) GetById(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(output)
 }
 
-// fix route for this pls
-func (p *UserHandlers) GetByEmail(c *fiber.Ctx) error {
-	email := c.Params("email")
-	if email == ":email" {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "user email missing"})
-	}
-
-	output, err := p.UserUseCase.GetByEmail(email)
-	if err != nil {
-		return err
-	}
-
-	return c.Status(fiber.StatusOK).JSON(output)
-}
-
 func (p *UserHandlers) UpdateById(c *fiber.Ctx) error {
 	var input usecase.UserInputDto
 	err := c.BodyParser(&input)
@@ -86,12 +71,12 @@ func (p *UserHandlers) UpdateById(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "user id missing"})
 	}
 
-	new, err := p.UserUseCase.UpdateById(id, input)
+	_, err = p.UserUseCase.UpdateById(id, input)
 	if err != nil {
 		return err
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(new)
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": "user updated successfully"})
 }
 
 func (p *UserHandlers) DeleteById(c *fiber.Ctx) error {
@@ -99,10 +84,11 @@ func (p *UserHandlers) DeleteById(c *fiber.Ctx) error {
 	if id == ":id" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "user id missing"})
 	}
-	err := p.UserUseCase.DeleteById(id)
+
+	_, err := p.UserUseCase.DeleteById(id)
 	if err != nil {
 		return err
 	}
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "user deleted"})
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "user deleted successfully"})
 }
