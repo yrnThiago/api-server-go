@@ -1,19 +1,18 @@
-package entity
+package usecase
 
 import (
 	"testing"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
+	"github.com/yrnThiago/api-server-go/internal/entity"
 )
-
-const WAITING_PAYMENT = "Aguardando Pagamento"
 
 func TestNewOrder_return_order_with_id(t *testing.T) {
 	orderStatus := WAITING_PAYMENT
-	orderItems := []OrderItems{
+	orderItems := []entity.OrderItems{
 		{
-			Product: *NewProduct("Controle PS4", 123.45, 1),
+			Product: *entity.NewProduct("Controle PS4", 123.45, 1),
 			Qty:     1,
 		},
 	}

@@ -12,7 +12,8 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/nats-io/nats.go v1.39.1
 	github.com/redis/go-redis/v9 v9.7.3
-	github.com/stretchr/testify v1.8.4
+	github.com/stretchr/testify v1.9.0
+	go.uber.org/mock v0.5.1
 	go.uber.org/zap v1.27.0
 	golang.org/x/crypto v0.34.0
 	gorm.io/driver/mysql v1.5.7
