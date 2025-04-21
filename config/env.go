@@ -3,24 +3,28 @@ package config
 import (
 	"log"
 	"os"
+	"strconv"
+	"time"
 
 	"github.com/joho/godotenv"
 )
 
 type EnvVariables struct {
-	PORT             string
-	DB_USERNAME      string
-	DB_PASSWORD      string
-	DB_HOST          string
-	DB_PORT          string
-	DB_NAME          string
-	COOKIE_NAME      string
-	SECRET_KEY       string
-	NEW_ORDERS_TOPIC string
-	RDB_ADDRESS      string
-	RDB_PASSWORD     string
-	RDB_DB           string
-	LOGS_FILE_NAME   string
+	PORT              string
+	DB_USERNAME       string
+	DB_PASSWORD       string
+	DB_HOST           string
+	DB_PORT           string
+	DB_NAME           string
+	COOKIE_NAME       string
+	SECRET_KEY        string
+	NEW_ORDERS_TOPIC  string
+	RDB_ADDRESS       string
+	RDB_PASSWORD      string
+	RDB_DB            int
+	RATE_LIMIT        int
+	RATE_LIMIT_WINDOW time.Duration
+	LOGS_FILE_NAME    string
 }
 
 var Env EnvVariables
@@ -31,19 +35,25 @@ func Init() {
 		log.Panic(".env missing")
 	}
 
+	rdbDb, _ := strconv.Atoi(os.Getenv("RDB_DB"))
+	rateLimit, _ := strconv.Atoi(os.Getenv("RATE_LIMIT"))
+	rateLimitWindow, _ := time.ParseDuration(os.Getenv("RATE_LIMIT_WINDOW"))
+
 	Env = EnvVariables{
-		PORT:             os.Getenv("PORT"),
-		DB_USERNAME:      os.Getenv("DB_USERNAME"),
-		DB_PASSWORD:      os.Getenv("DB_PASSWORD"),
-		DB_HOST:          os.Getenv("DB_HOST"),
-		DB_PORT:          os.Getenv("DB_PORT"),
-		DB_NAME:          os.Getenv("DB_NAME"),
-		COOKIE_NAME:      os.Getenv("COOKIE_NAME"),
-		SECRET_KEY:       os.Getenv("SECRET_KEY"),
-		NEW_ORDERS_TOPIC: os.Getenv("NEW_ORDERS_TOPIC"),
-		RDB_ADDRESS:      os.Getenv("RDB_ADDRESS"),
-		RDB_PASSWORD:     os.Getenv("RDB_PASSWORD"),
-		RDB_DB:           os.Getenv("RDB_DB"),
-		LOGS_FILE_NAME:   os.Getenv("LOGS_FILE_NAME"),
+		PORT:              os.Getenv("PORT"),
+		DB_USERNAME:       os.Getenv("DB_USERNAME"),
+		DB_PASSWORD:       os.Getenv("DB_PASSWORD"),
+		DB_HOST:           os.Getenv("DB_HOST"),
+		DB_PORT:           os.Getenv("DB_PORT"),
+		DB_NAME:           os.Getenv("DB_NAME"),
+		COOKIE_NAME:       os.Getenv("COOKIE_NAME"),
+		SECRET_KEY:        os.Getenv("SECRET_KEY"),
+		NEW_ORDERS_TOPIC:  os.Getenv("NEW_ORDERS_TOPIC"),
+		RDB_ADDRESS:       os.Getenv("RDB_ADDRESS"),
+		RDB_PASSWORD:      os.Getenv("RDB_PASSWORD"),
+		RDB_DB:            rdbDb,
+		RATE_LIMIT:        rateLimit,
+		RATE_LIMIT_WINDOW: rateLimitWindow,
+		LOGS_FILE_NAME:    os.Getenv("LOGS_FILE_NAME"),
 	}
 }
