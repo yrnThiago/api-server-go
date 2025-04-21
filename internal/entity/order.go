@@ -14,6 +14,6 @@ type OrderItems struct {
 type Order struct {
 	ID     string `gorm:"primaryKey"`
 	Status string
-	Items  []OrderItems `gorm:"foreignKey:OrderID"`
+	Items  []OrderItems `gorm:"foreignKey:OrderID;constraint:OnDelete:CASCADE"`
 	gorm.Model
 }
