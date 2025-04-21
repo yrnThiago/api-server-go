@@ -2,7 +2,6 @@ package config
 
 import (
 	"context"
-	"strconv"
 
 	infra "github.com/yrnThiago/api-server-go/internal/infra/redis"
 	"go.uber.org/zap"
@@ -11,8 +10,7 @@ import (
 var Redis *infra.Redis
 
 func RedisInit() {
-	rdbDb, _ := strconv.Atoi(Env.RDB_DB)
-	Redis = infra.NewRedis(Env.RDB_ADDRESS, Env.RDB_PASSWORD, rdbDb, Logger)
+	Redis = infra.NewRedis(Env.RDB_ADDRESS, Env.RDB_PASSWORD, Env.RDB_DB, Env.RATE_LIMIT, Env.RATE_LIMIT_WINDOW, Logger)
 
 	_, err := Redis.Ping(context.Background())
 	if err != nil {

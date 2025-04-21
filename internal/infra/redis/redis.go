@@ -31,7 +31,7 @@ func NewRateLimiter(client *redis.Client, limit int, window time.Duration, ctx c
 	}
 }
 
-func NewRedis(addr, password string, db int, logger *zap.Logger) *Redis {
+func NewRedis(addr, password string, db, limit int, window time.Duration, logger *zap.Logger) *Redis {
 	client := redis.NewClient(&redis.Options{
 		Addr:     addr,
 		Password: password,
@@ -39,7 +39,7 @@ func NewRedis(addr, password string, db int, logger *zap.Logger) *Redis {
 	},
 	)
 
-	rateLimiter := NewRateLimiter(client, 10, 1*time.Minute, context.Background())
+	rateLimiter := NewRateLimiter(client, limit, window, context.Background())
 
 	return &Redis{
 		Client:      client,
