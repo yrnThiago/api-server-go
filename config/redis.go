@@ -12,7 +12,7 @@ var Redis *infra.Redis
 
 func RedisInit() {
 	rdbDb, _ := strconv.Atoi(Env.RDB_DB)
-	Redis = infra.NewRedisClient(Env.RDB_ADDRESS, Env.RDB_PASSWORD, rdbDb, Logger)
+	Redis = infra.NewRedis(Env.RDB_ADDRESS, Env.RDB_PASSWORD, rdbDb, Logger)
 
 	_, err := Redis.Ping(context.Background())
 	if err != nil {
