@@ -23,6 +23,8 @@ func ErrorMiddleware(c *fiber.Ctx, err error) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": errorInfo.Message})
 	case "JWT_INVALID_TOKEN":
 		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{"error": utils.ErrUnauthorizedMsg})
+	case "RATE_LIMIT_ERROR":
+		return c.Status(fiber.StatusTooManyRequests).JSON(fiber.Map{"error": errorInfo.Message})
 	default:
 		return c.Status(fiber.StatusInternalServerError).
 			JSON(fiber.Map{"error": utils.ErrInternalServerMsg})

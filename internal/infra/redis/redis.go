@@ -2,16 +2,33 @@ package infra
 
 import (
 	"context"
+	"time"
 
 	"github.com/redis/go-redis/v9"
 	"go.uber.org/zap"
 )
 
-var RedisClient *Redis
-
 type Redis struct {
-	Client *redis.Client
-	Logger *zap.Logger
+	Client      *redis.Client
+	Logger      *zap.Logger
+	RateLimiter *RateLimiter
+	IsUp        bool
+}
+
+type RateLimiter struct {
+	client  *redis.Client
+	limit   int
+	window  time.Duration
+	context context.Context
+}
+
+func NewRateLimiter(client *redis.Client, limit int, window time.Duration, ctx context.Context) *RateLimiter {
+	return &RateLimiter{
+		client:  client,
+		limit:   limit,
+		window:  window,
+		context: ctx,
+	}
 }
 
 func NewRedisClient(addr, password string, db int, logger *zap.Logger) *Redis {
@@ -22,9 +39,12 @@ func NewRedisClient(addr, password string, db int, logger *zap.Logger) *Redis {
 	},
 	)
 
+	rateLimiter := NewRateLimiter(client, 10, 1*time.Minute, context.Background())
+
 	return &Redis{
-		Client: client,
-		Logger: logger,
+		Client:      client,
+		Logger:      logger,
+		RateLimiter: rateLimiter,
 	}
 }
 
@@ -65,4 +85,18 @@ func (r *Redis) Get(ctx context.Context, key string) string {
 		zap.String("val", val),
 	)
 	return val
+}
+
+func (r *Redis) Allow(key string) bool {
+	pipe := r.Client.TxPipeline()
+	incr := pipe.Incr(r.RateLimiter.context, key)
+	pipe.Expire(r.RateLimiter.context, key, r.RateLimiter.window)
+
+	_, err := pipe.Exec(r.RateLimiter.context)
+	if err != nil {
+		r.Logger.Panic("failed to exec pipe rate limit")
+		return false
+	}
+
+	return incr.Val() <= int64(r.RateLimiter.limit)
 }

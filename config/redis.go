@@ -8,22 +8,24 @@ import (
 	"go.uber.org/zap"
 )
 
-var RedisClient *infra.Redis
+var Redis *infra.Redis
 
 func RedisInit() {
 	rdbDb, _ := strconv.Atoi(Env.RDB_DB)
-	RedisClient = infra.NewRedisClient(Env.RDB_ADDRESS, Env.RDB_PASSWORD, rdbDb, Logger)
+	Redis = infra.NewRedisClient(Env.RDB_ADDRESS, Env.RDB_PASSWORD, rdbDb, Logger)
 
-	_, err := RedisClient.Ping(context.Background())
+	_, err := Redis.Ping(context.Background())
 	if err != nil {
 		Logger.Warn(
 			"redis did not pong",
 			zap.Error(err),
 		)
 
+		Redis.IsUp = false
 		return
 	}
 
+	Redis.IsUp = true
 	Logger.Info(
 		"Redis successfully initialized",
 		zap.String("addr", Env.RDB_ADDRESS),
