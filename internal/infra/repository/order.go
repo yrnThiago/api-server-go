@@ -40,9 +40,9 @@ func (r *OrderRepositoryMysql) GetMany() ([]*entity.Order, error) {
 	return orders, nil
 }
 
-func (r *OrderRepositoryMysql) GetById(orderId string) (*entity.Order, error) {
+func (r *OrderRepositoryMysql) GetById(id string) (*entity.Order, error) {
 	var order *entity.Order
-	res := r.DB.Preload("Items.Product").First(&order, "id = ?", orderId)
+	res := r.DB.Preload("Items.Product").First(&order, "id = ?", id)
 	if res.Error != nil {
 		if errors.Is(res.Error, gorm.ErrRecordNotFound) {
 			return nil, utils.ErrOrderNotFound
@@ -66,9 +66,10 @@ func (r *OrderRepositoryMysql) UpdateById(
 	return order, nil
 }
 
-func (r *OrderRepositoryMysql) DeleteById(orderId string) error {
+func (r *OrderRepositoryMysql) DeleteById(id string) error {
+	// TODO: maybe add soft delete and remove orderItems
 	var order *entity.Order
-	res := r.DB.Delete(&order, "id = ?", orderId)
+	res := r.DB.Delete(&order, "id = ?", id)
 	if res.Error != nil {
 		return res.Error
 	}
