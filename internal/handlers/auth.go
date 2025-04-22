@@ -27,7 +27,7 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 
 	token, output, err := h.AuthUseCase.Login(input)
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "wrong credentials")
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "wrong credentials"})
 	}
 
 	c.Locals(utils.UserIdKeyCtx, output.ID)
