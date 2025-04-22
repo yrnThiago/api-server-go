@@ -16,8 +16,9 @@ type EnvVariables struct {
 	DB_HOST           string
 	DB_PORT           string
 	DB_NAME           string
-	COOKIE_NAME       string
 	SECRET_KEY        string
+	COOKIE_NAME       string
+	COOKIE_EXPIRES_AT time.Duration
 	NEW_ORDERS_TOPIC  string
 	RDB_ADDRESS       string
 	RDB_PASSWORD      string
@@ -38,6 +39,7 @@ func Init() {
 	rdbDb, _ := strconv.Atoi(os.Getenv("RDB_DB"))
 	rateLimit, _ := strconv.Atoi(os.Getenv("RATE_LIMIT"))
 	rateLimitWindow, _ := time.ParseDuration(os.Getenv("RATE_LIMIT_WINDOW"))
+	cookieExpiresAt, _ := time.ParseDuration(os.Getenv("COOKIE_EXPIRES_AT"))
 
 	Env = EnvVariables{
 		PORT:              os.Getenv("PORT"),
@@ -46,8 +48,9 @@ func Init() {
 		DB_HOST:           os.Getenv("DB_HOST"),
 		DB_PORT:           os.Getenv("DB_PORT"),
 		DB_NAME:           os.Getenv("DB_NAME"),
-		COOKIE_NAME:       os.Getenv("COOKIE_NAME"),
 		SECRET_KEY:        os.Getenv("SECRET_KEY"),
+		COOKIE_NAME:       os.Getenv("COOKIE_NAME"),
+		COOKIE_EXPIRES_AT: cookieExpiresAt,
 		NEW_ORDERS_TOPIC:  os.Getenv("NEW_ORDERS_TOPIC"),
 		RDB_ADDRESS:       os.Getenv("RDB_ADDRESS"),
 		RDB_PASSWORD:      os.Getenv("RDB_PASSWORD"),

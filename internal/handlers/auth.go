@@ -72,7 +72,7 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 	cookie := &fiber.Cookie{}
 	cookie.Name = config.Env.COOKIE_NAME
 	cookie.Value = utils.BEARER_KEY + authToken
-	cookie.Expires = time.Now().Add(365 * 24 * time.Hour)
+	cookie.Expires = time.Now().Add(config.Env.COOKIE_EXPIRES_AT)
 	cookie.Secure = false
 	cookie.HTTPOnly = true
 	cookie.Path = "/"
