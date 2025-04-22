@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/gofiber/fiber/v2/utils"
 	"go.uber.org/zap"
@@ -19,6 +20,12 @@ func Init() {
 			ErrorHandler: middlewares.ErrorMiddleware,
 		},
 	)
+
+	app.Use(cors.New(cors.Config{
+		AllowCredentials: true,
+		AllowOrigins:     "https://localhost",
+		AllowHeaders:     "Origin, Content-Type, Accept",
+	}))
 
 	app.Use(requestid.New(requestid.Config{
 		Next:       nil,
