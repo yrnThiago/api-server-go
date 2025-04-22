@@ -9,6 +9,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/yrnThiago/api-server-go/config"
+	infra "github.com/yrnThiago/api-server-go/internal/infra/redis"
 	"github.com/yrnThiago/api-server-go/internal/usecase/user"
 	"github.com/yrnThiago/api-server-go/internal/utils"
 )
@@ -66,7 +67,7 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 		return err
 	}
 
-	config.Redis.Set(context.Background(), "user-"+output.ID, string(userJson), 0)
+	infra.Redis.Set(context.Background(), "user-"+output.ID, string(userJson), 0)
 
 	cookie := &fiber.Cookie{}
 	cookie.Name = config.Env.COOKIE_NAME

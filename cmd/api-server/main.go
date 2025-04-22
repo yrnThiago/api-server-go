@@ -8,6 +8,7 @@ import (
 	"github.com/yrnThiago/api-server-go/cmd/consumer"
 	"github.com/yrnThiago/api-server-go/cmd/publisher"
 	"github.com/yrnThiago/api-server-go/config"
+	infra "github.com/yrnThiago/api-server-go/internal/infra/redis"
 	"github.com/yrnThiago/api-server-go/internal/server"
 )
 
@@ -16,7 +17,8 @@ func main() {
 	config.LoggerInit()
 	config.DatabaseInit()
 	config.NatsInit()
-	config.RedisInit()
+
+	infra.RedisInit()
 
 	publisher.PubInit()
 	consumer.ConsumerInit()

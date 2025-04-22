@@ -3,10 +3,12 @@ package usecase
 import (
 	"context"
 	"encoding/json"
+
 	"go.uber.org/zap"
 
 	"github.com/yrnThiago/api-server-go/config"
 	"github.com/yrnThiago/api-server-go/internal/entity"
+	infra "github.com/yrnThiago/api-server-go/internal/infra/redis"
 	"github.com/yrnThiago/api-server-go/internal/utils"
 )
 
@@ -60,7 +62,7 @@ func (u *ProductUseCase) Add(
 		zap.String("name", input.Name),
 	)
 
-	config.Redis.Del(context.Background(), "all-products")
+	infra.Redis.Del(context.Background(), "all-products")
 	return &ProductOutputDto{
 		ID:    product.ID,
 		Name:  product.Name,
@@ -73,7 +75,7 @@ func (u *ProductUseCase) GetMany() ([]*ProductOutputDto, error) {
 	var productsDTO []*ProductOutputDto
 	ctx := context.Background()
 
-	productsRedis, _ := config.Redis.Get(ctx, "all-products")
+	productsRedis, _ := infra.Redis.Get(ctx, "all-products")
 
 	if productsRedis != "" {
 		json.Unmarshal([]byte(productsRedis), &productsDTO)
@@ -101,7 +103,7 @@ func (u *ProductUseCase) GetMany() ([]*ProductOutputDto, error) {
 		return nil, err
 	}
 
-	config.Redis.Set(ctx, "all-products", string(productsJson), config.Env.RATE_LIMIT_WINDOW)
+	infra.Redis.Set(ctx, "all-products", string(productsJson), config.Env.RATE_LIMIT_WINDOW)
 	return productsDTO, nil
 }
 
@@ -143,7 +145,7 @@ func (u *ProductUseCase) UpdateById(
 		return nil, err
 	}
 
-	config.Redis.Del(context.Background(), "all-products")
+	infra.Redis.Del(context.Background(), "all-products")
 
 	return &ProductOutputDto{
 		ID:    updatedProduct.ID,
@@ -167,6 +169,6 @@ func (u *ProductUseCase) DeleteById(
 		return nil, err
 	}
 
-	config.Redis.Del(context.Background(), "all-products")
+	infra.Redis.Del(context.Background(), "all-products")
 	return product, nil
 }
