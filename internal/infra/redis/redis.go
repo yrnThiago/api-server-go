@@ -87,6 +87,23 @@ func (r *Redis) Get(ctx context.Context, key string) (string, error) {
 	return val, err
 }
 
+func (r *Redis) Del(ctx context.Context, key string) error {
+	err := r.Client.Del(ctx, key).Err()
+	if err != nil {
+		r.Logger.Info(
+			"error del redis key",
+			zap.String("key", key),
+		)
+		return err
+	}
+
+	r.Logger.Info(
+		"key/val deleted",
+		zap.String("key", key),
+	)
+	return nil
+}
+
 func (r *Redis) Allow(key string) bool {
 	pipe := r.Client.TxPipeline()
 	incr := pipe.Incr(r.RateLimiter.context, key)

@@ -60,6 +60,7 @@ func (u *ProductUseCase) Add(
 		zap.String("name", input.Name),
 	)
 
+	config.Redis.Del(context.Background(), "all-products")
 	return &ProductOutputDto{
 		ID:    product.ID,
 		Name:  product.Name,
@@ -142,6 +143,8 @@ func (u *ProductUseCase) UpdateById(
 		return nil, err
 	}
 
+	config.Redis.Del(context.Background(), "all-products")
+
 	return &ProductOutputDto{
 		ID:    updatedProduct.ID,
 		Name:  updatedProduct.Name,
@@ -164,5 +167,6 @@ func (u *ProductUseCase) DeleteById(
 		return nil, err
 	}
 
+	config.Redis.Del(context.Background(), "all-products")
 	return product, nil
 }
