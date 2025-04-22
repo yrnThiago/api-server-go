@@ -7,13 +7,13 @@ import (
 	"github.com/yrnThiago/api-server-go/internal/handlers"
 	"github.com/yrnThiago/api-server-go/internal/infra/repository"
 	"github.com/yrnThiago/api-server-go/internal/routes"
-	"github.com/yrnThiago/api-server-go/internal/usecase/user"
+	"github.com/yrnThiago/api-server-go/internal/usecase/auth"
 )
 
 func AuthRouter() *fiber.App {
 	userRepository := repository.NewUserRepositoryMysql(config.DB)
-	userUseCase := usecase.NewUserUseCase(userRepository)
-	authHandlers := handlers.NewAuthHandlers(userUseCase)
+	authUseCase := usecase.NewAuthUseCase(userRepository)
+	authHandlers := handlers.NewAuthHandlers(authUseCase)
 	authRouter := routes.NewAuthRouter(authHandlers)
 
 	return authRouter.GetRouter()

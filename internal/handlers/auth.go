@@ -1,43 +1,33 @@
 package handlers
 
 import (
-	"context"
-	"encoding/json"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
 
 	"github.com/yrnThiago/api-server-go/config"
-	infra "github.com/yrnThiago/api-server-go/internal/infra/redis"
-	"github.com/yrnThiago/api-server-go/internal/usecase/user"
+	"github.com/yrnThiago/api-server-go/internal/usecase/auth"
 	"github.com/yrnThiago/api-server-go/internal/utils"
 )
 
-var WRONG_CREDENTIALS_ERR = "wrong credentials"
-
 type AuthHandler struct {
-	UserUseCase *usecase.UserUseCase
+	AuthUseCase usecase.IAuthUseCase
 }
 
-func NewAuthHandlers(createUserUseCase *usecase.UserUseCase) *AuthHandler {
+func NewAuthHandlers(authUseCase usecase.IAuthUseCase) *AuthHandler {
 	return &AuthHandler{
-		UserUseCase: createUserUseCase,
+		AuthUseCase: authUseCase,
 	}
 }
 
 func (h *AuthHandler) Login(c *fiber.Ctx) error {
-	var userInputDto usecase.UserInputDto
-	c.BodyParser(&userInputDto)
+	var input usecase.AuthInputDto
+	c.BodyParser(&input)
 
-	output, err := h.UserUseCase.GetByLogin(userInputDto.Email)
+	token, output, err := h.AuthUseCase.Login(input)
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": WRONG_CREDENTIALS_ERR})
-	}
-
-	if !utils.CheckPasswordHash(userInputDto.Password, output.Password) {
-		config.Logger.Warn(WRONG_CREDENTIALS_ERR)
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": WRONG_CREDENTIALS_ERR})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "wrong credentials")
 	}
 
 	c.Locals(utils.UserIdKeyCtx, output.ID)
@@ -47,31 +37,9 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 		zap.String("user id", c.Locals(utils.UserIdKeyCtx).(string)),
 	)
 
-	authToken, err := utils.GenerateJWT(output.ID)
-	if err != nil {
-		config.Logger.Fatal(
-			"jwt token not generated",
-			zap.Error(err),
-		)
-
-		return err
-	}
-
-	userJson, err := json.Marshal(output)
-	if err != nil {
-		config.Logger.Fatal(
-			"marshal user json",
-			zap.Error(err),
-		)
-
-		return err
-	}
-
-	infra.Redis.Set(context.Background(), "user-"+output.ID, string(userJson), 0)
-
 	cookie := &fiber.Cookie{}
 	cookie.Name = config.Env.COOKIE_NAME
-	cookie.Value = utils.BEARER_KEY + authToken
+	cookie.Value = utils.BEARER_KEY + token
 	cookie.Expires = time.Now().Add(config.Env.COOKIE_EXPIRES_AT)
 	cookie.Secure = false
 	cookie.HTTPOnly = true
