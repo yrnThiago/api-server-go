@@ -1,8 +1,6 @@
 package handlers
 
 import (
-	"time"
-
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
 
@@ -37,25 +35,12 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 		zap.String("user id", c.Locals(utils.UserIdKeyCtx).(string)),
 	)
 
-	cookie := &fiber.Cookie{}
-	cookie.Name = config.Env.COOKIE_NAME
-	cookie.Value = utils.BEARER_KEY + token
-	cookie.Expires = time.Now().Add(config.Env.COOKIE_EXPIRES_AT)
-	cookie.Secure = false
-	cookie.HTTPOnly = true
-	cookie.Path = "/"
-
-	utils.SetCookie(c, cookie)
+	utils.SetBearerCookie(c, token)
 	return c.JSON(fiber.Map{"message": "user logged in"})
 }
 
 func (h *AuthHandler) Logout(c *fiber.Ctx) error {
-	cookie := &fiber.Cookie{}
-	cookie.Name = config.Env.COOKIE_NAME
-	cookie.Value = "deleted"
-	cookie.Expires = time.Now().Add(-3 * time.Second)
-	cookie.HTTPOnly = true
+	utils.ClearBearerCookie(c)
 
-	utils.SetCookie(c, cookie)
 	return c.JSON(fiber.Map{"message": "user logout"})
 }

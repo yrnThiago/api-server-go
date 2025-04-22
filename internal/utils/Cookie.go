@@ -3,6 +3,7 @@ package utils
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/yrnThiago/api-server-go/config"
@@ -34,7 +35,16 @@ func SetCookie(c *fiber.Ctx, cookie *fiber.Cookie) (string, error) {
 	return newCookie, err
 }
 
-func SetBearerCookie(c *fiber.Ctx, cookie *fiber.Cookie) (string, error) {
+func SetBearerCookie(c *fiber.Ctx, token string) (string, error) {
+
+	cookie := &fiber.Cookie{}
+	cookie.Name = config.Env.COOKIE_NAME
+	cookie.Value = BEARER_KEY + token
+	cookie.Expires = time.Now().Add(config.Env.COOKIE_EXPIRES_AT)
+	cookie.Secure = false
+	cookie.HTTPOnly = true
+	cookie.Path = "/"
+
 	c.Cookie(cookie)
 	newCookie, err := GetCookie(c, cookie.Name)
 
@@ -43,8 +53,21 @@ func SetBearerCookie(c *fiber.Ctx, cookie *fiber.Cookie) (string, error) {
 		zap.String("name", cookie.Name),
 		zap.String("value", cookie.Value),
 	)
+
 	return newCookie, err
 }
+
+func ClearBearerCookie(c *fiber.Ctx) error {
+	cookie := &fiber.Cookie{}
+	cookie.Name = config.Env.COOKIE_NAME
+	cookie.Expires = time.Now().Add(-3 * time.Second)
+	cookie.HTTPOnly = true
+
+	_, err := SetCookie(c, cookie)
+	return err
+
+}
+
 func GetFormattedAuthToken(token string) (string, error) {
 	return strings.Replace(token, BEARER_KEY, "", 1), nil
 }
