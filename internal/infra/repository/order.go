@@ -21,7 +21,6 @@ func NewOrderRepositoryMysql(db *gorm.DB) *OrderRepositoryMysql {
 
 func (r *OrderRepositoryMysql) Add(order *entity.Order) error {
 	res := r.DB.Create(order).Omit("Items.Product")
-
 	if res.Error != nil {
 		return res.Error
 	}
@@ -76,3 +75,8 @@ func (r *OrderRepositoryMysql) DeleteById(id string) error {
 
 	return nil
 }
+
+
+
+
+

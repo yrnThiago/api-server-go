@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"context"
+	"encoding/json"
 	"go.uber.org/zap"
 
 	"github.com/yrnThiago/api-server-go/config"
@@ -68,6 +70,15 @@ func (u *ProductUseCase) Add(
 
 func (u *ProductUseCase) GetMany() ([]*ProductOutputDto, error) {
 	var productsDTO []*ProductOutputDto
+	ctx := context.Background()
+
+	productsRedis, _ := config.Redis.Get(ctx, "all-products")
+
+	if productsRedis != "" {
+		json.Unmarshal([]byte(productsRedis), &productsDTO)
+		return productsDTO, nil
+	}
+
 	products, err := u.ProductRepository.GetMany()
 	if err != nil {
 		return nil, err
@@ -84,6 +95,12 @@ func (u *ProductUseCase) GetMany() ([]*ProductOutputDto, error) {
 		productsDTO = append(productsDTO, productDTO)
 	}
 
+	productsJson, err := json.Marshal(productsDTO)
+	if err != nil {
+		return nil, err
+	}
+
+	config.Redis.Set(ctx, "all-products", string(productsJson), config.Env.RATE_LIMIT_WINDOW)
 	return productsDTO, nil
 }
 

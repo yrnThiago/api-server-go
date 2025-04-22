@@ -66,7 +66,7 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 		return err
 	}
 
-	config.Redis.Set(context.Background(), "user-"+output.ID, string(userJson))
+	config.Redis.Set(context.Background(), "user-"+output.ID, string(userJson), 0)
 
 	cookie := &fiber.Cookie{}
 	cookie.Name = config.Env.COOKIE_NAME

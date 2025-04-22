@@ -52,8 +52,8 @@ func (r *Redis) Ping(ctx context.Context) (string, error) {
 	return r.Client.Ping(ctx).Result()
 }
 
-func (r *Redis) Set(ctx context.Context, key, val string) {
-	err := r.Client.Set(ctx, key, val, 0).Err()
+func (r *Redis) Set(ctx context.Context, key, val string, ttl time.Duration) {
+	err := r.Client.Set(ctx, key, val, ttl).Err()
 	if err != nil {
 		r.Logger.Warn(
 			"set key/val",
@@ -66,25 +66,25 @@ func (r *Redis) Set(ctx context.Context, key, val string) {
 	r.Logger.Info(
 		"set redis key/val",
 		zap.String("key", key),
-		zap.String("val", val),
 	)
 }
 
-func (r *Redis) Get(ctx context.Context, key string) string {
+func (r *Redis) Get(ctx context.Context, key string) (string, error) {
 	val, err := r.Client.Get(ctx, key).Result()
 	if err != nil {
 		r.Logger.Warn(
 			"get key/val",
 			zap.Error(err),
 		)
+
+		return "", err
 	}
 
 	r.Logger.Info(
 		"get redis key/val",
 		zap.String("key", key),
-		zap.String("val", val),
 	)
-	return val
+	return val, err
 }
 
 func (r *Redis) Allow(key string) bool {
