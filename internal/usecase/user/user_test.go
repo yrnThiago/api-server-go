@@ -3,29 +3,52 @@ package usecase
 import (
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+
 	"github.com/yrnThiago/api-server-go/internal/entity"
 	"github.com/yrnThiago/api-server-go/internal/tests/mocks"
 	"go.uber.org/mock/gomock"
 )
 
-func Test_FindUserByID(t *testing.T) {
+func TestUserUseCase_GetById(t *testing.T) {
 	control := gomock.NewController(t)
 	defer control.Finish()
 
-	id := "12346"
-	repository := mocks.NewMockIUserRepository(control)
-	service := NewUserUseCase(repository)
-
-	repository.EXPECT().GetById(id).Return(entity.NewUser("test@test.com", "123456"), nil)
-
-	user, err := service.GetById(id)
-	if err != nil {
-		t.FailNow()
-		return
+	type testCase struct {
+		name        string
+		user        *entity.User
+		mockSetup   func(repo *mocks.MockIUserRepository)
+		expected    *UserOutputDto
+		expectError bool
 	}
 
-	if user.Email != "test@test.com" {
-		t.FailNow()
-		return
+	userTest := entity.NewUser("test@test.com", "123456")
+
+	tests := []testCase{
+		{
+			name: "return valid user when everything looks good",
+			mockSetup: func(repo *mocks.MockIUserRepository) {
+				repo.EXPECT().GetById(userTest.ID).Return(userTest, nil)
+			},
+			expected:    &UserOutputDto{userTest.ID, userTest.Email},
+			expectError: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			repo := mocks.NewMockIUserRepository(control)
+			tt.mockSetup(repo)
+
+			usecase := NewUserUseCase(repo)
+			user, err := usecase.GetById(userTest.ID)
+
+			if tt.expectError {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, tt.expected, user)
+			}
+		})
 	}
 }
