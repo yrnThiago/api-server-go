@@ -57,7 +57,7 @@ func (r *OrderRepositoryMysql) UpdateById(
 	order *entity.Order,
 ) (*entity.Order, error) {
 	// TODO: fix duplicating product when update
-	res := r.DB.Save(order)
+	res := r.DB.Save(order).Omit("Items")
 	if res.Error != nil {
 		return nil, res.Error
 	}
@@ -75,8 +75,3 @@ func (r *OrderRepositoryMysql) DeleteById(id string) error {
 
 	return nil
 }
-
-
-
-
-

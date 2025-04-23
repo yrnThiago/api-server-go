@@ -9,11 +9,9 @@ import (
 	"github.com/yrnThiago/api-server-go/internal/utils"
 )
 
-var WAITING_PAYMENT = "Aguardando pagamento"
-
 type OrderInputDto struct {
 	Items  []OrderItemInputDto `validate:"required,dive"`
-	Status string
+	Status entity.OrderStatus  `validate:"required,oneof=Aprovado 'Aguardando pagamento' Cancelado"`
 }
 
 type OrderItemInputDto struct {
@@ -25,7 +23,7 @@ type OrderItemInputDto struct {
 
 type OrderOutputDto struct {
 	ID        string
-	Status    string
+	Status    entity.OrderStatus
 	Items     []entity.OrderItems
 	CreatedAt time.Time
 }
@@ -54,7 +52,7 @@ func (u *OrderUseCase) NewOrderItems(items []OrderItemInputDto) []entity.OrderIt
 	return orderItems
 }
 
-func (u *OrderUseCase) NewOrder(items []OrderItemInputDto, status string) *entity.Order {
+func (u *OrderUseCase) NewOrder(items []OrderItemInputDto, status entity.OrderStatus) *entity.Order {
 	return &entity.Order{
 		ID:     uuid.New().String(),
 		Status: status,
@@ -86,7 +84,7 @@ func (u *OrderUseCase) Add(
 		return nil, err
 	}
 
-	order := u.NewOrder(input.Items, WAITING_PAYMENT)
+	order := u.NewOrder(input.Items, entity.Pending)
 	err = u.orderRepository.Add(order)
 	if err != nil {
 		return nil, err

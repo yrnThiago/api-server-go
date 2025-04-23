@@ -4,6 +4,14 @@ import (
 	"gorm.io/gorm"
 )
 
+type OrderStatus string
+
+const (
+	Paid     OrderStatus = "Aprovado"
+	Pending  OrderStatus = "Aguardando pagamento"
+	Canceled OrderStatus = "Cancelado"
+)
+
 type OrderItems struct {
 	OrderID   string  `gorm:"index"                json:"-"`
 	ProductID string  `gorm:"index"                json:"-"`
@@ -12,8 +20,8 @@ type OrderItems struct {
 }
 
 type Order struct {
-	ID     string `gorm:"primaryKey"`
-	Status string
+	ID     string       `gorm:"primaryKey"`
+	Status OrderStatus  `gorm:"type:enum('Aprovado', 'Aguardando pagamento', 'Cancelado')"`
 	Items  []OrderItems `gorm:"foreignKey:OrderID;constraint:OnDelete:CASCADE"`
 	gorm.Model
 }
