@@ -1,4 +1,4 @@
-package publisher
+package nats
 
 import (
 	"context"
@@ -11,19 +11,19 @@ import (
 	"github.com/yrnThiago/api-server-go/config"
 )
 
-var OrdersPub *Pub
+var OrdersPublisher *Publisher
 
-type Pub struct {
+type Publisher struct {
 	NatsConn *nats.Conn
 	Js       jetstream.JetStream
 	Ctx      context.Context
 	Config   jetstream.StreamConfig
 }
 
-func NewPub(name, description, subject string) *Pub {
-	return &Pub{
-		NatsConn: config.NC,
-		Js:       config.JS,
+func NewPublisher(name, description, subject string) *Publisher {
+	return &Publisher{
+		NatsConn: NC,
+		Js:       JS,
 		Ctx:      context.Background(),
 		Config: jetstream.StreamConfig{
 			Name:        name,
@@ -36,7 +36,7 @@ func NewPub(name, description, subject string) *Pub {
 	}
 }
 
-func (p *Pub) Publish(msg string) {
+func (p *Publisher) Publish(msg string) {
 	_, err := p.Js.Publish(p.Ctx, fmt.Sprintf("orders.%s", msg), []byte("new order"))
 	if err != nil {
 		config.Logger.Warn(
@@ -51,7 +51,7 @@ func (p *Pub) Publish(msg string) {
 	)
 }
 
-func (p *Pub) CreateStream() {
+func (p *Publisher) CreateStream() {
 	_, err := p.Js.CreateOrUpdateStream(p.Ctx, p.Config)
 	if err != nil {
 		config.Logger.Fatal(
@@ -61,9 +61,9 @@ func (p *Pub) CreateStream() {
 	}
 }
 
-func PubInit() {
-	OrdersPub = NewPub("orders", "Msgs for orders", "orders.>")
-	OrdersPub.CreateStream()
+func PublisherInit() {
+	OrdersPublisher = NewPublisher("orders", "Msgs for orders", "orders.>")
+	OrdersPublisher.CreateStream()
 
 	config.Logger.Info(
 		"publishers successfully initialized",

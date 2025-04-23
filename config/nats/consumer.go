@@ -1,4 +1,4 @@
-package consumer
+package nats
 
 import (
 	"context"
@@ -19,7 +19,7 @@ type Consumer struct {
 
 func NewConsumer(name, durable, filterSubject string) *Consumer {
 	return &Consumer{
-		Js:  config.JS,
+		Js:  JS,
 		Ctx: context.Background(),
 		Config: jetstream.ConsumerConfig{
 			Name:          name,
