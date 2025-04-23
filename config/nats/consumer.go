@@ -8,16 +8,19 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/yrnThiago/api-server-go/config"
+	"github.com/yrnThiago/api-server-go/internal/infra/repository"
+	"github.com/yrnThiago/api-server-go/internal/usecase/payment"
 )
 
 type Consumer struct {
-	Js          jetstream.JetStream
-	Ctx         context.Context
-	Config      jetstream.ConsumerConfig
-	ConsumerCtx jetstream.Consumer
+	Js             jetstream.JetStream
+	Ctx            context.Context
+	Config         jetstream.ConsumerConfig
+	ConsumerCtx    jetstream.Consumer
+	PaymentUseCase *payment.PaymentUseCase
 }
 
-func NewConsumer(name, durable, filterSubject string) *Consumer {
+func NewConsumer(name, durable, filterSubject string, paymentUseCase *payment.PaymentUseCase) *Consumer {
 	return &Consumer{
 		Js:  JS,
 		Ctx: context.Background(),
@@ -28,6 +31,7 @@ func NewConsumer(name, durable, filterSubject string) *Consumer {
 			AckPolicy:     jetstream.AckExplicitPolicy,
 			DeliverPolicy: jetstream.DeliverAllPolicy,
 		},
+		PaymentUseCase: paymentUseCase,
 	}
 }
 
@@ -43,7 +47,7 @@ func (c *Consumer) CreateStream() {
 	}
 }
 
-func (c *Consumer) ConsumeSubject() {
+func (c *Consumer) HandlingNewOrders() {
 	_, err := c.ConsumerCtx.Consume(func(msg jetstream.Msg) {
 		orderID := strings.Replace(string(msg.Subject()), "orders.", "", 1)
 
@@ -51,6 +55,12 @@ func (c *Consumer) ConsumeSubject() {
 			"new order received",
 			zap.String("order id", orderID),
 		)
+
+		order, _ := c.PaymentUseCase.OrderRepository.GetById(orderID)
+		if !c.PaymentUseCase.IsPaymentValid(order) {
+			order.Status = "Cancelado"
+			c.PaymentUseCase.OrderRepository.UpdateById(order)
+		}
 
 		msg.Ack()
 	})
@@ -60,9 +70,12 @@ func (c *Consumer) ConsumeSubject() {
 }
 
 func ConsumerInit() {
-	ordersConsumer := NewConsumer("order_processor", "order_processor", "orders.>")
+	repositoryOrders := repository.NewOrderRepositoryMysql(config.DB)
+	paymentUseCase := payment.NewPaymentUseCase(repositoryOrders)
+
+	ordersConsumer := NewConsumer("order_processor", "order_processor", "orders.>", paymentUseCase)
 	ordersConsumer.CreateStream()
-	ordersConsumer.ConsumeSubject()
+	ordersConsumer.HandlingNewOrders()
 
 	config.Logger.Info(
 		"consumers successfully initialized",
