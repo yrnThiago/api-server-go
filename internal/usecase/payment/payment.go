@@ -15,10 +15,22 @@ func NewPaymentUseCase(orderRepository usecase.IOrderRepository) *PaymentUseCase
 	}
 }
 
+func (p *PaymentUseCase) GetPaymentMethod(order *entity.Order) entity.PaymentMethod {
+	return order.Payment
+}
+
 func (p *PaymentUseCase) IsOrderPaymentValid(order *entity.Order) bool {
-	return false
+	return true
 }
 
 func (p *PaymentUseCase) GeneratePixCode() string {
-	return "12345"
+	return "PIX_CODE_TEST"
+}
+
+func (p *PaymentUseCase) GeneratePayment(order *entity.Order) string {
+	if p.GetPaymentMethod(order) == entity.PIX {
+		return p.GeneratePixCode()
+	}
+
+	return "CARTAO_DE_CREDITO"
 }

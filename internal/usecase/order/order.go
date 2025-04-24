@@ -5,13 +5,14 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/yrnThiago/api-server-go/internal/entity"
-	"github.com/yrnThiago/api-server-go/internal/usecase/product"
+	usecase "github.com/yrnThiago/api-server-go/internal/usecase/product"
 	"github.com/yrnThiago/api-server-go/internal/utils"
 )
 
 type OrderInputDto struct {
-	Items  []OrderItemInputDto `validate:"required,dive"`
-	Status entity.OrderStatus  `validate:"required,oneof=Aprovado 'Aguardando pagamento' Cancelado"`
+	Items   []OrderItemInputDto  `validate:"required,dive"`
+	Status  entity.OrderStatus   `validate:"required,oneof=Aprovado 'Aguardando pagamento' Cancelado"`
+	Payment entity.PaymentMethod `validate:"required,oneof=Pix 'Cartao de credito'"`
 }
 
 type OrderItemInputDto struct {
@@ -25,6 +26,7 @@ type OrderOutputDto struct {
 	ID        string
 	Status    entity.OrderStatus
 	Items     []entity.OrderItems
+	Payment   entity.PaymentMethod
 	CreatedAt time.Time
 }
 
@@ -52,11 +54,12 @@ func (u *OrderUseCase) NewOrderItems(items []OrderItemInputDto) []entity.OrderIt
 	return orderItems
 }
 
-func (u *OrderUseCase) NewOrder(items []OrderItemInputDto, status entity.OrderStatus) *entity.Order {
+func (u *OrderUseCase) NewOrder(items []OrderItemInputDto, status entity.OrderStatus, payment entity.PaymentMethod) *entity.Order {
 	return &entity.Order{
-		ID:     uuid.New().String(),
-		Status: status,
-		Items:  u.NewOrderItems(items),
+		ID:      uuid.New().String(),
+		Status:  status,
+		Payment: payment,
+		Items:   u.NewOrderItems(items),
 	}
 }
 
@@ -84,7 +87,7 @@ func (u *OrderUseCase) Add(
 		return nil, err
 	}
 
-	order := u.NewOrder(input.Items, entity.Pending)
+	order := u.NewOrder(input.Items, input.Status, input.Payment)
 	err = u.orderRepository.Add(order)
 	if err != nil {
 		return nil, err
@@ -94,6 +97,7 @@ func (u *OrderUseCase) Add(
 		ID:        order.ID,
 		Items:     order.Items,
 		Status:    order.Status,
+		Payment:   order.Payment,
 		CreatedAt: order.CreatedAt,
 	}, err
 }
@@ -110,6 +114,7 @@ func (u *OrderUseCase) GetMany() ([]*OrderOutputDto, error) {
 			ID:        order.ID,
 			Items:     order.Items,
 			Status:    order.Status,
+			Payment:   order.Payment,
 			CreatedAt: order.CreatedAt,
 		})
 	}
@@ -127,6 +132,7 @@ func (u *OrderUseCase) GetById(id string) (*OrderOutputDto, error) {
 		ID:        order.ID,
 		Status:    order.Status,
 		Items:     order.Items,
+		Payment:   order.Payment,
 		CreatedAt: order.CreatedAt,
 	}, nil
 }
@@ -161,6 +167,7 @@ func (u *OrderUseCase) UpdateById(
 		ID:        updatedOrder.ID,
 		Status:    updatedOrder.Status,
 		Items:     updatedOrder.Items,
+		Payment:   order.Payment,
 		CreatedAt: updatedOrder.CreatedAt,
 	}, nil
 }

@@ -62,6 +62,12 @@ func (c *Consumer) HandlingNewOrders() {
 			c.PaymentUseCase.OrderRepository.UpdateById(order)
 		}
 
+		paymentRes := c.PaymentUseCase.GeneratePayment(order)
+		config.Logger.Info(
+			"payment generated",
+			zap.String("result", paymentRes),
+			zap.String("order id", order.ID),
+		)
 		msg.Ack()
 	})
 	if err != nil {
