@@ -16,9 +16,9 @@ var DB *gorm.DB
 type GoEnv string
 
 const (
-	Local GoEnv = "local"
-	Dev   GoEnv = "dev"
-	Prod  GoEnv = "production"
+	LOCAL_ENV GoEnv = "local"
+	DEV_ENV   GoEnv = "dev"
+	PROD_ENV  GoEnv = "production"
 )
 
 func getDatabaseUrl() string {
@@ -33,7 +33,7 @@ func getDatabaseUrl() string {
 
 func connectDatabase() {
 	var err error
-	if Env.GO_ENV == Local {
+	if Env.GO_ENV == LOCAL_ENV {
 		DB, err = gorm.Open(mysql.Open(getDatabaseUrl()), &gorm.Config{})
 		if err != nil {
 			Logger.Panic("failed to connect to mysql database")
