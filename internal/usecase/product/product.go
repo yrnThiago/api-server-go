@@ -48,7 +48,7 @@ func (u *ProductUseCase) Add(
 ) (*ProductOutputDto, error) {
 	err := utils.ValidateStruct(input)
 	if err != nil {
-		return nil, utils.GetValidationError(err.Error())
+		return nil, entity.GetValidationError(err.Error())
 	}
 
 	product := entity.NewProduct(input.Name, input.Price, input.Stock)
@@ -128,7 +128,7 @@ func (u *ProductUseCase) UpdateById(
 
 	err := utils.ValidateStruct(input)
 	if err != nil {
-		return nil, utils.GetValidationError(err.Error())
+		return nil, entity.GetValidationError(err.Error())
 	}
 
 	product, err := u.ProductRepository.GetById(id)

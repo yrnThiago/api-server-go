@@ -5,6 +5,7 @@ import (
 	"github.com/golang-jwt/jwt"
 
 	"github.com/yrnThiago/api-server-go/config"
+	"github.com/yrnThiago/api-server-go/internal/entity"
 	"github.com/yrnThiago/api-server-go/internal/utils"
 )
 
@@ -14,7 +15,7 @@ func AuthMiddleware(c *fiber.Ctx) error {
 
 	token, err := utils.VerifyJWT(userAuthorization)
 	if err != nil {
-		return utils.GetInvalidJwtTokenError(err.Error())
+		return entity.GetInvalidJwtTokenError(err.Error())
 	}
 
 	claims := token.Claims.(jwt.MapClaims)

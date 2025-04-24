@@ -6,7 +6,6 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/yrnThiago/api-server-go/internal/entity"
-	"github.com/yrnThiago/api-server-go/internal/utils"
 )
 
 type OrderRepositoryMysql struct {
@@ -44,7 +43,7 @@ func (r *OrderRepositoryMysql) GetById(id string) (*entity.Order, error) {
 	res := r.DB.Preload("Items.Product").First(&order, "id = ?", id)
 	if res.Error != nil {
 		if errors.Is(res.Error, gorm.ErrRecordNotFound) {
-			return nil, utils.ErrOrderNotFound
+			return nil, entity.ErrOrderNotFound
 		}
 
 		return nil, res.Error

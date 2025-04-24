@@ -5,11 +5,11 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/yrnThiago/api-server-go/config"
-	"github.com/yrnThiago/api-server-go/internal/utils"
+	"github.com/yrnThiago/api-server-go/internal/entity"
 )
 
 func ErrorMiddleware(c *fiber.Ctx, err error) error {
-	errorInfo := utils.AsErrorInfo(err)
+	errorInfo := entity.AsErrorInfo(err)
 
 	config.Logger.Warn(errorInfo.GetLowerName(),
 		zap.String("request id", c.Locals("requestid").(string)),
@@ -22,11 +22,11 @@ func ErrorMiddleware(c *fiber.Ctx, err error) error {
 	case "RECORD_NOT_FOUND":
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": errorInfo.Message})
 	case "JWT_INVALID_TOKEN":
-		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{"error": utils.ErrUnauthorizedMsg})
+		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{"error": entity.ErrUnauthorizedMsg})
 	case "RATE_LIMIT_ERROR":
 		return c.Status(fiber.StatusTooManyRequests).JSON(fiber.Map{"error": errorInfo.Message})
 	default:
 		return c.Status(fiber.StatusInternalServerError).
-			JSON(fiber.Map{"error": utils.ErrInternalServerMsg})
+			JSON(fiber.Map{"error": entity.ErrInternalServerMsg})
 	}
 }

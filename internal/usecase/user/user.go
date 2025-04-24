@@ -33,7 +33,7 @@ func (u *UserUseCase) Add(
 ) (*UserOutputDto, error) {
 	err := utils.ValidateStruct(input)
 	if err != nil {
-		return nil, utils.GetValidationError(err.Error())
+		return nil, entity.GetValidationError(err.Error())
 	}
 
 	input.Password, _ = utils.GenerateHashPassword(input.Password)
@@ -98,7 +98,7 @@ func (u *UserUseCase) UpdateById(
 
 	err := utils.ValidateStruct(input)
 	if err != nil {
-		return nil, utils.GetValidationError(err.Error())
+		return nil, entity.GetValidationError(err.Error())
 	}
 
 	user, err := u.UserRepository.GetById(id)
