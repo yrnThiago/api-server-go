@@ -17,6 +17,7 @@ type EnvVariables struct {
 	DB_PORT           string
 	DB_NAME           string
 	SECRET_KEY        string
+	SKIP_AUTH         bool
 	COOKIE_NAME       string
 	COOKIE_EXPIRES_AT time.Duration
 	NEW_ORDERS_TOPIC  string
@@ -36,6 +37,7 @@ func Init() {
 		log.Panic(".env missing")
 	}
 
+	skipAuth, _ := strconv.ParseBool(os.Getenv("SKIP_AUTH"))
 	rdbDb, _ := strconv.Atoi(os.Getenv("RDB_DB"))
 	rateLimit, _ := strconv.Atoi(os.Getenv("RATE_LIMIT"))
 	rateLimitWindow, _ := time.ParseDuration(os.Getenv("RATE_LIMIT_WINDOW"))
@@ -49,6 +51,7 @@ func Init() {
 		DB_PORT:           os.Getenv("DB_PORT"),
 		DB_NAME:           os.Getenv("DB_NAME"),
 		SECRET_KEY:        os.Getenv("SECRET_KEY"),
+		SKIP_AUTH:         skipAuth,
 		COOKIE_NAME:       os.Getenv("COOKIE_NAME"),
 		COOKIE_EXPIRES_AT: cookieExpiresAt,
 		NEW_ORDERS_TOPIC:  os.Getenv("NEW_ORDERS_TOPIC"),

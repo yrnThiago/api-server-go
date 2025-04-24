@@ -5,7 +5,7 @@ import (
 
 	"github.com/yrnThiago/api-server-go/internal/entity"
 	"go.uber.org/zap"
-	"gorm.io/driver/mysql"
+	"github.com/glebarez/sqlite"
 	"gorm.io/gorm"
 )
 
@@ -22,7 +22,7 @@ func getDatabaseUrl() string {
 }
 
 func DatabaseInit() {
-	db, err := gorm.Open(mysql.Open(getDatabaseUrl()), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
 	if err != nil {
 		Logger.Panic("failed to connect to database")
 	}
