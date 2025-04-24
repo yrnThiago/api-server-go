@@ -57,7 +57,7 @@ func (c *Consumer) HandlingNewOrders() {
 		)
 
 		order, _ := c.PaymentUseCase.OrderRepository.GetById(orderID)
-		if !c.PaymentUseCase.IsPaymentValid(order) {
+		if !c.PaymentUseCase.IsOrderPaymentValid(order) {
 			order.Status = "Cancelado"
 			c.PaymentUseCase.OrderRepository.UpdateById(order)
 		}

@@ -5,7 +5,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/yrnThiago/api-server-go/config/nats"
+	"github.com/yrnThiago/api-server-go/internal/infra/nats"
 	"github.com/yrnThiago/api-server-go/internal/usecase/order"
 )
 

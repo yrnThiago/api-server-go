@@ -6,7 +6,7 @@ import (
 	"syscall"
 
 	"github.com/yrnThiago/api-server-go/config"
-	"github.com/yrnThiago/api-server-go/config/nats"
+	"github.com/yrnThiago/api-server-go/internal/infra/nats"
 	infra "github.com/yrnThiago/api-server-go/internal/infra/redis"
 	"github.com/yrnThiago/api-server-go/internal/server"
 )
