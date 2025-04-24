@@ -12,6 +12,8 @@ import (
 	"github.com/yrnThiago/api-server-go/internal/utils"
 )
 
+const REDIS_PRODUCTS_KEY = "all-products"
+
 type ProductInputDto struct {
 	Name  string  `validate:"required"`
 	Price float64 `validate:"required,gt=0"`
@@ -62,7 +64,7 @@ func (u *ProductUseCase) Add(
 		zap.String("name", input.Name),
 	)
 
-	infra.Redis.Del(context.Background(), "all-products")
+	infra.Redis.Del(context.Background(), REDIS_PRODUCTS_KEY)
 	return &ProductOutputDto{
 		ID:    product.ID,
 		Name:  product.Name,
@@ -75,7 +77,7 @@ func (u *ProductUseCase) GetMany() ([]*ProductOutputDto, error) {
 	var productsDTO []*ProductOutputDto
 	ctx := context.Background()
 
-	productsRedis, _ := infra.Redis.Get(ctx, "all-products")
+	productsRedis, _ := infra.Redis.Get(ctx, REDIS_PRODUCTS_KEY)
 
 	if productsRedis != "" {
 		json.Unmarshal([]byte(productsRedis), &productsDTO)
@@ -103,7 +105,7 @@ func (u *ProductUseCase) GetMany() ([]*ProductOutputDto, error) {
 		return nil, err
 	}
 
-	infra.Redis.Set(ctx, "all-products", string(productsJson), config.Env.RATE_LIMIT_WINDOW)
+	infra.Redis.Set(ctx, REDIS_PRODUCTS_KEY, string(productsJson), config.Env.RATE_LIMIT_WINDOW)
 	return productsDTO, nil
 }
 
@@ -145,7 +147,7 @@ func (u *ProductUseCase) UpdateById(
 		return nil, err
 	}
 
-	infra.Redis.Del(context.Background(), "all-products")
+	infra.Redis.Del(context.Background(), REDIS_PRODUCTS_KEY)
 
 	return &ProductOutputDto{
 		ID:    updatedProduct.ID,
@@ -169,6 +171,6 @@ func (u *ProductUseCase) DeleteById(
 		return nil, err
 	}
 
-	infra.Redis.Del(context.Background(), "all-products")
+	infra.Redis.Del(context.Background(), REDIS_PRODUCTS_KEY)
 	return product, nil
 }
