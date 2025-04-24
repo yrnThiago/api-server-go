@@ -10,6 +10,13 @@ import (
 )
 
 func AuthMiddleware(c *fiber.Ctx) error {
+	if config.Env.SKIP_AUTH {
+		config.Logger.Info(
+			"skipping auth",
+		)
+		return c.Next()
+	}
+
 	authCookieValue, _ := utils.GetCookie(c, config.Env.COOKIE_NAME)
 	userAuthorization, _ := utils.GetFormattedAuthToken(authCookieValue)
 
