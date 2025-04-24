@@ -3,13 +3,23 @@ package config
 import (
 	"fmt"
 
+	"github.com/glebarez/sqlite"
 	"github.com/yrnThiago/api-server-go/internal/entity"
 	"go.uber.org/zap"
-	"github.com/glebarez/sqlite"
+
+	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 var DB *gorm.DB
+
+type GoEnv string
+
+const (
+	Local GoEnv = "local"
+	Dev   GoEnv = "dev"
+	Prod  GoEnv = "production"
+)
 
 func getDatabaseUrl() string {
 	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
@@ -21,19 +31,29 @@ func getDatabaseUrl() string {
 	)
 }
 
-func DatabaseInit() {
-	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
-	if err != nil {
-		Logger.Panic("failed to connect to database")
+func connectDatabase() {
+	var err error
+	if Env.GO_ENV == Local {
+		DB, err = gorm.Open(mysql.Open(getDatabaseUrl()), &gorm.Config{})
+		if err != nil {
+			Logger.Panic("failed to connect to mysql database")
+		}
+
+		return
 	}
 
-	db.Migrator().AutoMigrate(&entity.User{}, &entity.Product{}, &entity.Order{}, &entity.OrderItems{})
-	DB = db
+	DB, err = gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
+	if err != nil {
+		Logger.Panic("failed to connect to sqlite database")
+	}
+}
+
+func DatabaseInit() {
+	connectDatabase()
+	DB.Migrator().AutoMigrate(&entity.User{}, &entity.Product{}, &entity.Order{}, &entity.OrderItems{})
 
 	Logger.Info(
 		"db successfully initialized",
-		zap.String("host", Env.DB_HOST),
-		zap.String("port", Env.DB_PORT),
-		zap.String("db name", Env.DB_NAME),
+		zap.String("env", string(Env.GO_ENV)),
 	)
 }
