@@ -18,7 +18,7 @@ func NewUserRouter(userHandlers *handlers.UserHandlers) *UserRouter {
 	}
 }
 
-func (p *UserRouter) GetRouter() *fiber.App {
+func (p *UserRouter) GetRoutes() *fiber.App {
 	router := fiber.New()
 
 	router.Post("/", p.UserHandlers.Add)
