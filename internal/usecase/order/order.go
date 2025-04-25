@@ -63,6 +63,16 @@ func (u *OrderUseCase) NewOrder(items []OrderItemInputDto, status entity.OrderSt
 	}
 }
 
+func NewOrderOutputDto(order *entity.Order) *OrderOutputDto {
+	return &OrderOutputDto{
+		ID:        order.ID,
+		Items:     order.Items,
+		Status:    order.Status,
+		Payment:   order.Payment,
+		CreatedAt: order.CreatedAt,
+	}
+}
+
 func (u *OrderUseCase) validateOrderItems(items []OrderItemInputDto) error {
 	for _, item := range items {
 		_, err := u.productRepository.GetById(item.Product.ID)
@@ -93,13 +103,7 @@ func (u *OrderUseCase) Add(
 		return nil, err
 	}
 
-	return &OrderOutputDto{
-		ID:        order.ID,
-		Items:     order.Items,
-		Status:    order.Status,
-		Payment:   order.Payment,
-		CreatedAt: order.CreatedAt,
-	}, err
+	return NewOrderOutputDto(order), nil
 }
 
 func (u *OrderUseCase) GetMany() ([]*OrderOutputDto, error) {
@@ -110,13 +114,7 @@ func (u *OrderUseCase) GetMany() ([]*OrderOutputDto, error) {
 
 	var ordersOutput []*OrderOutputDto
 	for _, order := range orders {
-		ordersOutput = append(ordersOutput, &OrderOutputDto{
-			ID:        order.ID,
-			Items:     order.Items,
-			Status:    order.Status,
-			Payment:   order.Payment,
-			CreatedAt: order.CreatedAt,
-		})
+		ordersOutput = append(ordersOutput, NewOrderOutputDto(order))
 	}
 
 	return ordersOutput, nil
@@ -128,13 +126,7 @@ func (u *OrderUseCase) GetById(id string) (*OrderOutputDto, error) {
 		return nil, err
 	}
 
-	return &OrderOutputDto{
-		ID:        order.ID,
-		Status:    order.Status,
-		Items:     order.Items,
-		Payment:   order.Payment,
-		CreatedAt: order.CreatedAt,
-	}, nil
+	return NewOrderOutputDto(order), nil
 }
 
 func (u *OrderUseCase) UpdateById(
@@ -163,13 +155,7 @@ func (u *OrderUseCase) UpdateById(
 		return nil, err
 	}
 
-	return &OrderOutputDto{
-		ID:        updatedOrder.ID,
-		Status:    updatedOrder.Status,
-		Items:     updatedOrder.Items,
-		Payment:   order.Payment,
-		CreatedAt: updatedOrder.CreatedAt,
-	}, nil
+	return NewOrderOutputDto(updatedOrder), nil
 }
 
 func (u *OrderUseCase) DeleteById(

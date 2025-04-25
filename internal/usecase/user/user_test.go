@@ -30,7 +30,7 @@ func TestUserUseCase_GetById(t *testing.T) {
 			mockSetup: func(repo *mocks.MockIUserRepository) {
 				repo.EXPECT().GetById(userTest.ID).Return(userTest, nil)
 			},
-			expected:    &UserOutputDto{userTest.ID, userTest.Email},
+			expected:    NewUserOutputDto(userTest),
 			expectError: false,
 		},
 	}

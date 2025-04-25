@@ -45,6 +45,15 @@ func NewProduct(name string, price float64, stock int) *entity.Product {
 	}
 }
 
+func NewProductOutputDto(product *entity.Product) *ProductOutputDto {
+	return &ProductOutputDto{
+		ID:    product.ID,
+		Name:  product.Name,
+		Price: product.Price,
+		Stock: product.Stock,
+	}
+}
+
 func (u *ProductUseCase) Add(
 	input ProductInputDto,
 ) (*ProductOutputDto, error) {
@@ -65,23 +74,19 @@ func (u *ProductUseCase) Add(
 	)
 
 	infra.Redis.Del(context.Background(), REDIS_PRODUCTS_KEY)
-	return &ProductOutputDto{
-		ID:    product.ID,
-		Name:  product.Name,
-		Price: product.Price,
-		Stock: product.Stock,
-	}, nil
+
+	return NewProductOutputDto(product), nil
 }
 
 func (u *ProductUseCase) GetMany() ([]*ProductOutputDto, error) {
-	var productsDTO []*ProductOutputDto
+	var productsDto []*ProductOutputDto
 	ctx := context.Background()
 
 	productsRedis, _ := infra.Redis.Get(ctx, REDIS_PRODUCTS_KEY)
 
 	if productsRedis != "" {
-		json.Unmarshal([]byte(productsRedis), &productsDTO)
-		return productsDTO, nil
+		json.Unmarshal([]byte(productsRedis), &productsDto)
+		return productsDto, nil
 	}
 
 	products, err := u.ProductRepository.GetMany()
@@ -90,23 +95,16 @@ func (u *ProductUseCase) GetMany() ([]*ProductOutputDto, error) {
 	}
 
 	for _, product := range products {
-		productDTO := &ProductOutputDto{
-			ID:    product.ID,
-			Name:  product.Name,
-			Price: product.Price,
-			Stock: product.Stock,
-		}
-
-		productsDTO = append(productsDTO, productDTO)
+		productsDto = append(productsDto, NewProductOutputDto(product))
 	}
 
-	productsJson, err := json.Marshal(productsDTO)
+	productsJson, err := json.Marshal(productsDto)
 	if err != nil {
 		return nil, err
 	}
 
 	infra.Redis.Set(ctx, REDIS_PRODUCTS_KEY, string(productsJson), config.Env.RATE_LIMIT_WINDOW)
-	return productsDTO, nil
+	return productsDto, nil
 }
 
 func (u *ProductUseCase) GetById(id string) (*ProductOutputDto, error) {
@@ -115,12 +113,7 @@ func (u *ProductUseCase) GetById(id string) (*ProductOutputDto, error) {
 		return nil, err
 	}
 
-	return &ProductOutputDto{
-		ID:    product.ID,
-		Name:  product.Name,
-		Price: product.Price,
-		Stock: product.Stock,
-	}, nil
+	return NewProductOutputDto(product), nil
 }
 
 func (u *ProductUseCase) UpdateById(
@@ -149,12 +142,7 @@ func (u *ProductUseCase) UpdateById(
 
 	infra.Redis.Del(context.Background(), REDIS_PRODUCTS_KEY)
 
-	return &ProductOutputDto{
-		ID:    updatedProduct.ID,
-		Name:  updatedProduct.Name,
-		Price: updatedProduct.Price,
-		Stock: updatedProduct.Stock,
-	}, nil
+	return NewProductOutputDto(updatedProduct), nil
 }
 
 func (u *ProductUseCase) DeleteById(

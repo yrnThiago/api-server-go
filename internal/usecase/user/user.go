@@ -28,6 +28,13 @@ func NewUserUseCase(userRepository IUserRepository) *UserUseCase {
 	}
 }
 
+func NewUserOutputDto(user *entity.User) *UserOutputDto {
+	return &UserOutputDto{
+		ID:    user.ID,
+		Email: user.Email,
+	}
+}
+
 func (u *UserUseCase) Add(
 	input UserInputDto,
 ) (*UserOutputDto, error) {
@@ -45,10 +52,7 @@ func (u *UserUseCase) Add(
 	}
 
 	config.Logger.Info("new user added")
-	return &UserOutputDto{
-		ID:    user.ID,
-		Email: user.Email,
-	}, err
+	return NewUserOutputDto(user), nil
 }
 
 func (u *UserUseCase) GetMany() ([]*UserOutputDto, error) {
@@ -59,12 +63,7 @@ func (u *UserUseCase) GetMany() ([]*UserOutputDto, error) {
 	}
 
 	for _, user := range users {
-		userOutputDTO := &UserOutputDto{
-			ID:    user.ID,
-			Email: user.Email,
-		}
-
-		usersOutputDTO = append(usersOutputDTO, userOutputDTO)
+		usersOutputDTO = append(usersOutputDTO, NewUserOutputDto(user))
 	}
 
 	return usersOutputDTO, nil
@@ -76,10 +75,7 @@ func (u *UserUseCase) GetById(id string) (*UserOutputDto, error) {
 		return nil, err
 	}
 
-	return &UserOutputDto{
-		ID:    user.ID,
-		Email: user.Email,
-	}, err
+	return NewUserOutputDto(user), nil
 }
 
 func (u *UserUseCase) GetByLogin(email string) (*entity.User, error) {
@@ -119,10 +115,7 @@ func (u *UserUseCase) UpdateById(
 		zap.String("id", id),
 	)
 
-	return &UserOutputDto{
-		ID:    updatedUser.ID,
-		Email: updatedUser.Email,
-	}, err
+	return NewUserOutputDto(updatedUser), nil
 }
 
 func (u *UserUseCase) DeleteById(
