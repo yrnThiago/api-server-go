@@ -18,7 +18,7 @@ func NewOrderRouter(orderHandlers *handlers.OrderHandlers) *OrderRouter {
 	}
 }
 
-func (o *OrderRouter) GetRouter() *fiber.App {
+func (o *OrderRouter) GetRoutes() *fiber.App {
 	router := fiber.New()
 
 	router.Post("/checkout", o.OrderHandlers.Add)
