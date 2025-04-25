@@ -30,3 +30,7 @@ type Order struct {
 	Payment PaymentMethod
 	gorm.Model
 }
+
+func (o *Order) SetStatus(status OrderStatus) {
+	o.Status = status
+}

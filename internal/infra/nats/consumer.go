@@ -8,6 +8,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/yrnThiago/api-server-go/config"
+	"github.com/yrnThiago/api-server-go/internal/entity"
 	"github.com/yrnThiago/api-server-go/internal/infra/repository"
 	"github.com/yrnThiago/api-server-go/internal/usecase/payment"
 )
@@ -50,6 +51,7 @@ func (c *Consumer) CreateStream() {
 func (c *Consumer) HandlingNewOrders() {
 	_, err := c.ConsumerCtx.Consume(func(msg jetstream.Msg) {
 		orderID := strings.Replace(string(msg.Subject()), "orders.", "", 1)
+		msg.Ack()
 
 		config.Logger.Info(
 			"new order received",
@@ -58,17 +60,19 @@ func (c *Consumer) HandlingNewOrders() {
 
 		order, _ := c.PaymentUseCase.OrderRepository.GetById(orderID)
 		if !c.PaymentUseCase.IsOrderPaymentValid(order) {
-			order.Status = "Cancelado"
+			order.SetStatus(entity.Canceled)
 			c.PaymentUseCase.OrderRepository.UpdateById(order)
+
+			return
 		}
 
+		order.SetStatus(entity.Pending)
 		paymentRes := c.PaymentUseCase.GeneratePayment(order)
 		config.Logger.Info(
 			"payment generated",
 			zap.String("result", paymentRes),
 			zap.String("order id", order.ID),
 		)
-		msg.Ack()
 	})
 	if err != nil {
 		config.Logger.Fatal("err", zap.Error(err))
