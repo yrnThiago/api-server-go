@@ -30,7 +30,7 @@ func (r *UserRepositoryMysql) Add(user *entity.User) error {
 
 func (r *UserRepositoryMysql) GetMany() ([]*entity.User, error) {
 	var users []*entity.User
-	res := r.DB.Find(&users)
+	res := r.DB.Preload("Orders").Preload("Orders.Items.Product").Find(&users)
 
 	if res.Error != nil {
 		return nil, res.Error
@@ -41,7 +41,7 @@ func (r *UserRepositoryMysql) GetMany() ([]*entity.User, error) {
 
 func (r *UserRepositoryMysql) GetById(userID string) (*entity.User, error) {
 	var user *entity.User
-	res := r.DB.Limit(1).First(&user, "id = ?", userID)
+	res := r.DB.Limit(1).Preload("Orders").First(&user, "id = ?", userID)
 	if res.Error != nil {
 		if errors.Is(res.Error, gorm.ErrRecordNotFound) {
 			return nil, entity.ErrUserNotFound

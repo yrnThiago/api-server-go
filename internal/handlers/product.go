@@ -3,6 +3,7 @@ package handlers
 import (
 	"github.com/gofiber/fiber/v2"
 
+	"github.com/yrnThiago/api-server-go/internal/dto"
 	"github.com/yrnThiago/api-server-go/internal/usecase/product"
 )
 
@@ -19,7 +20,7 @@ func NewProductHandlers(
 }
 
 func (p *ProductHandlers) Add(c *fiber.Ctx) error {
-	var input usecase.ProductInputDto
+	var input dto.ProductInputDto
 	err := c.BodyParser(&input)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "product body missing"})
@@ -60,7 +61,7 @@ func (p *ProductHandlers) GetById(c *fiber.Ctx) error {
 }
 
 func (p *ProductHandlers) UpdateById(c *fiber.Ctx) error {
-	var input usecase.ProductInputDto
+	var input dto.ProductInputDto
 	err := c.BodyParser(&input)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "product body missing"})

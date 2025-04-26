@@ -29,7 +29,7 @@ func (r *OrderRepositoryMysql) Add(order *entity.Order) error {
 
 func (r *OrderRepositoryMysql) GetMany() ([]*entity.Order, error) {
 	var orders []*entity.Order
-	res := r.DB.Preload("Items.Product").Find(&orders)
+	res := r.DB.Preload("Items.Product").Preload("Client").Find(&orders)
 
 	if res.Error != nil {
 		return nil, res.Error
@@ -40,7 +40,7 @@ func (r *OrderRepositoryMysql) GetMany() ([]*entity.Order, error) {
 
 func (r *OrderRepositoryMysql) GetById(id string) (*entity.Order, error) {
 	var order *entity.Order
-	res := r.DB.Preload("Items.Product").First(&order, "id = ?", id)
+	res := r.DB.Preload("Items.Product").Preload("Client").First(&order, "id = ?", id)
 	if res.Error != nil {
 		if errors.Is(res.Error, gorm.ErrRecordNotFound) {
 			return nil, entity.ErrOrderNotFound

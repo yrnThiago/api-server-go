@@ -7,25 +7,13 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/yrnThiago/api-server-go/config"
+	"github.com/yrnThiago/api-server-go/internal/dto"
 	"github.com/yrnThiago/api-server-go/internal/entity"
 	infra "github.com/yrnThiago/api-server-go/internal/infra/redis"
 	"github.com/yrnThiago/api-server-go/internal/utils"
 )
 
 const REDIS_PRODUCTS_KEY = "all-products"
-
-type ProductInputDto struct {
-	Name  string  `validate:"required"`
-	Price float64 `validate:"required,gt=0"`
-	Stock int     `validate:"required"`
-}
-
-type ProductOutputDto struct {
-	ID    string
-	Name  string
-	Price float64
-	Stock int
-}
 
 type ProductUseCase struct {
 	ProductRepository IProductRepository
@@ -45,18 +33,9 @@ func NewProduct(name string, price float64, stock int) *entity.Product {
 	}
 }
 
-func NewProductOutputDto(product *entity.Product) *ProductOutputDto {
-	return &ProductOutputDto{
-		ID:    product.ID,
-		Name:  product.Name,
-		Price: product.Price,
-		Stock: product.Stock,
-	}
-}
-
 func (u *ProductUseCase) Add(
-	input ProductInputDto,
-) (*ProductOutputDto, error) {
+	input dto.ProductInputDto,
+) (*dto.ProductOutputDto, error) {
 	err := utils.ValidateStruct(input)
 	if err != nil {
 		return nil, entity.GetValidationError(err.Error())
@@ -75,11 +54,11 @@ func (u *ProductUseCase) Add(
 
 	infra.Redis.Del(context.Background(), REDIS_PRODUCTS_KEY)
 
-	return NewProductOutputDto(product), nil
+	return dto.NewProductOutputDto(product), nil
 }
 
-func (u *ProductUseCase) GetMany() ([]*ProductOutputDto, error) {
-	var productsDto []*ProductOutputDto
+func (u *ProductUseCase) GetMany() ([]*dto.ProductOutputDto, error) {
+	var productsDto []*dto.ProductOutputDto
 	ctx := context.Background()
 
 	productsRedis, _ := infra.Redis.Get(ctx, REDIS_PRODUCTS_KEY)
@@ -95,7 +74,7 @@ func (u *ProductUseCase) GetMany() ([]*ProductOutputDto, error) {
 	}
 
 	for _, product := range products {
-		productsDto = append(productsDto, NewProductOutputDto(product))
+		productsDto = append(productsDto, dto.NewProductOutputDto(product))
 	}
 
 	productsJson, err := json.Marshal(productsDto)
@@ -107,19 +86,19 @@ func (u *ProductUseCase) GetMany() ([]*ProductOutputDto, error) {
 	return productsDto, nil
 }
 
-func (u *ProductUseCase) GetById(id string) (*ProductOutputDto, error) {
+func (u *ProductUseCase) GetById(id string) (*dto.ProductOutputDto, error) {
 	product, err := u.ProductRepository.GetById(id)
 	if err != nil {
 		return nil, err
 	}
 
-	return NewProductOutputDto(product), nil
+	return dto.NewProductOutputDto(product), nil
 }
 
 func (u *ProductUseCase) UpdateById(
 	id string,
-	input ProductInputDto,
-) (*ProductOutputDto, error) {
+	input dto.ProductInputDto,
+) (*dto.ProductOutputDto, error) {
 
 	err := utils.ValidateStruct(input)
 	if err != nil {
@@ -142,12 +121,12 @@ func (u *ProductUseCase) UpdateById(
 
 	infra.Redis.Del(context.Background(), REDIS_PRODUCTS_KEY)
 
-	return NewProductOutputDto(updatedProduct), nil
+	return dto.NewProductOutputDto(updatedProduct), nil
 }
 
 func (u *ProductUseCase) DeleteById(
 	id string,
-) (*ProductOutputDto, error) {
+) (*dto.ProductOutputDto, error) {
 
 	product, err := u.GetById(id)
 	if err != nil {

@@ -9,6 +9,7 @@ type User struct {
 	ID       string `gorm:"primaryKey"`
 	Email    string
 	Password string
+	Orders   []Order `gorm:"foreignKey:ClientID"`
 	gorm.Model
 }
 

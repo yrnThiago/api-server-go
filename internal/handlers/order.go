@@ -5,6 +5,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
+	"github.com/yrnThiago/api-server-go/internal/dto"
 	"github.com/yrnThiago/api-server-go/internal/infra/nats"
 	"github.com/yrnThiago/api-server-go/internal/usecase/order"
 )
@@ -22,7 +23,7 @@ func NewOrderHandlers(
 }
 
 func (p *OrderHandlers) Add(c *fiber.Ctx) error {
-	var input usecase.OrderInputDto
+	var input dto.OrderInputDto
 	err := c.BodyParser(&input)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "order body missing"})
@@ -66,7 +67,7 @@ func (p *OrderHandlers) GetById(c *fiber.Ctx) error {
 }
 
 func (p *OrderHandlers) UpdateById(c *fiber.Ctx) error {
-	var input usecase.OrderInputDto
+	var input dto.OrderInputDto
 	err := c.BodyParser(&input)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "order body missing"})
