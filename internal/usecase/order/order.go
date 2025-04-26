@@ -16,16 +16,46 @@ type OrderInputDto struct {
 }
 
 type OrderItemInputDto struct {
-	OrderID   string         `gorm:"index"                json:"-"`
-	ProductID string         `json:"-"`
-	Product   entity.Product `gorm:"foreignKey:ProductID" validate:"required"`
-	Qty       int            `json:"qty" validate:"required,min=1"`
+	ProductID string `json:"product_id" validate:"required"`
+	Qty       int    `json:"qty" validate:"required,min=1"`
+}
+
+type OrderItemsOutputDto struct {
+	Product *OrderProductOutputDto
+	Qty     int
+}
+
+type OrderProductOutputDto struct {
+	ID    string
+	Name  string
+	Price float64
+}
+
+func NewOrderProductOutputDto(item entity.OrderItems) *OrderProductOutputDto {
+	return &OrderProductOutputDto{
+		ID:    item.Product.ID,
+		Name:  item.Product.Name,
+		Price: item.Product.Price,
+	}
+}
+
+func NewOrderItemsOutputDto(items []entity.OrderItems) []OrderItemsOutputDto {
+	var itemsOutput []OrderItemsOutputDto
+
+	for _, item := range items {
+		itemsOutput = append(itemsOutput, OrderItemsOutputDto{
+			Product: NewOrderProductOutputDto(item),
+			Qty:     item.Qty},
+		)
+	}
+
+	return itemsOutput
 }
 
 type OrderOutputDto struct {
 	ID        string
 	Status    entity.OrderStatus
-	Items     []entity.OrderItems
+	Items     []OrderItemsOutputDto
 	Payment   entity.PaymentMethod
 	CreatedAt time.Time
 }
@@ -46,7 +76,7 @@ func (u *OrderUseCase) NewOrderItems(items []OrderItemInputDto) []entity.OrderIt
 	var orderItems []entity.OrderItems
 	for _, item := range items {
 		orderItems = append(orderItems, entity.OrderItems{
-			ProductID: item.Product.ID,
+			ProductID: item.ProductID,
 			Qty:       item.Qty,
 		})
 	}
@@ -66,7 +96,7 @@ func (u *OrderUseCase) NewOrder(items []OrderItemInputDto, status entity.OrderSt
 func NewOrderOutputDto(order *entity.Order) *OrderOutputDto {
 	return &OrderOutputDto{
 		ID:        order.ID,
-		Items:     order.Items,
+		Items:     NewOrderItemsOutputDto(order.Items),
 		Status:    order.Status,
 		Payment:   order.Payment,
 		CreatedAt: order.CreatedAt,
@@ -75,7 +105,7 @@ func NewOrderOutputDto(order *entity.Order) *OrderOutputDto {
 
 func (u *OrderUseCase) validateOrderItems(items []OrderItemInputDto) error {
 	for _, item := range items {
-		_, err := u.productRepository.GetById(item.Product.ID)
+		_, err := u.productRepository.GetById(item.ProductID)
 		if err != nil {
 			return err
 		}
