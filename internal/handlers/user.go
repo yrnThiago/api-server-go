@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/yrnThiago/api-server-go/internal/dto"
 	"github.com/yrnThiago/api-server-go/internal/usecase/user"
 )
 
@@ -18,7 +19,7 @@ func NewUserHandlers(
 }
 
 func (p *UserHandlers) Add(c *fiber.Ctx) error {
-	var input usecase.UserInputDto
+	var input dto.UserInputDto
 	err := c.BodyParser(&input)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "user body missing"})
@@ -60,7 +61,7 @@ func (p *UserHandlers) GetById(c *fiber.Ctx) error {
 }
 
 func (p *UserHandlers) UpdateById(c *fiber.Ctx) error {
-	var input usecase.UserInputDto
+	var input dto.UserInputDto
 	err := c.BodyParser(&input)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "user body missing"})

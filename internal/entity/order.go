@@ -24,10 +24,12 @@ type OrderItems struct {
 }
 
 type Order struct {
-	ID      string `gorm:"primaryKey"`
-	Status  OrderStatus
-	Items   []OrderItems `gorm:"foreignKey:OrderID;constraint:OnDelete:CASCADE"`
-	Payment PaymentMethod
+	ID       string `gorm:"primaryKey"`
+	Status   OrderStatus
+	Items    []OrderItems `gorm:"foreignKey:OrderID;constraint:OnDelete:CASCADE"`
+	ClientID string       `gorm:"index" json:"-"`
+	Client   User         `gorm:"foreignKey:ClientID"`
+	Payment  PaymentMethod
 	gorm.Model
 }
 

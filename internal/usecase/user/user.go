@@ -4,19 +4,10 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/yrnThiago/api-server-go/config"
+	"github.com/yrnThiago/api-server-go/internal/dto"
 	"github.com/yrnThiago/api-server-go/internal/entity"
 	"github.com/yrnThiago/api-server-go/internal/utils"
 )
-
-type UserInputDto struct {
-	Email    string `validate:"required,email"`
-	Password string `validate:"required,min=6"`
-}
-
-type UserOutputDto struct {
-	ID    string
-	Email string
-}
 
 type UserUseCase struct {
 	UserRepository IUserRepository
@@ -27,17 +18,9 @@ func NewUserUseCase(userRepository IUserRepository) *UserUseCase {
 		UserRepository: userRepository,
 	}
 }
-
-func NewUserOutputDto(user *entity.User) *UserOutputDto {
-	return &UserOutputDto{
-		ID:    user.ID,
-		Email: user.Email,
-	}
-}
-
 func (u *UserUseCase) Add(
-	input UserInputDto,
-) (*UserOutputDto, error) {
+	input dto.UserInputDto,
+) (*dto.UserOutputDto, error) {
 	err := utils.ValidateStruct(input)
 	if err != nil {
 		return nil, entity.GetValidationError(err.Error())
@@ -52,30 +35,30 @@ func (u *UserUseCase) Add(
 	}
 
 	config.Logger.Info("new user added")
-	return NewUserOutputDto(user), nil
+	return dto.NewUserOutputDto(user), nil
 }
 
-func (u *UserUseCase) GetMany() ([]*UserOutputDto, error) {
-	var usersOutputDTO []*UserOutputDto
+func (u *UserUseCase) GetMany() ([]*dto.UserOutputDto, error) {
+	var usersOutputDTO []*dto.UserOutputDto
 	users, err := u.UserRepository.GetMany()
 	if err != nil {
 		return nil, err
 	}
 
 	for _, user := range users {
-		usersOutputDTO = append(usersOutputDTO, NewUserOutputDto(user))
+		usersOutputDTO = append(usersOutputDTO, dto.NewUserOutputDto(user))
 	}
 
 	return usersOutputDTO, nil
 }
 
-func (u *UserUseCase) GetById(id string) (*UserOutputDto, error) {
+func (u *UserUseCase) GetById(id string) (*dto.UserOutputDto, error) {
 	user, err := u.UserRepository.GetById(id)
 	if err != nil {
 		return nil, err
 	}
 
-	return NewUserOutputDto(user), nil
+	return dto.NewUserOutputDto(user), nil
 }
 
 func (u *UserUseCase) GetByLogin(email string) (*entity.User, error) {
@@ -89,8 +72,8 @@ func (u *UserUseCase) GetByLogin(email string) (*entity.User, error) {
 
 func (u *UserUseCase) UpdateById(
 	id string,
-	input UserInputDto,
-) (*UserOutputDto, error) {
+	input dto.UserInputDto,
+) (*dto.UserOutputDto, error) {
 
 	err := utils.ValidateStruct(input)
 	if err != nil {
@@ -115,12 +98,12 @@ func (u *UserUseCase) UpdateById(
 		zap.String("id", id),
 	)
 
-	return NewUserOutputDto(updatedUser), nil
+	return dto.NewUserOutputDto(updatedUser), nil
 }
 
 func (u *UserUseCase) DeleteById(
 	id string,
-) (*UserOutputDto, error) {
+) (*dto.UserOutputDto, error) {
 	user, err := u.GetById(id)
 	if err != nil {
 		return nil, err
