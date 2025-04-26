@@ -5,6 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
+	"github.com/yrnThiago/api-server-go/internal/dto"
 	"github.com/yrnThiago/api-server-go/internal/entity"
 	"github.com/yrnThiago/api-server-go/internal/tests/mocks"
 	"go.uber.org/mock/gomock"
@@ -18,7 +19,7 @@ func TestUserUseCase_GetById(t *testing.T) {
 		name        string
 		user        *entity.User
 		mockSetup   func(repo *mocks.MockIUserRepository)
-		expected    *UserOutputDto
+		expected    *dto.UserOutputDto
 		expectError bool
 	}
 
@@ -30,7 +31,7 @@ func TestUserUseCase_GetById(t *testing.T) {
 			mockSetup: func(repo *mocks.MockIUserRepository) {
 				repo.EXPECT().GetById(userTest.ID).Return(userTest, nil)
 			},
-			expected:    NewUserOutputDto(userTest),
+			expected:    dto.NewUserOutputDto(userTest),
 			expectError: false,
 		},
 	}
