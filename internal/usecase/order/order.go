@@ -59,7 +59,7 @@ func (u *OrderUseCase) Add(
 
 	err := utils.ValidateStruct(input)
 	if err != nil {
-		return nil, entity.GetValidationError(err.Error())
+		return nil, err
 	}
 
 	if err := u.validateOrderItems(input.Items); err != nil {
@@ -105,7 +105,7 @@ func (u *OrderUseCase) UpdateById(
 
 	err := utils.ValidateStruct(input)
 	if err != nil {
-		return nil, entity.GetValidationError(err.Error())
+		return nil, err
 	}
 
 	if err := u.validateOrderItems(input.Items); err != nil {

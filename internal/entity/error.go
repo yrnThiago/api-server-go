@@ -1,6 +1,8 @@
 package entity
 
-import "strings"
+import (
+	"strings"
+)
 
 var (
 	ErrProductNotFound = NewErrorInfo("RECORD_NOT_FOUND", "product id not found")
@@ -15,6 +17,12 @@ var (
 
 type ErrorInfo struct {
 	Name    string `json:"name"`
+	Message string `json:"message"`
+	Errors  []ValidationError
+}
+
+type ValidationError struct {
+	Field   string `json:"field"`
 	Message string `json:"message"`
 }
 
@@ -33,10 +41,10 @@ func NewErrorInfo(name, msg string) *ErrorInfo {
 	}
 }
 
-func GetValidationError(msg string) *ErrorInfo {
+func GetValidationError(validationErrors []ValidationError) *ErrorInfo {
 	return &ErrorInfo{
-		Name:    "VALIDATION_ERROR",
-		Message: msg,
+		Name:   "VALIDATION_ERROR",
+		Errors: validationErrors,
 	}
 }
 

@@ -18,7 +18,7 @@ func ErrorMiddleware(c *fiber.Ctx, err error) error {
 
 	switch errorInfo.Name {
 	case "VALIDATION_ERROR":
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": errorInfo.Message})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": errorInfo.Errors})
 	case "RECORD_NOT_FOUND":
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": errorInfo.Message})
 	case "JWT_INVALID_TOKEN":
