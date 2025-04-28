@@ -63,7 +63,7 @@ func (u *ProductUseCase) GetMany() ([]*dto.ProductOutputDto, error) {
 
 	productsRedis, _ := infra.Redis.Get(ctx, REDIS_PRODUCTS_KEY)
 
-	if productsRedis != "" {
+	if !utils.IsEmpty(productsRedis) {
 		json.Unmarshal([]byte(productsRedis), &productsDto)
 		return productsDto, nil
 	}

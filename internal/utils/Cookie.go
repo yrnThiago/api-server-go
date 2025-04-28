@@ -17,7 +17,7 @@ var BEARER_KEY = "Bearer "
 
 func GetCookie(c *fiber.Ctx, cookieName string) (string, error) {
 	cookie := c.Cookies(cookieName)
-	if cookie == "" {
+	if IsEmpty(cookie) {
 		return "", fmt.Errorf("cookie %s not found", cookieName)
 	}
 	return cookie, nil

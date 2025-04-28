@@ -4,6 +4,7 @@ import (
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/jetstream"
 	"github.com/yrnThiago/api-server-go/config"
+	"github.com/yrnThiago/api-server-go/internal/utils"
 	"go.uber.org/zap"
 )
 
@@ -37,7 +38,7 @@ func Init() {
 }
 
 func getNatsURL() string {
-	if config.Env.NATS_URL == "" {
+	if utils.IsEmpty(config.Env.NATS_URL) {
 		return nats.DefaultURL
 	}
 

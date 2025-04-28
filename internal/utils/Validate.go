@@ -40,3 +40,7 @@ func ValidateStruct(input any) error {
 
 	return nil
 }
+
+func IsEmpty(param string) bool {
+	return param == ""
+}
