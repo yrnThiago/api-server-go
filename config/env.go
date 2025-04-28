@@ -22,13 +22,11 @@ type EnvVariables struct {
 	COOKIE_NAME       string
 	COOKIE_EXPIRES_AT time.Duration
 	NATS_URL          string
-	NEW_ORDERS_TOPIC  string
 	RDB_ADDRESS       string
 	RDB_PASSWORD      string
 	RDB_DB            int
 	RATE_LIMIT        int
 	RATE_LIMIT_WINDOW time.Duration
-	LOGS_FILE_NAME    string
 }
 
 var Env EnvVariables
@@ -58,12 +56,10 @@ func Init() {
 		COOKIE_NAME:       os.Getenv("COOKIE_NAME"),
 		COOKIE_EXPIRES_AT: cookieExpiresAt,
 		NATS_URL:          os.Getenv("NATS_URL"),
-		NEW_ORDERS_TOPIC:  os.Getenv("NEW_ORDERS_TOPIC"),
 		RDB_ADDRESS:       os.Getenv("RDB_ADDRESS"),
 		RDB_PASSWORD:      os.Getenv("RDB_PASSWORD"),
 		RDB_DB:            rdbDb,
 		RATE_LIMIT:        rateLimit,
 		RATE_LIMIT_WINDOW: rateLimitWindow,
-		LOGS_FILE_NAME:    os.Getenv("LOGS_FILE_NAME"),
 	}
 }
