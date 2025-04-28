@@ -1,4 +1,4 @@
-package infra
+package redis
 
 import (
 	"context"
@@ -24,7 +24,7 @@ type RateLimiter struct {
 
 var Redis *RedisCfg
 
-func RedisInit() {
+func Init() {
 	Redis = NewRedis(config.Env.RDB_ADDRESS, config.Env.RDB_PASSWORD, config.Env.RDB_DB, config.Env.RATE_LIMIT, config.Env.RATE_LIMIT_WINDOW)
 
 	_, err := Redis.Ping(context.Background())

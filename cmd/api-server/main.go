@@ -7,7 +7,7 @@ import (
 
 	"github.com/yrnThiago/api-server-go/config"
 	"github.com/yrnThiago/api-server-go/internal/infra/nats"
-	infra "github.com/yrnThiago/api-server-go/internal/infra/redis"
+	"github.com/yrnThiago/api-server-go/internal/infra/redis"
 	"github.com/yrnThiago/api-server-go/internal/server"
 )
 
@@ -20,7 +20,7 @@ func main() {
 	nats.PublisherInit()
 	nats.ConsumerInit()
 
-	infra.RedisInit()
+	redis.Init()
 
 	go server.Init()
 
