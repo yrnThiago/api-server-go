@@ -53,7 +53,6 @@ func (p *OrderHandlers) GetMany(c *fiber.Ctx) error {
 
 func (p *OrderHandlers) GetById(c *fiber.Ctx) error {
 	id := c.Params("id")
-	fmt.Println(id)
 	if id == ":id" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "order id missing"})
 	}
