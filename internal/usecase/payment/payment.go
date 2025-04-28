@@ -1,8 +1,8 @@
-package payment
+package usecase
 
 import (
 	"github.com/yrnThiago/api-server-go/internal/entity"
-	usecase "github.com/yrnThiago/api-server-go/internal/usecase/order"
+	"github.com/yrnThiago/api-server-go/internal/usecase/order"
 )
 
 type PaymentUseCase struct {

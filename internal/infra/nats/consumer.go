@@ -18,10 +18,10 @@ type Consumer struct {
 	Ctx            context.Context
 	Config         jetstream.ConsumerConfig
 	ConsumerCtx    jetstream.Consumer
-	PaymentUseCase *payment.PaymentUseCase
+	PaymentUseCase *usecase.PaymentUseCase
 }
 
-func NewConsumer(name, durable, filterSubject string, paymentUseCase *payment.PaymentUseCase) *Consumer {
+func NewConsumer(name, durable, filterSubject string, paymentUseCase *usecase.PaymentUseCase) *Consumer {
 	return &Consumer{
 		Js:  JS,
 		Ctx: context.Background(),
@@ -81,7 +81,7 @@ func (c *Consumer) HandlingNewOrders() {
 
 func ConsumerInit() {
 	repositoryOrders := repository.NewOrderRepositoryMysql(config.DB)
-	paymentUseCase := payment.NewPaymentUseCase(repositoryOrders)
+	paymentUseCase := usecase.NewPaymentUseCase(repositoryOrders)
 
 	ordersConsumer := NewConsumer("order_processor", "order_processor", "orders.>", paymentUseCase)
 	ordersConsumer.CreateStream()
