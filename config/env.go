@@ -21,6 +21,7 @@ type EnvVariables struct {
 	SKIP_AUTH         bool
 	COOKIE_NAME       string
 	COOKIE_EXPIRES_AT time.Duration
+	NATS_URL          string
 	NEW_ORDERS_TOPIC  string
 	RDB_ADDRESS       string
 	RDB_PASSWORD      string
@@ -56,6 +57,7 @@ func Init() {
 		SKIP_AUTH:         skipAuth,
 		COOKIE_NAME:       os.Getenv("COOKIE_NAME"),
 		COOKIE_EXPIRES_AT: cookieExpiresAt,
+		NATS_URL:          os.Getenv("NATS_URL"),
 		NEW_ORDERS_TOPIC:  os.Getenv("NEW_ORDERS_TOPIC"),
 		RDB_ADDRESS:       os.Getenv("RDB_ADDRESS"),
 		RDB_PASSWORD:      os.Getenv("RDB_PASSWORD"),

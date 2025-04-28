@@ -14,7 +14,8 @@ var (
 
 func Init() {
 	var err error
-	NC, err = nats.Connect("connect.ngs.global", nats.UserCredentials("./user.creds"))
+	natsURL := getNatsURL()
+	NC, err = nats.Connect(natsURL)
 	if err != nil {
 		config.Logger.Fatal(
 			"nats connection",
@@ -33,6 +34,14 @@ func Init() {
 	config.Logger.Info(
 		"Nats successfully initialized",
 	)
+}
+
+func getNatsURL() string {
+	if config.Env.NATS_URL == "" {
+		return nats.DefaultURL
+	}
+
+	return config.Env.NATS_URL
 }
 
 func CloseAllConections() {
