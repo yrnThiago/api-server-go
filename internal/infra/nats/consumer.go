@@ -2,6 +2,7 @@ package nats
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	"github.com/nats-io/nats.go/jetstream"
@@ -12,6 +13,10 @@ import (
 	"github.com/yrnThiago/api-server-go/internal/infra/repository"
 	"github.com/yrnThiago/api-server-go/internal/usecase/payment"
 )
+
+const ordersSubject = "orders"
+
+var ordersFilter = fmt.Sprintf("%s.>", ordersSubject)
 
 type Consumer struct {
 	Js             jetstream.JetStream
@@ -36,21 +41,22 @@ func NewConsumer(name, durable, filterSubject string, paymentUseCase *usecase.Pa
 	}
 }
 
-func (c *Consumer) CreateStream() {
-	stream, err := c.Js.Stream(c.Ctx, "orders")
-	if err != nil {
-		config.Logger.Fatal("err", zap.Error(err))
-	}
+func ConsumerInit() {
+	repositoryOrders := repository.NewOrderRepositoryMysql(config.DB)
+	paymentUseCase := usecase.NewPaymentUseCase(repositoryOrders)
 
-	c.ConsumerCtx, err = stream.CreateOrUpdateConsumer(c.Ctx, c.Config)
-	if err != nil {
-		config.Logger.Fatal("err", zap.Error(err))
-	}
+	ordersConsumer := NewConsumer("order_processor", "order_processor", ordersFilter, paymentUseCase)
+	ordersConsumer.CreateStream()
+	ordersConsumer.HandlingNewOrders()
+
+	config.Logger.Info(
+		"consumers successfully initialized",
+	)
 }
 
 func (c *Consumer) HandlingNewOrders() {
 	_, err := c.ConsumerCtx.Consume(func(msg jetstream.Msg) {
-		orderID := strings.Replace(string(msg.Subject()), "orders.", "", 1)
+		orderID := getOrderIdFromMsg(msg)
 		msg.Ack()
 
 		config.Logger.Info(
@@ -79,15 +85,18 @@ func (c *Consumer) HandlingNewOrders() {
 	}
 }
 
-func ConsumerInit() {
-	repositoryOrders := repository.NewOrderRepositoryMysql(config.DB)
-	paymentUseCase := usecase.NewPaymentUseCase(repositoryOrders)
+func (c *Consumer) CreateStream() {
+	stream, err := c.Js.Stream(c.Ctx, ordersSubject)
+	if err != nil {
+		config.Logger.Fatal("err", zap.Error(err))
+	}
 
-	ordersConsumer := NewConsumer("order_processor", "order_processor", "orders.>", paymentUseCase)
-	ordersConsumer.CreateStream()
-	ordersConsumer.HandlingNewOrders()
+	c.ConsumerCtx, err = stream.CreateOrUpdateConsumer(c.Ctx, c.Config)
+	if err != nil {
+		config.Logger.Fatal("err", zap.Error(err))
+	}
+}
 
-	config.Logger.Info(
-		"consumers successfully initialized",
-	)
+func getOrderIdFromMsg(msg jetstream.Msg) string {
+	return strings.Replace(string(msg.Subject()), fmt.Sprintf("%s.", ordersSubject), "", 1)
 }
