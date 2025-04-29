@@ -22,7 +22,7 @@ func ErrorMiddleware(c *fiber.Ctx, err error) error {
 	case entity.ErrRecordNotFoundName:
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": errorInfo.Message})
 	case entity.ErrInvalidJwtTokenName:
-		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{"error": entity.ErrUnauthorizedMsg})
+		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{"error": errorInfo.Message})
 	case entity.ErrRateLimitName:
 		return c.Status(fiber.StatusTooManyRequests).JSON(fiber.Map{"error": errorInfo.Message})
 	default:

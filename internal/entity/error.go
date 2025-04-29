@@ -49,8 +49,8 @@ func GetValidationError(validationErrors []ValidationError) *ErrorInfo {
 	return NewErrorInfo(ErrValidationName, ErrValidationMsg, validationErrors)
 }
 
-func GetInvalidJwtTokenError(msg string) *ErrorInfo {
-	return NewErrorInfo(ErrInvalidJwtTokenName, msg, nil)
+func GetInvalidJwtTokenError() *ErrorInfo {
+	return NewErrorInfo(ErrInvalidJwtTokenName, ErrUnauthorizedMsg, nil)
 }
 
 func GetInternalServerError() *ErrorInfo {

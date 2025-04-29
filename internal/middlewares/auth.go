@@ -22,7 +22,7 @@ func AuthMiddleware(c *fiber.Ctx) error {
 
 	token, err := utils.VerifyJWT(userAuthorization)
 	if err != nil {
-		return entity.GetInvalidJwtTokenError(err.Error())
+		return entity.GetInvalidJwtTokenError()
 	}
 
 	claims := token.Claims.(jwt.MapClaims)
