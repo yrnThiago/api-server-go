@@ -5,6 +5,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/yrnThiago/api-server-go/config"
+	"github.com/yrnThiago/api-server-go/internal/entity"
 	"github.com/yrnThiago/api-server-go/internal/usecase/auth"
 	"github.com/yrnThiago/api-server-go/internal/utils"
 )
@@ -25,7 +26,7 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 
 	token, output, err := h.AuthUseCase.Login(input)
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "wrong credentials"})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": entity.ErrWrongCredentialsMsg})
 	}
 
 	c.Locals(utils.UserIdKeyCtx, output.ID)

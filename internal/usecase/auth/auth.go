@@ -3,7 +3,6 @@ package usecase
 import (
 	"context"
 	"encoding/json"
-
 	"github.com/yrnThiago/api-server-go/config"
 	"github.com/yrnThiago/api-server-go/internal/entity"
 	infra "github.com/yrnThiago/api-server-go/internal/infra/redis"
@@ -34,8 +33,9 @@ func (a *AuthUseCase) Login(input AuthInputDto) (string, *entity.User, error) {
 		return "", nil, err
 	}
 
-	if !utils.CheckPasswordHash(input.Password, output.Password) {
-		config.Logger.Warn("wrong credentials")
+	err = utils.CheckPasswordHash(input.Password, output.Password)
+	if err != nil {
+		config.Logger.Warn(entity.ErrWrongCredentialsMsg)
 		return "", nil, err
 	}
 

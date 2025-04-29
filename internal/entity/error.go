@@ -11,11 +11,12 @@ const (
 	ErrInternalServerName  = "INTERNAL_SERVER_ERROR"
 	ErrRateLimitName       = "RATE_LIMIT_ERROR"
 
-	ErrValidationMsg     = "invalid body request"
-	ErrRecordNotFoundMsg = "id not found"
-	ErrInternalServerMsg = "something went wrong"
-	ErrRateLimitMsg      = "too many requests"
-	ErrUnauthorizedMsg   = "unauthorized"
+	ErrValidationMsg       = "invalid body request"
+	ErrRecordNotFoundMsg   = "id not found"
+	ErrInternalServerMsg   = "something went wrong"
+	ErrRateLimitMsg        = "too many requests"
+	ErrUnauthorizedMsg     = "unauthorized"
+	ErrWrongCredentialsMsg = "wrong credentials"
 )
 
 type ErrorInfo struct {
