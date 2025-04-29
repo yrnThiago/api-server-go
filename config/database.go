@@ -16,9 +16,10 @@ var DB *gorm.DB
 type GoEnv string
 
 const (
-	LOCAL_ENV GoEnv = "local"
-	DEV_ENV   GoEnv = "dev"
-	PROD_ENV  GoEnv = "production"
+	LOCAL_ENV        GoEnv = "local"
+	DEV_ENV          GoEnv = "dev"
+	PROD_ENV         GoEnv = "production"
+	tempDatabasePath       = "temp.db"
 )
 
 func getDatabaseUrl() string {
@@ -42,7 +43,7 @@ func connectDatabase() {
 		return
 	}
 
-	DB, err = gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
+	DB, err = gorm.Open(sqlite.Open(tempDatabasePath), &gorm.Config{})
 	if err != nil {
 		Logger.Panic("failed to connect to sqlite database")
 	}

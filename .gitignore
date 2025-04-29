@@ -1,6 +1,7 @@
 .env
 **/logs/
 user.creds
+*.db
 
 # air build outputs
 bin/
