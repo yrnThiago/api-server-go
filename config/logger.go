@@ -11,7 +11,7 @@ import (
 
 var Logger *zap.Logger
 
-const LOGS_PATH = "./internal/logs/logs.log"
+const logsPath = "./internal/logs/logs.log"
 
 func LoggerInit() {
 	encoderConfig := zapcore.EncoderConfig{
@@ -30,11 +30,11 @@ func LoggerInit() {
 	fileEncoder := zapcore.NewJSONEncoder(encoderConfig)
 	consoleEncoder := zapcore.NewJSONEncoder(encoderConfig)
 
-	if !pathExists(LOGS_PATH) {
-		createFileWithPath(LOGS_PATH)
+	if !pathExists(logsPath) {
+		createFileWithPath(logsPath)
 	}
 
-	logFile, _ := os.OpenFile(LOGS_PATH, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	logFile, _ := os.OpenFile(logsPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	fileWriter := zapcore.AddSync(logFile)
 	consoleWriter := zapcore.AddSync(os.Stdout)
 
