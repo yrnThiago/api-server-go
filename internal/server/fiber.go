@@ -53,8 +53,8 @@ func Init() {
 
 	config.Logger.Info(
 		"server listening",
-		zap.String("port", config.Env.PORT),
+		zap.String("port", config.Env.Port),
 	)
 
-	log.Fatal(app.Listen(":" + config.Env.PORT))
+	log.Fatal(app.Listen(":" + config.Env.Port))
 }

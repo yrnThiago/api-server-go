@@ -12,8 +12,9 @@ import (
 
 type Option func(c fiber.Cookie) fiber.Cookie
 
-var SECRET_KEY = []byte(config.Env.SECRET_KEY)
-var BEARER_KEY = "Bearer "
+var (
+	bearerKey = "Bearer "
+)
 
 func GetCookie(c *fiber.Ctx, cookieName string) (string, error) {
 	cookie := c.Cookies(cookieName)
@@ -38,9 +39,9 @@ func SetCookie(c *fiber.Ctx, cookie *fiber.Cookie) (string, error) {
 func SetBearerCookie(c *fiber.Ctx, token string) (string, error) {
 
 	cookie := &fiber.Cookie{}
-	cookie.Name = config.Env.COOKIE_NAME
-	cookie.Value = BEARER_KEY + token
-	cookie.Expires = time.Now().Add(config.Env.COOKIE_EXPIRES_AT)
+	cookie.Name = config.Env.CookieName
+	cookie.Value = bearerKey + token
+	cookie.Expires = time.Now().Add(config.Env.CookieExpiresAt)
 	cookie.Secure = false
 	cookie.HTTPOnly = true
 	cookie.Path = "/"
@@ -59,7 +60,7 @@ func SetBearerCookie(c *fiber.Ctx, token string) (string, error) {
 
 func ClearBearerCookie(c *fiber.Ctx) error {
 	cookie := &fiber.Cookie{}
-	cookie.Name = config.Env.COOKIE_NAME
+	cookie.Name = config.Env.CookieName
 	cookie.Expires = time.Now().Add(-3 * time.Second)
 	cookie.HTTPOnly = true
 
@@ -69,5 +70,5 @@ func ClearBearerCookie(c *fiber.Ctx) error {
 }
 
 func GetFormattedAuthToken(token string) (string, error) {
-	return strings.Replace(token, BEARER_KEY, "", 1), nil
+	return strings.Replace(token, bearerKey, "", 1), nil
 }

@@ -25,7 +25,7 @@ type RateLimiter struct {
 var Redis *RedisCfg
 
 func Init() {
-	Redis = NewRedis(config.Env.RDB_ADDRESS, config.Env.RDB_PASSWORD, config.Env.RDB_DB, config.Env.RATE_LIMIT, config.Env.RATE_LIMIT_WINDOW)
+	Redis = NewRedis(config.Env.RdbAddress, config.Env.RdbPassword, config.Env.RdbDB, config.Env.RateLimit, config.Env.RateLimitWindow)
 
 	_, err := Redis.Ping(context.Background())
 	if err != nil {
@@ -41,7 +41,7 @@ func Init() {
 	Redis.IsUp = true
 	config.Logger.Info(
 		"Redis successfully initialized",
-		zap.String("addr", config.Env.RDB_ADDRESS),
+		zap.String("addr", config.Env.RdbAddress),
 	)
 }
 func NewRateLimiter(client *redis.Client, limit int, window time.Duration, ctx context.Context) *RateLimiter {

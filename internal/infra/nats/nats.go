@@ -38,11 +38,11 @@ func Init() {
 }
 
 func getNatsURL() string {
-	if utils.IsEmpty(config.Env.NATS_URL) {
+	if utils.IsEmpty(config.Env.NatsURL) {
 		return nats.DefaultURL
 	}
 
-	return config.Env.NATS_URL
+	return config.Env.NatsURL
 }
 
 func CloseAllConections() {

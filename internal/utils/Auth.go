@@ -5,10 +5,13 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt"
+	"github.com/yrnThiago/api-server-go/config"
 	"golang.org/x/crypto/bcrypt"
 )
 
 const UserIdKeyCtx string = "userID"
+
+var secretKey = []byte(config.Env.SecretKey)
 
 func GenerateJWT(userID string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
@@ -17,7 +20,7 @@ func GenerateJWT(userID string) (string, error) {
 			"exp":        time.Now().Add(time.Hour * 24).Unix(),
 		})
 
-	tokenString, err := token.SignedString(SECRET_KEY)
+	tokenString, err := token.SignedString(secretKey)
 	if err != nil {
 		return "", err
 	}
@@ -27,7 +30,7 @@ func GenerateJWT(userID string) (string, error) {
 
 func VerifyJWT(tokenString string) (*jwt.Token, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (any, error) {
-		return SECRET_KEY, nil
+		return secretKey, nil
 	})
 	if err != nil {
 		return nil, err

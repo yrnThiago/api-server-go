@@ -10,23 +10,23 @@ import (
 )
 
 type EnvVariables struct {
-	DB_USERNAME       string
-	DB_PASSWORD       string
-	DB_HOST           string
-	DB_PORT           string
-	DB_NAME           string
-	PORT              string
-	GO_ENV            GoEnv
-	SECRET_KEY        string
-	SKIP_AUTH         bool
-	COOKIE_NAME       string
-	COOKIE_EXPIRES_AT time.Duration
-	NATS_URL          string
-	RDB_ADDRESS       string
-	RDB_PASSWORD      string
-	RDB_DB            int
-	RATE_LIMIT        int
-	RATE_LIMIT_WINDOW time.Duration
+	DBUsername      string
+	DBPassword      string
+	DBHost          string
+	DBPort          string
+	DBName          string
+	Port            string
+	GoEnv           GoEnv
+	SecretKey       string
+	SkipAuth        bool
+	CookieName      string
+	CookieExpiresAt time.Duration
+	NatsURL         string
+	RdbAddress      string
+	RdbPassword     string
+	RdbDB           int
+	RateLimit       int
+	RateLimitWindow time.Duration
 }
 
 var Env EnvVariables
@@ -44,22 +44,22 @@ func Init() {
 	cookieExpiresAt, _ := time.ParseDuration(os.Getenv("COOKIE_EXPIRES_AT"))
 
 	Env = EnvVariables{
-		DB_USERNAME:       os.Getenv("DB_USERNAME"),
-		DB_PASSWORD:       os.Getenv("DB_PASSWORD"),
-		DB_HOST:           os.Getenv("DB_HOST"),
-		DB_PORT:           os.Getenv("DB_PORT"),
-		DB_NAME:           os.Getenv("DB_NAME"),
-		PORT:              os.Getenv("PORT"),
-		GO_ENV:            GoEnv(os.Getenv("GO_ENV")),
-		SECRET_KEY:        os.Getenv("SECRET_KEY"),
-		SKIP_AUTH:         skipAuth,
-		COOKIE_NAME:       os.Getenv("COOKIE_NAME"),
-		COOKIE_EXPIRES_AT: cookieExpiresAt,
-		NATS_URL:          os.Getenv("NATS_URL"),
-		RDB_ADDRESS:       os.Getenv("RDB_ADDRESS"),
-		RDB_PASSWORD:      os.Getenv("RDB_PASSWORD"),
-		RDB_DB:            rdbDb,
-		RATE_LIMIT:        rateLimit,
-		RATE_LIMIT_WINDOW: rateLimitWindow,
+		DBUsername:      os.Getenv("DB_USERNAME"),
+		DBPassword:      os.Getenv("DB_PASSWORD"),
+		DBHost:          os.Getenv("DB_HOST"),
+		DBPort:          os.Getenv("DB_PORT"),
+		DBName:          os.Getenv("DB_NAME"),
+		Port:            os.Getenv("PORT"),
+		GoEnv:           GoEnv(os.Getenv("GO_ENV")),
+		SecretKey:       os.Getenv("SECRET_KEY"),
+		SkipAuth:        skipAuth,
+		CookieName:      os.Getenv("COOKIE_NAME"),
+		CookieExpiresAt: cookieExpiresAt,
+		NatsURL:         os.Getenv("NATS_URL"),
+		RdbAddress:      os.Getenv("RDB_ADDRESS"),
+		RdbPassword:     os.Getenv("RDB_PASSWORD"),
+		RdbDB:           rdbDb,
+		RateLimit:       rateLimit,
+		RateLimitWindow: rateLimitWindow,
 	}
 }

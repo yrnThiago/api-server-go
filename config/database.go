@@ -24,17 +24,17 @@ const (
 
 func getDatabaseUrl() string {
 	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-		Env.DB_USERNAME,
-		Env.DB_PASSWORD,
-		Env.DB_HOST,
-		Env.DB_PORT,
-		Env.DB_NAME,
+		Env.DBUsername,
+		Env.DBPassword,
+		Env.DBHost,
+		Env.DBPort,
+		Env.DBName,
 	)
 }
 
 func connectDatabase() {
 	var err error
-	if Env.GO_ENV == localEnv {
+	if Env.GoEnv == localEnv {
 		DB, err = gorm.Open(mysql.Open(getDatabaseUrl()), &gorm.Config{})
 		if err != nil {
 			Logger.Panic("failed to connect to mysql database")
@@ -55,6 +55,6 @@ func DatabaseInit() {
 
 	Logger.Info(
 		"db successfully initialized",
-		zap.String("env", string(Env.GO_ENV)),
+		zap.String("env", string(Env.GoEnv)),
 	)
 }

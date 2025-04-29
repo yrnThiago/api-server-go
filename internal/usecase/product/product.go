@@ -82,7 +82,7 @@ func (u *ProductUseCase) GetMany() ([]*dto.ProductOutputDto, error) {
 		return nil, err
 	}
 
-	infra.Redis.Set(ctx, RedisProductsKey, string(productsJson), config.Env.RATE_LIMIT_WINDOW)
+	infra.Redis.Set(ctx, RedisProductsKey, string(productsJson), config.Env.RateLimitWindow)
 	return productsDto, nil
 }
 
