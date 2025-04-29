@@ -8,7 +8,7 @@ import (
 
 func RateLimitMiddleware(c *fiber.Ctx) error {
 	if infra.Redis.IsUp && !infra.Redis.Allow(c.IP()) {
-		return entity.ErrRateLimit
+		return entity.GetRateLimitError()
 	}
 
 	return c.Next()

@@ -17,13 +17,13 @@ func ErrorMiddleware(c *fiber.Ctx, err error) error {
 	)
 
 	switch errorInfo.Name {
-	case "VALIDATION_ERROR":
+	case entity.ErrValidationName:
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": errorInfo.Errors})
-	case "RECORD_NOT_FOUND":
+	case entity.ErrRecordNotFoundName:
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": errorInfo.Message})
-	case "JWT_INVALID_TOKEN":
+	case entity.ErrInvalidJwtTokenName:
 		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{"error": entity.ErrUnauthorizedMsg})
-	case "RATE_LIMIT_ERROR":
+	case entity.ErrRateLimitName:
 		return c.Status(fiber.StatusTooManyRequests).JSON(fiber.Map{"error": errorInfo.Message})
 	default:
 		return c.Status(fiber.StatusInternalServerError).

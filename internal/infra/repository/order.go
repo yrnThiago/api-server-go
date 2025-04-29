@@ -43,7 +43,7 @@ func (r *OrderRepositoryMysql) GetById(id string) (*entity.Order, error) {
 	res := r.DB.Preload("Items.Product").Preload("Client").First(&order, "id = ?", id)
 	if res.Error != nil {
 		if errors.Is(res.Error, gorm.ErrRecordNotFound) {
-			return nil, entity.ErrOrderNotFound
+			return nil, entity.GetNotFoundError()
 		}
 
 		return nil, res.Error

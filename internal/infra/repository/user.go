@@ -44,7 +44,7 @@ func (r *UserRepositoryMysql) GetById(userID string) (*entity.User, error) {
 	res := r.DB.Limit(1).Preload("Orders").First(&user, "id = ?", userID)
 	if res.Error != nil {
 		if errors.Is(res.Error, gorm.ErrRecordNotFound) {
-			return nil, entity.ErrUserNotFound
+			return nil, entity.GetNotFoundError()
 		}
 
 		return nil, res.Error

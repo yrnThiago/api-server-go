@@ -44,7 +44,7 @@ func (r *ProductRepositoryMysql) GetById(id string) (*entity.Product, error) {
 	res := r.DB.Limit(1).First(&product, "id = ?", id)
 	if res.Error != nil {
 		if errors.Is(res.Error, gorm.ErrRecordNotFound) {
-			return nil, entity.ErrProductNotFound
+			return nil, entity.GetNotFoundError()
 		}
 
 		return nil, res.Error

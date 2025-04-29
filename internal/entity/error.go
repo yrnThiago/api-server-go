@@ -4,15 +4,18 @@ import (
 	"strings"
 )
 
-var (
-	ErrProductNotFound = NewErrorInfo("RECORD_NOT_FOUND", "product id not found")
-	ErrOrderNotFound   = NewErrorInfo("RECORD_NOT_FOUND", "order id not found")
-	ErrUserNotFound    = NewErrorInfo("RECORD_NOT_FOUND", "user id not found")
-	ErrRateLimit       = NewErrorInfo("RATE_LIMIT_ERROR", "too many requests")
-	ErrInternalServer  = NewErrorInfo("INTERNAL_SERVER_ERROR", "something went wrong")
+const (
+	ErrValidationName      = "VALIDATION_ERROR"
+	ErrInvalidJwtTokenName = "JWT_INVALID_TOKEN"
+	ErrRecordNotFoundName  = "RECORD_NOT_FOUND"
+	ErrInternalServerName  = "INTERNAL_SERVER_ERROR"
+	ErrRateLimitName       = "RATE_LIMIT_ERROR"
 
-	ErrUnauthorizedMsg   = "unauthorized"
+	ErrValidationMsg     = "invalid body request"
+	ErrRecordNotFoundMsg = "id not found"
 	ErrInternalServerMsg = "something went wrong"
+	ErrRateLimitMsg      = "too many requests"
+	ErrUnauthorizedMsg   = "unauthorized"
 )
 
 type ErrorInfo struct {
@@ -34,31 +37,38 @@ func (e *ErrorInfo) GetLowerName() string {
 	return strings.ToLower(strings.ReplaceAll(e.Name, "_", " "))
 }
 
-func NewErrorInfo(name, msg string) *ErrorInfo {
+func NewErrorInfo(name, msg string, errors []ValidationError) *ErrorInfo {
 	return &ErrorInfo{
 		Name:    name,
 		Message: msg,
+		Errors:  errors,
 	}
 }
 
 func GetValidationError(validationErrors []ValidationError) *ErrorInfo {
-	return &ErrorInfo{
-		Name:   "VALIDATION_ERROR",
-		Errors: validationErrors,
-	}
+	return NewErrorInfo(ErrValidationName, ErrValidationMsg, validationErrors)
 }
 
 func GetInvalidJwtTokenError(msg string) *ErrorInfo {
-	return &ErrorInfo{
-		Name:    "JWT_INVALID_TOKEN",
-		Message: msg,
-	}
+	return NewErrorInfo(ErrInvalidJwtTokenName, msg, nil)
+}
+
+func GetInternalServerError() *ErrorInfo {
+	return NewErrorInfo(ErrInternalServerName, ErrInternalServerMsg, nil)
+}
+
+func GetNotFoundError() *ErrorInfo {
+	return NewErrorInfo(ErrRecordNotFoundName, ErrRecordNotFoundMsg, nil)
+}
+
+func GetRateLimitError() *ErrorInfo {
+	return NewErrorInfo(ErrRateLimitName, ErrRateLimitMsg, nil)
 }
 
 func AsErrorInfo(err error) *ErrorInfo {
 	errorInfo, ok := err.(*ErrorInfo)
 	if !ok {
-		return ErrInternalServer
+		return GetInternalServerError()
 	}
 
 	return errorInfo
