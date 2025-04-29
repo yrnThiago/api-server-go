@@ -28,7 +28,7 @@ func (p *PaymentUseCase) GeneratePixCode() string {
 }
 
 func (p *PaymentUseCase) GeneratePayment(order *entity.Order) string {
-	if p.GetPaymentMethod(order) == entity.PIX {
+	if p.GetPaymentMethod(order) == entity.Pix {
 		return p.GeneratePixCode()
 	}
 

@@ -12,8 +12,8 @@ const (
 	Pending  OrderStatus = "Aguardando pagamento"
 	Canceled OrderStatus = "Cancelado"
 
-	PIX         PaymentMethod = "Pix"
-	CREDIT_CARD PaymentMethod = "Cartao de credito"
+	Pix        PaymentMethod = "Pix"
+	CreditCard PaymentMethod = "Cartao de credito"
 )
 
 type OrderItems struct {
