@@ -49,7 +49,7 @@ func LoggerInit() {
 
 func pathExists(path string) bool {
 	_, err := os.Stat(path)
-	return os.IsNotExist(err)
+	return os.IsExist(err)
 }
 
 func createFileWithPath(filePath string) {
