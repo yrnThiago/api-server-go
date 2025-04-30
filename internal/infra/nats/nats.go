@@ -19,8 +19,7 @@ func Init() {
 	NC, err = nats.Connect(natsURL)
 	if err != nil {
 		config.Logger.Fatal(
-			"nats connection",
-			zap.Error(err),
+			"unable to connect with nats server",
 		)
 	}
 
