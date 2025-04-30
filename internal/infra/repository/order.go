@@ -64,7 +64,6 @@ func (r *OrderRepositoryMysql) UpdateById(
 }
 
 func (r *OrderRepositoryMysql) DeleteById(id string) error {
-	// TODO: maybe add soft delete and remove orderItems
 	var order *entity.Order
 	res := r.DB.Delete(&order, "id = ?", id)
 	if res.Error != nil {
