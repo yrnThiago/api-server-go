@@ -1,10 +1,6 @@
 package main
 
 import (
-	"os"
-	"os/signal"
-	"syscall"
-
 	"github.com/yrnThiago/api-server-go/config"
 	"github.com/yrnThiago/api-server-go/internal/infra/nats"
 	"github.com/yrnThiago/api-server-go/internal/infra/redis"
@@ -22,11 +18,5 @@ func main() {
 
 	redis.Init()
 
-	go server.Init()
-
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
-	<-quit
-
-	nats.CloseAllConections()
+	server.Init()
 }
