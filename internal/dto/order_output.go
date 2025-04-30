@@ -11,7 +11,7 @@ type OrderOutputDto struct {
 	Status    entity.OrderStatus
 	Items     []OrderItemsOutputDto
 	Payment   entity.PaymentMethod
-	Client    *UserOutputDto
+	Client    *OrderClientOutputDto
 	CreatedAt time.Time
 }
 
@@ -31,9 +31,21 @@ func NewOrderOutputDto(order *entity.Order) *OrderOutputDto {
 		ID:        order.ID,
 		Items:     NewOrderItemsOutputDto(order.Items),
 		Status:    order.Status,
-		Client:    NewUserOutputDto(&order.Client),
+		Client:    NewOrderClientOutputDto(&order.Client),
 		Payment:   order.Payment,
 		CreatedAt: order.CreatedAt,
+	}
+}
+
+type OrderClientOutputDto struct {
+	ID    string
+	Email string
+}
+
+func NewOrderClientOutputDto(client *entity.User) *OrderClientOutputDto {
+	return &OrderClientOutputDto{
+		ID:    client.ID,
+		Email: client.Email,
 	}
 }
 

@@ -30,7 +30,7 @@ func (r *UserRepositoryMysql) Add(user *entity.User) error {
 
 func (r *UserRepositoryMysql) GetMany() ([]*entity.User, error) {
 	var users []*entity.User
-	res := r.DB.Preload("Orders").Preload("Orders.Items.Product").Find(&users)
+	res := r.DB.Preload("Orders.Items.Product").Find(&users)
 
 	if res.Error != nil {
 		return nil, res.Error
