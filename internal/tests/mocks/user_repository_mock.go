@@ -41,11 +41,12 @@ func (m *MockIUserRepository) EXPECT() *MockIUserRepositoryMockRecorder {
 }
 
 // Add mocks base method.
-func (m *MockIUserRepository) Add(user *entity.User) error {
+func (m *MockIUserRepository) Add(user *entity.User) (*entity.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Add", user)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret0, _ := ret[0].(*entity.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // Add indicates an expected call of Add.
