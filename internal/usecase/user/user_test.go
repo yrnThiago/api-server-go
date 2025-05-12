@@ -12,6 +12,52 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
+func TestUserUseCase_Add(t *testing.T) {
+	control := gomock.NewController(t)
+	defer control.Finish()
+
+	type testCase struct {
+		name         string
+		userInputDto dto.UserInputDto
+		mockSetup    func(repo *mocks.MockIUserRepository)
+		expected     *dto.UserOutputDto
+		expectError  bool
+	}
+
+	userInputTest := dto.UserInputDto{Email: "test@email.com", Password: "123456"}
+	userTest := entity.NewUser(userInputTest.Email, userInputTest.Password)
+
+	tests := []testCase{
+		{
+			name:         "return user created",
+			userInputDto: userInputTest,
+			mockSetup: func(repo *mocks.MockIUserRepository) {
+				repo.EXPECT().Add(userInputTest).Return(userTest, nil)
+			},
+			expected:    dto.NewUserOutputDto(userTest),
+			expectError: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			repo := mocks.NewMockIUserRepository(control)
+			tt.mockSetup(repo)
+
+			usecase := NewUserUseCase(repo)
+			user, err := usecase.Add(userInputTest)
+
+			if tt.expectError {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, tt.expected, user)
+			}
+		})
+	}
+
+}
+
 func TestUserUseCase_GetById(t *testing.T) {
 	control := gomock.NewController(t)
 	defer control.Finish()

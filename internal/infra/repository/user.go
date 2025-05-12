@@ -18,14 +18,14 @@ func NewUserRepositoryMysql(db *gorm.DB) *UserRepositoryMysql {
 	}
 }
 
-func (r *UserRepositoryMysql) Add(user *entity.User) error {
+func (r *UserRepositoryMysql) Add(user *entity.User) (*entity.User, error) {
 	res := r.DB.Create(user)
 
 	if res.Error != nil {
-		return res.Error
+		return nil, res.Error
 	}
 
-	return nil
+	return user, nil
 }
 
 func (r *UserRepositoryMysql) GetMany() ([]*entity.User, error) {

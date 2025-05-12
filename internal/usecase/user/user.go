@@ -29,7 +29,7 @@ func (u *UserUseCase) Add(
 	input.Password, _ = utils.GenerateHashPassword(input.Password)
 
 	user := entity.NewUser(input.Email, input.Password)
-	err = u.UserRepository.Add(user)
+	_, err = u.UserRepository.Add(user)
 	if err != nil {
 		return nil, err
 	}
