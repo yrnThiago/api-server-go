@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -24,15 +25,26 @@ func TestUserUseCase_GetById(t *testing.T) {
 	}
 
 	userTest := entity.NewUser("test@test.com", "123456")
+	userNotFound := entity.NewUser("notfound@notfound.com", "123456")
 
 	tests := []testCase{
 		{
 			name: "return valid user when everything looks good",
+			user: userTest,
 			mockSetup: func(repo *mocks.MockIUserRepository) {
 				repo.EXPECT().GetById(userTest.ID).Return(userTest, nil)
 			},
 			expected:    dto.NewUserOutputDto(userTest),
 			expectError: false,
+		},
+		{
+			name: "return error when user id not found",
+			user: userNotFound,
+			mockSetup: func(repo *mocks.MockIUserRepository) {
+				repo.EXPECT().GetById(userNotFound.ID).Return(nil, fmt.Errorf("id not found"))
+			},
+			expected:    nil,
+			expectError: true,
 		},
 	}
 
@@ -42,7 +54,7 @@ func TestUserUseCase_GetById(t *testing.T) {
 			tt.mockSetup(repo)
 
 			usecase := NewUserUseCase(repo)
-			user, err := usecase.GetById(userTest.ID)
+			user, err := usecase.GetById(tt.user.ID)
 
 			if tt.expectError {
 				assert.Error(t, err)
