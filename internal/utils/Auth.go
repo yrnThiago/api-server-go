@@ -1,6 +1,9 @@
 package utils
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"time"
 
@@ -52,4 +55,27 @@ func CheckPasswordHash(password, hash string) error {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 
 	return err
+}
+
+func ConvertStructToString(obj any) (string, error) {
+	jsonStr, err := json.Marshal(obj)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return "", err
+	}
+	return string(jsonStr), err
+}
+
+func GenerateHash(val string) (string, error) {
+	hash := sha256.New()
+
+	// Write the input string as bytes to the hash
+	hash.Write([]byte(val))
+
+	// Get the final hashed value as a byte slice
+	hashedBytes := hash.Sum(nil)
+
+	// Convert the hashed bytes to a hexadecimal string
+	hashedString := hex.EncodeToString(hashedBytes)
+	return hashedString, nil
 }

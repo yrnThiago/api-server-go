@@ -3,10 +3,11 @@ package dto
 import "github.com/yrnThiago/api-server-go/internal/entity"
 
 type OrderInputDto struct {
-	Items    []OrderItemInputDto  `validate:"required,dive"`
-	Status   entity.OrderStatus   `validate:"required,oneof=Aprovado 'Aguardando pagamento' Cancelado"`
-	Payment  entity.PaymentMethod `validate:"required,oneof=Pix 'Cartao de credito'"`
-	ClientID string               `json:"client_id" validate:"required"`
+	IdempotencyKey string               `json:"idempotency_key"`
+	Items          []OrderItemInputDto  `validate:"required,dive"`
+	Status         entity.OrderStatus   `validate:"required,oneof=Aprovado 'Aguardando pagamento' Cancelado"`
+	Payment        entity.PaymentMethod `validate:"required,oneof=Pix 'Cartao de credito'"`
+	ClientID       string               `json:"client_id" validate:"required"`
 }
 
 type OrderItemInputDto struct {

@@ -5,7 +5,8 @@ import (
 
 	"github.com/yrnThiago/api-server-go/internal/dto"
 	"github.com/yrnThiago/api-server-go/internal/infra/nats"
-	"github.com/yrnThiago/api-server-go/internal/usecase/order"
+	usecase "github.com/yrnThiago/api-server-go/internal/usecase/order"
+	"github.com/yrnThiago/api-server-go/internal/utils"
 )
 
 type OrderHandlers struct {
@@ -27,6 +28,14 @@ func (p *OrderHandlers) Add(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "order body missing"})
 	}
 
+	inputStr, _ := utils.ConvertStructToString(input)
+	idempotencyKey, _ := utils.GenerateHash(inputStr)
+	input.IdempotencyKey = idempotencyKey
+
+	orderExists, _ := p.OrderUseCase.GetByIdempotencyKey(idempotencyKey)
+	if orderExists != nil {
+		return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": "order created successfully"})
+	}
 	output, err := p.OrderUseCase.Add(input)
 	if err != nil {
 		return err

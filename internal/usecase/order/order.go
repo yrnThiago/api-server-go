@@ -32,13 +32,14 @@ func (u *OrderUseCase) NewOrderItems(items []dto.OrderItemInputDto) []entity.Ord
 	return orderItems
 }
 
-func (u *OrderUseCase) NewOrder(items []dto.OrderItemInputDto, status entity.OrderStatus, payment entity.PaymentMethod, clientID string) *entity.Order {
+func (u *OrderUseCase) NewOrder(items []dto.OrderItemInputDto, status entity.OrderStatus, payment entity.PaymentMethod, clientID, idempotencyKey string) *entity.Order {
 	return &entity.Order{
-		ID:       uuid.New().String(),
-		Status:   status,
-		ClientID: clientID,
-		Payment:  payment,
-		Items:    u.NewOrderItems(items),
+		ID:             uuid.New().String(),
+		IdempotencyKey: idempotencyKey,
+		Status:         status,
+		ClientID:       clientID,
+		Payment:        payment,
+		Items:          u.NewOrderItems(items),
 	}
 }
 
@@ -66,7 +67,7 @@ func (u *OrderUseCase) Add(
 		return nil, err
 	}
 
-	order := u.NewOrder(input.Items, input.Status, input.Payment, input.ClientID)
+	order := u.NewOrder(input.Items, input.Status, input.Payment, input.ClientID, input.IdempotencyKey)
 	err = u.orderRepository.Add(order)
 	if err != nil {
 		return nil, err
@@ -87,6 +88,15 @@ func (u *OrderUseCase) GetMany() ([]*dto.OrderOutputDto, error) {
 	}
 
 	return ordersOutput, nil
+}
+
+func (u *OrderUseCase) GetByIdempotencyKey(idempotencyKey string) (*dto.OrderOutputDto, error) {
+	order, err := u.orderRepository.GetByIdempotencyKey(idempotencyKey)
+	if err != nil {
+		return nil, err
+	}
+
+	return dto.NewOrderOutputDto(order), nil
 }
 
 func (u *OrderUseCase) GetById(id string) (*dto.OrderOutputDto, error) {

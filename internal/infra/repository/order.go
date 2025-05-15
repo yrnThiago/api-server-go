@@ -38,6 +38,20 @@ func (r *OrderRepositoryMysql) GetMany() ([]*entity.Order, error) {
 	return orders, nil
 }
 
+func (r *OrderRepositoryMysql) GetByIdempotencyKey(idempotencyKey string) (*entity.Order, error) {
+	var order *entity.Order
+	res := r.DB.Preload("Items.Product").Preload("Client").First(&order, "idempotency_key = ?", idempotencyKey)
+	if res.Error != nil {
+		if errors.Is(res.Error, gorm.ErrRecordNotFound) {
+			return nil, entity.GetNotFoundError()
+		}
+
+		return nil, res.Error
+	}
+
+	return order, nil
+}
+
 func (r *OrderRepositoryMysql) GetById(id string) (*entity.Order, error) {
 	var order *entity.Order
 	res := r.DB.Preload("Items.Product").Preload("Client").First(&order, "id = ?", id)
