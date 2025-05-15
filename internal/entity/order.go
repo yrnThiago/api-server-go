@@ -25,7 +25,7 @@ type OrderItems struct {
 
 type Order struct {
 	ID             string `gorm:"primaryKey"`
-	IdempotencyKey string `gorm:"primaryKey" json:"idempotency_key"`
+	IdempotencyKey string `gorm:"unique" json:"idempotency_key"`
 	Status         OrderStatus
 	Items          []OrderItems `gorm:"foreignKey:OrderID;constraint:OnDelete:CASCADE"`
 	ClientID       string       `gorm:"index" json:"-"`
