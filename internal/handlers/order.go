@@ -29,7 +29,7 @@ func (p *OrderHandlers) Add(c *fiber.Ctx) error {
 	}
 
 	inputStr, _ := utils.ConvertStructToString(input)
-	idempotencyKey, _ := utils.GenerateHash(inputStr)
+	idempotencyKey, _ := utils.GenerateHash(inputStr + c.Locals(utils.UserIdKeyCtx).(string))
 	input.IdempotencyKey = idempotencyKey
 
 	orderExists, _ := p.OrderUseCase.GetByIdempotencyKey(idempotencyKey)
