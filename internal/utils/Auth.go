@@ -8,8 +8,9 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt"
-	"github.com/yrnThiago/api-server-go/config"
 	"golang.org/x/crypto/bcrypt"
+
+	"github.com/yrnThiago/api-server-go/config"
 )
 
 const UserIdKeyCtx string = "userID"
@@ -57,7 +58,7 @@ func CheckPasswordHash(password, hash string) error {
 	return err
 }
 
-func ConvertStructToString(obj any) (string, error) {
+func ConvertInputToString(obj any) (string, error) {
 	jsonStr, err := json.Marshal(obj)
 	if err != nil {
 		fmt.Println("Error:", err)
@@ -68,14 +69,10 @@ func ConvertStructToString(obj any) (string, error) {
 
 func GenerateHash(val string) (string, error) {
 	hash := sha256.New()
-
-	// Write the input string as bytes to the hash
 	hash.Write([]byte(val))
 
-	// Get the final hashed value as a byte slice
 	hashedBytes := hash.Sum(nil)
-
-	// Convert the hashed bytes to a hexadecimal string
 	hashedString := hex.EncodeToString(hashedBytes)
+
 	return hashedString, nil
 }

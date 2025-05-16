@@ -28,14 +28,16 @@ func (p *OrderHandlers) Add(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "order body missing"})
 	}
 
-	inputStr, _ := utils.ConvertStructToString(input)
+	inputStr, _ := utils.ConvertInputToString(input)
 	idempotencyKey, _ := utils.GenerateHash(inputStr + c.Locals(utils.UserIdKeyCtx).(string))
 	input.IdempotencyKey = idempotencyKey
 
-	orderExists, _ := p.OrderUseCase.GetByIdempotencyKey(idempotencyKey)
+	orderExists, _ := p.OrderUseCase.GetByIdempotencyKey(input.IdempotencyKey)
 	if orderExists != nil {
-		return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": "order created successfully"})
+		return c.Status(fiber.StatusCreated).
+			JSON(fiber.Map{"message": "order created successfully"})
 	}
+
 	output, err := p.OrderUseCase.Add(input)
 	if err != nil {
 		return err
