@@ -2,6 +2,7 @@
 **/logs/
 user.creds
 *.db
+*.rdb
 
 # air build outputs
 bin/
