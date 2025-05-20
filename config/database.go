@@ -51,7 +51,7 @@ func connectDatabase() {
 
 func DatabaseInit() {
 	connectDatabase()
-	DB.Migrator().AutoMigrate(&entity.User{}, &entity.Product{}, &entity.Order{}, &entity.OrderItems{})
+	DB.Migrator().AutoMigrate(&entity.User{}, &entity.Product{}, &entity.Order{}, &entity.OrderItems{}, &entity.Offer{})
 
 	Logger.Info(
 		"db successfully initialized",

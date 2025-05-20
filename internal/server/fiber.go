@@ -45,6 +45,7 @@ func Init() {
 	// Private routes
 	private := app.Group("/private", middlewares.AuthMiddleware, middlewares.RateLimitMiddleware)
 	private.Mount("/orders", configroutes.OrderRouter())
+	private.Mount("/offers", configroutes.OfferRouter())
 	private.Mount("/products", configroutes.ProductRouter())
 	private.Mount("/users", configroutes.UserRouter())
 
