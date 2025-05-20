@@ -14,30 +14,61 @@ import (
 	"github.com/yrnThiago/api-server-go/internal/usecase/payment"
 )
 
-const ordersSubject = "orders"
+const (
+	OrdersSubject = "orders"
+	OffersSubject = "offers"
+)
 
-var ordersFilter = fmt.Sprintf("%s.>", ordersSubject)
+var OrdersFilter = fmt.Sprintf("%s.>", OrdersSubject)
+var OffersAcceptedFilter = fmt.Sprintf("%s.accepted.>", OffersSubject)
+var OffersDeclinedFilter = fmt.Sprintf("%s.declined.>", OffersSubject)
 
 type Consumer struct {
-	Js             jetstream.JetStream
-	Ctx            context.Context
-	Config         jetstream.ConsumerConfig
-	ConsumerCtx    jetstream.Consumer
+	Js          jetstream.JetStream
+	Ctx         context.Context
+	Config      jetstream.ConsumerConfig
+	ConsumerCtx jetstream.Consumer
+}
+
+type OffersConsumer struct {
+	ConsumerCfg *Consumer
+}
+
+type OrdersConsumer struct {
+	ConsumerCfg    *Consumer
 	PaymentUseCase *usecase.PaymentUseCase
 }
 
-func NewConsumer(name, durable, filterSubject string, paymentUseCase *usecase.PaymentUseCase) *Consumer {
-	return &Consumer{
-		Js:  JS,
-		Ctx: context.Background(),
-		Config: jetstream.ConsumerConfig{
-			Name:          name,
-			Durable:       durable,
-			FilterSubject: filterSubject,
-			AckPolicy:     jetstream.AckExplicitPolicy,
-			DeliverPolicy: jetstream.DeliverAllPolicy,
+func NewOrdersConsumer(name, durable, filterSubject string, paymentUseCase *usecase.PaymentUseCase) *OrdersConsumer {
+	return &OrdersConsumer{
+		ConsumerCfg: &Consumer{
+			Js:  JS,
+			Ctx: context.Background(),
+			Config: jetstream.ConsumerConfig{
+				Name:          name,
+				Durable:       durable,
+				FilterSubject: filterSubject,
+				AckPolicy:     jetstream.AckExplicitPolicy,
+				DeliverPolicy: jetstream.DeliverAllPolicy,
+			},
 		},
 		PaymentUseCase: paymentUseCase,
+	}
+}
+
+func NewOffersConsumer(name, durable, filterSubject string) *OffersConsumer {
+	return &OffersConsumer{
+		ConsumerCfg: &Consumer{
+			Js:  JS,
+			Ctx: context.Background(),
+			Config: jetstream.ConsumerConfig{
+				Name:          name,
+				Durable:       durable,
+				FilterSubject: filterSubject,
+				AckPolicy:     jetstream.AckExplicitPolicy,
+				DeliverPolicy: jetstream.DeliverAllPolicy,
+			},
+		},
 	}
 }
 
@@ -45,18 +76,22 @@ func ConsumerInit() {
 	repositoryOrders := repository.NewOrderRepositoryMysql(config.DB)
 	paymentUseCase := usecase.NewPaymentUseCase(repositoryOrders)
 
-	ordersConsumer := NewConsumer("order_processor", "order_processor", ordersFilter, paymentUseCase)
-	ordersConsumer.CreateStream()
+	ordersConsumer := NewOrdersConsumer("order_processor", "order_processor", OrdersFilter, paymentUseCase)
+	ordersConsumer.ConsumerCfg.CreateStream(OrdersSubject)
 	ordersConsumer.HandlingNewOrders()
+
+	offersConsumer := NewOffersConsumer("offer_accepted_processor", "offer_accepted_processor", OffersAcceptedFilter)
+	offersConsumer.ConsumerCfg.CreateStream(OffersSubject)
+	offersConsumer.HandlingAccptedOffers()
 
 	config.Logger.Info(
 		"consumers successfully initialized",
 	)
 }
 
-func (c *Consumer) HandlingNewOrders() {
-	_, err := c.ConsumerCtx.Consume(func(msg jetstream.Msg) {
-		orderID := getOrderIdFromMsg(msg)
+func (c *OrdersConsumer) HandlingNewOrders() {
+	_, err := c.ConsumerCfg.ConsumerCtx.Consume(func(msg jetstream.Msg) {
+		orderID := getIdFromMsg(msg, OrdersSubject)
 		msg.Ack()
 
 		config.Logger.Info(
@@ -85,8 +120,24 @@ func (c *Consumer) HandlingNewOrders() {
 	}
 }
 
-func (c *Consumer) CreateStream() {
-	stream, err := c.Js.Stream(c.Ctx, ordersSubject)
+func (o *OffersConsumer) HandlingAccptedOffers() {
+	_, err := o.ConsumerCfg.ConsumerCtx.Consume(func(msg jetstream.Msg) {
+		offerId := getIdFromMsg(msg, OffersAcceptedFilter)
+		msg.Ack()
+
+		config.Logger.Info(
+			"new offer accepted",
+			zap.String("offer id", offerId),
+		)
+	})
+
+	if err != nil {
+		config.Logger.Fatal("err", zap.Error(err))
+	}
+}
+
+func (c *Consumer) CreateStream(subject string) {
+	stream, err := c.Js.Stream(c.Ctx, subject)
 	if err != nil {
 		config.Logger.Fatal("err", zap.Error(err))
 	}
@@ -97,6 +148,6 @@ func (c *Consumer) CreateStream() {
 	}
 }
 
-func getOrderIdFromMsg(msg jetstream.Msg) string {
-	return strings.Replace(string(msg.Subject()), fmt.Sprintf("%s.", ordersSubject), "", 1)
+func getIdFromMsg(msg jetstream.Msg, filter string) string {
+	return strings.Replace(string(msg.Subject()), fmt.Sprintf("%s.", filter), "", 1)
 }

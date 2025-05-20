@@ -43,7 +43,7 @@ func (p *OrderHandlers) Add(c *fiber.Ctx) error {
 		return err
 	}
 
-	go nats.OrdersPublisher.Publish(output.ID)
+	go nats.OrdersPublisher.Publish(nats.OrdersSubject, output.ID)
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": "order created successfully"})
 }
 

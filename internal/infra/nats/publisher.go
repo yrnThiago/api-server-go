@@ -11,7 +11,7 @@ import (
 	"github.com/yrnThiago/api-server-go/config"
 )
 
-var OrdersPublisher *Publisher
+var OrdersPublisher, OffersPublisher *Publisher
 
 type Publisher struct {
 	NatsConn *nats.Conn
@@ -36,8 +36,8 @@ func NewPublisher(name, description, subject string) *Publisher {
 	}
 }
 
-func (p *Publisher) Publish(msg string) {
-	_, err := p.Js.Publish(p.Ctx, fmt.Sprintf("orders.%s", msg), []byte("new order"))
+func (p *Publisher) Publish(filter, msg string) {
+	_, err := p.Js.Publish(p.Ctx, fmt.Sprintf("%s.%s", filter, msg), []byte("new msg"))
 	if err != nil {
 		config.Logger.Warn(
 			"msg cant be published",
@@ -45,9 +45,11 @@ func (p *Publisher) Publish(msg string) {
 		)
 	}
 
+	logMsg := fmt.Sprintf("publishing new %s", p.Config.Name)
+
 	config.Logger.Info(
-		"publishing new order",
-		zap.String("order id", msg),
+		logMsg,
+		zap.String("id", msg),
 	)
 }
 
@@ -64,6 +66,9 @@ func (p *Publisher) CreateStream() {
 func PublisherInit() {
 	OrdersPublisher = NewPublisher("orders", "Msgs for orders", "orders.>")
 	OrdersPublisher.CreateStream()
+
+	OffersPublisher = NewPublisher("offers", "Msgs for offers", "offers.>")
+	OffersPublisher.CreateStream()
 
 	config.Logger.Info(
 		"publishers successfully initialized",
