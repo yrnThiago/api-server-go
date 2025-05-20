@@ -17,12 +17,12 @@ type Offer struct {
 	ID        string
 	Price     float64
 	Status    OfferStatus
-	ProductID string   `gorm:"index"                json:"product_id"`
-	Product   *Product `gorm:"foreignKey:ProductID"`
-	SellerID  string   `gorm:"index"                json:"seller_id"`
-	Seller    *User    `gorm:"foreignKey:SellerID"`
-	BuyerID   string   `gorm:"index"                json:"buyer_id"`
-	Buyer     *User    `gorm:"foreignKey:BuyerID"`
+	ProductID string  `gorm:"index"                json:"product_id"`
+	Product   Product `gorm:"foreignKey:ProductID"`
+	SellerID  string  `gorm:"index"                json:"seller_id"`
+	Seller    User    `gorm:"foreignKey:SellerID"`
+	BuyerID   string  `gorm:"index"                json:"buyer_id"`
+	Buyer     User    `gorm:"foreignKey:BuyerID"`
 	gorm.Model
 }
 
@@ -32,7 +32,7 @@ func NewOffer(price float64, status OfferStatus, productId, sellerId, buyerId st
 		Price:     price,
 		Status:    status,
 		ProductID: productId,
-		SellerID:  productId,
+		SellerID:  sellerId,
 		BuyerID:   buyerId,
 	}
 }
