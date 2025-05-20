@@ -1,6 +1,8 @@
 package dto
 
-import "github.com/yrnThiago/api-server-go/internal/entity"
+import (
+	"github.com/yrnThiago/api-server-go/internal/entity"
+)
 
 type OfferOutputDto struct {
 	ID      string
@@ -16,8 +18,8 @@ func NewOfferOutputDto(offer *entity.Offer) *OfferOutputDto {
 		ID:      offer.ID,
 		Price:   offer.Price,
 		Status:  offer.Status,
-		Product: NewProductOutputDto(offer.Product),
-		Buyer:   NewUserOutputDto(offer.Buyer),
-		Seller:  NewUserOutputDto(offer.Seller),
+		Product: NewProductOutputDto(&offer.Product),
+		Buyer:   NewUserOutputDto(&offer.Buyer),
+		Seller:  NewUserOutputDto(&offer.Seller),
 	}
 }
