@@ -11,6 +11,7 @@ import (
 	"github.com/yrnThiago/api-server-go/config"
 	"github.com/yrnThiago/api-server-go/internal/entity"
 	"github.com/yrnThiago/api-server-go/internal/infra/repository"
+	offerUseCase "github.com/yrnThiago/api-server-go/internal/usecase/offer"
 	"github.com/yrnThiago/api-server-go/internal/usecase/payment"
 )
 
@@ -31,7 +32,8 @@ type Consumer struct {
 }
 
 type OffersConsumer struct {
-	ConsumerCfg *Consumer
+	ConsumerCfg   *Consumer
+	OffersUseCase *offerUseCase.OfferUseCase
 }
 
 type OrdersConsumer struct {
@@ -56,7 +58,7 @@ func NewOrdersConsumer(name, durable, filterSubject string, paymentUseCase *usec
 	}
 }
 
-func NewOffersConsumer(name, durable, filterSubject string) *OffersConsumer {
+func NewOffersConsumer(name, durable, filterSubject string, offersUseCase *offerUseCase.OfferUseCase) *OffersConsumer {
 	return &OffersConsumer{
 		ConsumerCfg: &Consumer{
 			Js:  JS,
@@ -69,6 +71,7 @@ func NewOffersConsumer(name, durable, filterSubject string) *OffersConsumer {
 				DeliverPolicy: jetstream.DeliverAllPolicy,
 			},
 		},
+		OffersUseCase: offersUseCase,
 	}
 }
 
@@ -80,7 +83,10 @@ func ConsumerInit() {
 	ordersConsumer.ConsumerCfg.CreateStream(OrdersSubject)
 	ordersConsumer.HandlingNewOrders()
 
-	offersConsumer := NewOffersConsumer("offer_accepted_processor", "offer_accepted_processor", OffersAcceptedFilter)
+	repositoryOffers := repository.NewOfferRepositoryMysql(config.DB)
+	offersUseCase := offerUseCase.NewOfferUseCase(repositoryOffers)
+
+	offersConsumer := NewOffersConsumer("offer_accepted_processor", "offer_accepted_processor", OffersAcceptedFilter, offersUseCase)
 	offersConsumer.ConsumerCfg.CreateStream(OffersSubject)
 	offersConsumer.HandlingAccptedOffers()
 
@@ -127,6 +133,15 @@ func (o *OffersConsumer) HandlingAccptedOffers() {
 
 		config.Logger.Info(
 			"new offer accepted",
+			zap.String("offer id", offerId),
+		)
+
+		offer, _ := o.OffersUseCase.OfferRepository.GetById(offerId)
+		offer.SetAcceptedStatus()
+		o.OffersUseCase.OfferRepository.UpdateById(offer)
+
+		config.Logger.Info(
+			"order status updated to accepted",
 			zap.String("offer id", offerId),
 		)
 	})
