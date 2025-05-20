@@ -10,7 +10,7 @@ type OfferStatus string
 const (
 	ACCEPTED OfferStatus = "Aceita"
 	PENDING  OfferStatus = "Pendente"
-	REFUSED  OfferStatus = "Recusada"
+	DECLINED OfferStatus = "Recusada"
 )
 
 type Offer struct {
@@ -35,4 +35,12 @@ func NewOffer(price float64, status OfferStatus, productId, sellerId, buyerId st
 		SellerID:  sellerId,
 		BuyerID:   buyerId,
 	}
+}
+
+func (o *Offer) SetAcceptedStatus() {
+	o.Status = ACCEPTED
+}
+
+func (o *Offer) SetDeclinedStatus() {
+	o.Status = DECLINED
 }
