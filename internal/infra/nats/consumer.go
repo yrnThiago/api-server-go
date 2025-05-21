@@ -2,6 +2,7 @@ package nats
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -10,6 +11,7 @@ import (
 
 	"github.com/yrnThiago/api-server-go/config"
 	"github.com/yrnThiago/api-server-go/internal/entity"
+	"github.com/yrnThiago/api-server-go/internal/infra/redis"
 	"github.com/yrnThiago/api-server-go/internal/infra/repository"
 	offerUseCase "github.com/yrnThiago/api-server-go/internal/usecase/offer"
 	"github.com/yrnThiago/api-server-go/internal/usecase/payment"
@@ -139,6 +141,11 @@ func (o *OffersConsumer) HandlingAccptedOffers() {
 		offer, _ := o.OffersUseCase.OfferRepository.GetById(offerId)
 		offer.SetAcceptedStatus()
 		o.OffersUseCase.OfferRepository.UpdateById(offer)
+
+		offer.Product.SetOfferPrice(offer.Price)
+		offerProductJson, _ := json.Marshal(offer.Product)
+
+		go redis.Redis.Set(context.Background(), "offer-"+offer.Buyer.ID+"-"+offer.Product.ID, string(offerProductJson), 0)
 
 		config.Logger.Info(
 			"order status updated to accepted",

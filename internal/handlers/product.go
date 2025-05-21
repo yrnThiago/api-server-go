@@ -5,6 +5,7 @@ import (
 
 	"github.com/yrnThiago/api-server-go/internal/dto"
 	"github.com/yrnThiago/api-server-go/internal/usecase/product"
+	"github.com/yrnThiago/api-server-go/internal/utils"
 )
 
 type ProductHandlers struct {
@@ -52,7 +53,8 @@ func (p *ProductHandlers) GetById(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "product id missing"})
 	}
 
-	output, err := p.ProductUseCase.GetById(id)
+	userId := c.Locals(utils.UserIdKeyCtx).(string)
+	output, err := p.ProductUseCase.GetById(userId, id)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "product id not found"})
 	}

@@ -86,8 +86,15 @@ func (u *ProductUseCase) GetMany() ([]*dto.ProductOutputDto, error) {
 	return productsDto, nil
 }
 
-func (u *ProductUseCase) GetById(id string) (*dto.ProductOutputDto, error) {
-	product, err := u.ProductRepository.GetById(id)
+func (u *ProductUseCase) GetById(userId, productId string) (*dto.ProductOutputDto, error) {
+	var product *entity.Product
+
+	productWithOffer, err := infra.Redis.Get(context.Background(), "offer-"+userId+"-"+productId)
+	if err := json.Unmarshal([]byte(productWithOffer), &product); err == nil {
+		return dto.NewProductOutputDto(product), nil
+	}
+
+	product, err = u.ProductRepository.GetById(productId)
 	if err != nil {
 		return nil, err
 	}
@@ -128,7 +135,7 @@ func (u *ProductUseCase) DeleteById(
 	id string,
 ) (*dto.ProductOutputDto, error) {
 
-	product, err := u.GetById(id)
+	product, err := u.ProductRepository.GetById(id)
 	if err != nil {
 		return nil, err
 	}
@@ -139,5 +146,5 @@ func (u *ProductUseCase) DeleteById(
 	}
 
 	infra.Redis.Del(context.Background(), RedisProductsKey)
-	return product, nil
+	return dto.NewProductOutputDto(product), nil
 }

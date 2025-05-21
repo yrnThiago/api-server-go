@@ -21,3 +21,7 @@ func NewProduct(name string, price float64, stock int) *Product {
 		Stock: stock,
 	}
 }
+
+func (p *Product) SetOfferPrice(offerPrice float64) {
+	p.Price = offerPrice
+}
