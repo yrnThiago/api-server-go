@@ -59,7 +59,7 @@ func (a *AuthUseCase) Login(input AuthInputDto) (string, *entity.User, error) {
 		return "", nil, err
 	}
 
-	infra.Redis.Set(context.Background(), "user-"+output.ID, string(userJson), 0)
+	infra.Redis.Set(context.Background(), "user-"+output.ID, string(userJson), config.Env.UserSessionExpiresAt)
 	return token, output, nil
 }
 

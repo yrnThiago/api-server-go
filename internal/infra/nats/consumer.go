@@ -145,7 +145,7 @@ func (o *OffersConsumer) HandlingAccptedOffers() {
 		offer.Product.SetOfferPrice(offer.Price)
 		offerProductJson, _ := json.Marshal(offer.Product)
 
-		go redis.Redis.Set(context.Background(), "offer-"+offer.Buyer.ID+"-"+offer.Product.ID, string(offerProductJson), 0)
+		go redis.Redis.Set(context.Background(), "offer-"+offer.Buyer.ID+"-"+offer.Product.ID, string(offerProductJson), config.Env.OfferExpiresAt)
 
 		config.Logger.Info(
 			"order status updated to accepted",
