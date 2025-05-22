@@ -3,8 +3,10 @@ package handlers
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/yrnThiago/api-server-go/internal/dto"
+	"github.com/yrnThiago/api-server-go/internal/entity"
 	"github.com/yrnThiago/api-server-go/internal/infra/nats"
 	usecase "github.com/yrnThiago/api-server-go/internal/usecase/offer"
+	"github.com/yrnThiago/api-server-go/internal/utils"
 )
 
 type OfferHandlers struct {
@@ -93,6 +95,39 @@ func (p *OfferHandlers) DeclineById(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "offer declined successfully"})
 }
 
+func (p *OfferHandlers) AnswerOffer(c *fiber.Ctx) error {
+	var input dto.OfferStatusInputDto
+	err := c.BodyParser(&input)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "offer body missing"})
+	}
+
+	err = utils.ValidateStruct(input)
+	if err != nil {
+		return err
+	}
+
+	id := c.Params("id")
+	if id == ":id" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "offer id missing"})
+	}
+
+	var offerFilter string
+
+	switch input.Status {
+	case entity.ACCEPTED:
+		offerFilter = nats.OffersAcceptedFilter
+	case entity.PENDING:
+		offerFilter = nats.OffersPendingFilter
+	case entity.DECLINED:
+		offerFilter = nats.OffersDeclinedFilter
+	}
+
+	go nats.OffersPublisher.Publish(offerFilter, id)
+
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": "offer answered successfully"})
+}
+
 func (p *OfferHandlers) UpdateById(c *fiber.Ctx) error {
 	var input dto.OfferInputDto
 	err := c.BodyParser(&input)
@@ -118,7 +153,6 @@ func (p *OfferHandlers) DeleteById(c *fiber.Ctx) error {
 	if id == ":id" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "offer id missing"})
 	}
-
 	_, err := p.OfferUseCase.DeleteById(id)
 	if err != nil {
 		return err

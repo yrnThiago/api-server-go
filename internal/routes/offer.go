@@ -23,6 +23,7 @@ func (p *OfferRouter) GetRoutes() *fiber.App {
 
 	router.Post("/", p.OfferHandlers.Add)
 	router.Get("/", p.OfferHandlers.GetMany)
+	router.Post("/answer/:id", p.OfferHandlers.AnswerOffer)
 	router.Get("/accept/:id", p.OfferHandlers.AcceptById)
 	router.Get("/decline/:id", p.OfferHandlers.DeclineById)
 	router.Get("/:id", p.OfferHandlers.GetById)

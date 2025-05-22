@@ -14,7 +14,7 @@ import (
 	"github.com/yrnThiago/api-server-go/internal/infra/redis"
 	"github.com/yrnThiago/api-server-go/internal/infra/repository"
 	offerUseCase "github.com/yrnThiago/api-server-go/internal/usecase/offer"
-	"github.com/yrnThiago/api-server-go/internal/usecase/payment"
+	usecase "github.com/yrnThiago/api-server-go/internal/usecase/payment"
 )
 
 const (
@@ -25,6 +25,7 @@ const (
 var OrdersFilter = fmt.Sprintf("%s.>", OrdersSubject)
 var OffersAcceptedFilter = fmt.Sprintf("%s.accepted.>", OffersSubject)
 var OffersDeclinedFilter = fmt.Sprintf("%s.declined.>", OffersSubject)
+var OffersPendingFilter = fmt.Sprintf("%s.pending.>", OffersSubject)
 
 type Consumer struct {
 	Js          jetstream.JetStream
@@ -88,9 +89,9 @@ func ConsumerInit() {
 	repositoryOffers := repository.NewOfferRepositoryMysql(config.DB)
 	offersUseCase := offerUseCase.NewOfferUseCase(repositoryOffers)
 
-	offersConsumer := NewOffersConsumer("offer_accepted_processor", "offer_accepted_processor", OffersAcceptedFilter, offersUseCase)
+	offersConsumer := NewOffersConsumer("offer_answer_processor", "offer_answer_processor", OffersAcceptedFilter, offersUseCase)
 	offersConsumer.ConsumerCfg.CreateStream(OffersSubject)
-	offersConsumer.HandlingAccptedOffers()
+	offersConsumer.HandlingAnsweredOffers()
 
 	config.Logger.Info(
 		"consumers successfully initialized",
@@ -128,7 +129,7 @@ func (c *OrdersConsumer) HandlingNewOrders() {
 	}
 }
 
-func (o *OffersConsumer) HandlingAccptedOffers() {
+func (o *OffersConsumer) HandlingAnsweredOffers() {
 	_, err := o.ConsumerCfg.ConsumerCtx.Consume(func(msg jetstream.Msg) {
 		offerId := getIdFromMsg(msg, OffersAcceptedFilter)
 		msg.Ack()
