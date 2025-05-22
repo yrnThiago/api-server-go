@@ -57,6 +57,26 @@ func (r *OfferRepositoryMysql) GetById(offerID string) (*entity.Offer, error) {
 	return offer, nil
 }
 
+func (r *OfferRepositoryMysql) GetByUserProductId(userId, productId string) (*entity.Offer, error) {
+	var offer *entity.Offer
+	res := r.DB.Limit(1).
+		Where("Status = ? AND product_id = ? AND buyer_id = ?", entity.ACCEPTED, productId, userId).
+		Preload("Product").
+		Preload("Buyer").
+		Preload("Seller").
+		First(&offer)
+
+	if res.Error != nil {
+		if errors.Is(res.Error, gorm.ErrRecordNotFound) {
+			return nil, entity.GetNotFoundError()
+		}
+
+		return nil, res.Error
+	}
+
+	return offer, nil
+}
+
 func (r *OfferRepositoryMysql) UpdateById(offer *entity.Offer) (*entity.Offer, error) {
 	res := r.DB.Save(offer)
 	if res.Error != nil {

@@ -10,6 +10,7 @@ import (
 	"github.com/yrnThiago/api-server-go/internal/dto"
 	"github.com/yrnThiago/api-server-go/internal/entity"
 	infra "github.com/yrnThiago/api-server-go/internal/infra/redis"
+	usecase "github.com/yrnThiago/api-server-go/internal/usecase/offer"
 	"github.com/yrnThiago/api-server-go/internal/utils"
 )
 
@@ -17,11 +18,13 @@ const RedisProductsKey = "all-products"
 
 type ProductUseCase struct {
 	ProductRepository IProductRepository
+	OfferUseCase      *usecase.OfferUseCase
 }
 
-func NewProductUseCase(productRepository IProductRepository) *ProductUseCase {
+func NewProductUseCase(productRepository IProductRepository, offerUseCase *usecase.OfferUseCase) *ProductUseCase {
 	return &ProductUseCase{
 		ProductRepository: productRepository,
+		OfferUseCase:      offerUseCase,
 	}
 }
 
@@ -89,12 +92,18 @@ func (u *ProductUseCase) GetMany() ([]*dto.ProductOutputDto, error) {
 func (u *ProductUseCase) GetById(userId, productId string) (*dto.ProductOutputDto, error) {
 	var product *entity.Product
 
-	productWithOffer, err := infra.Redis.Get(context.Background(), "offer-"+userId+"-"+productId)
+	productWithOffer, _ := infra.Redis.Get(context.Background(), "offer-"+userId+"-"+productId)
 	if err := json.Unmarshal([]byte(productWithOffer), &product); err == nil {
 		return dto.NewProductOutputDto(product), nil
 	}
 
-	product, err = u.ProductRepository.GetById(productId)
+	offer, _ := u.OfferUseCase.GetByUserProductId(userId, productId)
+	if offer != nil {
+		offer.Product.Price = offer.Price
+		return offer.Product, nil
+	}
+
+	product, err := u.ProductRepository.GetById(productId)
 	if err != nil {
 		return nil, err
 	}

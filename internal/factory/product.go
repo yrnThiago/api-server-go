@@ -5,6 +5,7 @@ import (
 	"github.com/yrnThiago/api-server-go/internal/handlers"
 	"github.com/yrnThiago/api-server-go/internal/infra/repository"
 	"github.com/yrnThiago/api-server-go/internal/routes"
+	offerUc "github.com/yrnThiago/api-server-go/internal/usecase/offer"
 	usecase "github.com/yrnThiago/api-server-go/internal/usecase/product"
 )
 
@@ -16,8 +17,12 @@ type ProductFactory struct {
 }
 
 func NewProductFactory() *ProductFactory {
+	repositoryOffers := NewOfferRepository()
+	offerUseCase := NewOfferUseCase(repositoryOffers)
+
+
 	repositoryProducts := NewProductRepository()
-	productUseCase := NewProductUseCase(repositoryProducts)
+	productUseCase := NewProductUseCase(repositoryProducts, offerUseCase)
 	productHandlers := NewProductHandlers(productUseCase)
 	productRouter := NewProductRouter(productHandlers)
 
@@ -33,8 +38,8 @@ func NewProductRepository() usecase.IProductRepository {
 	return repository.NewProductRepositoryMysql(config.DB)
 }
 
-func NewProductUseCase(repo usecase.IProductRepository) *usecase.ProductUseCase {
-	return usecase.NewProductUseCase(repo)
+func NewProductUseCase(repo usecase.IProductRepository, offerUseCase *offerUc.OfferUseCase) *usecase.ProductUseCase {
+	return usecase.NewProductUseCase(repo, offerUseCase)
 }
 
 func NewProductHandlers(usecase *usecase.ProductUseCase) *handlers.ProductHandlers {

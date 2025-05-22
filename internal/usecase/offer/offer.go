@@ -66,6 +66,15 @@ func (u *OfferUseCase) GetById(id string) (*dto.OfferOutputDto, error) {
 	return dto.NewOfferOutputDto(offer), nil
 }
 
+func (u *OfferUseCase) GetByUserProductId(userId, productId string) (*dto.OfferOutputDto, error) {
+	offer, err := u.OfferRepository.GetByUserProductId(userId, productId)
+	if err != nil {
+		return nil, err
+	}
+
+	return dto.NewOfferOutputDto(offer), nil
+}
+
 func (u *OfferUseCase) UpdateById(
 	id string,
 	input dto.OfferInputDto,
