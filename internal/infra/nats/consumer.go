@@ -91,7 +91,7 @@ func ConsumerInit() {
 
 	offersConsumer := NewOffersConsumer("offer_answer_processor", "offer_answer_processor", OffersAcceptedFilter, offersUseCase)
 	offersConsumer.ConsumerCfg.CreateStream(OffersSubject)
-	offersConsumer.HandlingAnsweredOffers()
+	offersConsumer.HandlingOffers()
 
 	config.Logger.Info(
 		"consumers successfully initialized",
@@ -129,7 +129,7 @@ func (c *OrdersConsumer) HandlingNewOrders() {
 	}
 }
 
-func (o *OffersConsumer) HandlingAnsweredOffers() {
+func (o *OffersConsumer) HandlingOffers() {
 	_, err := o.ConsumerCfg.ConsumerCtx.Consume(func(msg jetstream.Msg) {
 		offerId := getIdFromMsg(msg, OffersAcceptedFilter)
 		msg.Ack()
@@ -146,7 +146,7 @@ func (o *OffersConsumer) HandlingAnsweredOffers() {
 		offer.Product.SetOfferPrice(offer.Price)
 		offerProductJson, _ := json.Marshal(offer.Product)
 
-		go redis.Redis.Set(context.Background(), "offer-"+offer.Buyer.ID+"-"+offer.Product.ID, string(offerProductJson), config.Env.OfferExpiresAt)
+		go redis.Redis.Set(context.Background(), redis.GetOfferCacheId(offer.BuyerID, offer.ProductID), string(offerProductJson), config.Env.OfferExpiresAt)
 
 		config.Logger.Info(
 			"order status updated to accepted",

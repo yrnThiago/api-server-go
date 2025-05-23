@@ -2,6 +2,7 @@ package redis
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/redis/go-redis/v9"
@@ -137,4 +138,8 @@ func (r *RedisCfg) Allow(key string) bool {
 	}
 
 	return incr.Val() <= int64(r.RateLimiter.limit)
+}
+
+func GetOfferCacheId(buyerId, productId string) string {
+	return fmt.Sprintf("offer-%s-%s", buyerId, productId)
 }

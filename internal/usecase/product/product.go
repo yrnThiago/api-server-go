@@ -92,7 +92,7 @@ func (u *ProductUseCase) GetMany() ([]*dto.ProductOutputDto, error) {
 func (u *ProductUseCase) GetById(userId, productId string) (*dto.ProductOutputDto, error) {
 	var product *entity.Product
 
-	productWithOffer, _ := infra.Redis.Get(context.Background(), "offer-"+userId+"-"+productId)
+	productWithOffer, _ := infra.Redis.Get(context.Background(), infra.GetOfferCacheId(userId, productId))
 	if err := json.Unmarshal([]byte(productWithOffer), &product); err == nil {
 		return dto.NewProductOutputDto(product), nil
 	}
