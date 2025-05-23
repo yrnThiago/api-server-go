@@ -25,6 +25,11 @@ func (p *UserHandlers) Add(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "user body missing"})
 	}
 
+	user, err := p.UserUseCase.GetByLogin(input.Email)
+	if user != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "email already in use"})
+	}
+
 	_, err = p.UserUseCase.Add(input)
 	if err != nil {
 		return err
