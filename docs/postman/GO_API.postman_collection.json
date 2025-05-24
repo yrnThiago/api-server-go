@@ -87,6 +87,9 @@
 			"item": [
 				{
 					"name": "Add",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
 					"request": {
 						"method": "POST",
 						"header": [
@@ -99,7 +102,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"test\",\r\n    \"price\": 1,\r\n    \"stock\": 10\r\n}",
+							"raw": "{\r\n    \"name\": \"teste offer\",\r\n    \"price\": 100,\r\n    \"stock\": 10\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -157,18 +160,19 @@
 							}
 						],
 						"url": {
-							"raw": "{{BASE_URL}}/products/:id",
+							"raw": "{{BASE_URL}}/private/products/:id",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
+								"private",
 								"products",
 								":id"
 							],
 							"variable": [
 								{
 									"key": "id",
-									"value": "ff27a167-e982-489d-a035-a7e063fdd8c0"
+									"value": "efcfd81a-8613-4bb3-ad13-2f73bd6fc438"
 								}
 							]
 						}
@@ -182,7 +186,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"Name\": \"Notebook Update 2\",\r\n    \"Price\": 999,\r\n    \"Stock\": 9\r\n}",
+							"raw": "{\r\n    \"name\": \"finalTestsUpdate\",\r\n    \"price\": 2,\r\n    \"stock\": 2\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -202,7 +206,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "dcb068c5-fec2-457e-bcd0-0c9e62d4dd6d"
+									"value": "a44c9719-6110-4ed3-b344-9c435c1d07ae"
 								}
 							]
 						}
@@ -227,7 +231,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": ""
+									"value": "a44c9719-6110-4ed3-b344-9c435c1d07ae"
 								}
 							]
 						}
@@ -253,7 +257,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"status\": \"\",\r\n    \"items\": [\r\n        {\r\n            \"Product\": {\r\n                \"ID\": \"29c93ca2-e5e9-41cf-b64f-7a4a641b20d4\"\r\n            },\r\n        \"qty\": 0\r\n        }\r\n    ]\r\n}",
+							"raw": "{\r\n    \"status\": \"Aguardando pagamento\",\r\n    \"payment\": \"Cartao de credito\",\r\n    \"client_id\": \"0a6fb256-82e0-4598-a36f-798a4d3174e0\",\r\n    \"items\": [\r\n        {\r\n            \"product_id\": \"07b2ac22-df67-4409-b45a-f2120d48c9d7\",\r\n            \"qty\": 9994\r\n        }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -325,7 +329,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "asdsad"
+									"value": "7381e378-6f51-4f01-a21a-b9de9c1655df"
 								}
 							]
 						}
@@ -339,7 +343,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"Name\": \"Update 2\",\r\n    \"Price\": 999,\r\n    \"Stock\": 9\r\n}",
+							"raw": "{\r\n    \"status\": \"Cancelado\",\r\n    \"payment\": \"Pix\",\r\n    \"items\": [\r\n        {\r\n            \"product_id\": \"29c93ca2-e5e9-41cf-b64f-7a4a641b20d4\",\r\n            \"qty\": 1\r\n        }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -359,7 +363,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "e9727e6a-c991-4c78-bd8c-d77075f552bd"
+									"value": "21c564ad-e45c-43fa-99df-35e608772022"
 								}
 							]
 						}
@@ -384,7 +388,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": ""
+									"value": "bc98a8a8-e5ec-458f-ba89-67d0380169f3"
 								}
 							]
 						}
@@ -410,7 +414,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"testValid@test.com\",\r\n    \"password\": \"test123\"\r\n}",
+							"raw": "{\r\n    \"email\": \"admin@admin.com\",\r\n    \"password\": \"admin123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -479,39 +483,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "92275c89-f27f-48cf-9c56-887284388436"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GetByEmail",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Cookie",
-								"value": "token=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ0ZXN0MTIzQGVtYWlsLmNvbSIsInBhc3N3b3JkIjoidGVzdDEyM2Fzc3dvcmQiLCJyb2xlIjoiQWRtaW4iLCJpYXQiOjE3MjYyNjkzNzksImV4cCI6MTcyNjI3Mjk3OX0.MOUYanZ1K-m5C8L2crGuOWuAlE73hmGMsvlmOWiMhX4\";",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"url": {
-							"raw": "{{BASE_URL}}/private/users/:email",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"private",
-								"users",
-								":email"
-							],
-							"variable": [
-								{
-									"key": "email",
-									"value": "test@test.com"
+									"value": "0a6fb256-82e0-4598-a36f-798a4d3174e0"
 								}
 							]
 						}
@@ -525,7 +497,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"testUpdate@test.com\"\r\n}",
+							"raw": "{\r\n    \"email\": \"finaltestsasdadasdasd@update.com\",\r\n    \"password\": \"asdasdasf\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -545,7 +517,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "92275c89-f27f-48cf-9c56-887284388436"
+									"value": "46fc9043-c7af-4c9a-bfe8-9a04397c2e4f"
 								}
 							]
 						}
@@ -570,7 +542,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": ""
+									"value": "46fc9043-c7af-4c9a-bfe8-9a04397c2e4f"
 								}
 							]
 						}
@@ -594,6 +566,268 @@
 							],
 							"path": [
 								"invalid_endpoint"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Offers",
+			"item": [
+				{
+					"name": "Add",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZW1haWwiOiJ0ZXN0TGlkZXJhYXNkc2Fkb0BlbWFpbC5jb20iLCJwYXNzd29yZCI6InRlc3RMaWRlcmFkb1Bhc3N3b3JkIiwicm9sZSI6IkxpZGVyIiwiaWF0IjoxNzI2MjY0Mzc1LCJleHAiOjE3MjYyNjc5NzV9.9deH8PoB9ifzUwDRr6B49LBgeDETATSwHk1GpL-cktU\";",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"price\": 99,\r\n    \"product_id\": \"07b2ac22-df67-4409-b45a-f2120d48c9d7\",\r\n    \"seller_id\": \"7a781c4c-1268-45d7-8422-f8169183eb78\",\r\n    \"buyer_id\": \"0a6fb256-82e0-4598-a36f-798a4d3174e0\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/private/offers",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"private",
+								"offers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AnswerOffer",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZW1haWwiOiJ0ZXN0TGlkZXJhYXNkc2Fkb0BlbWFpbC5jb20iLCJwYXNzd29yZCI6InRlc3RMaWRlcmFkb1Bhc3N3b3JkIiwicm9sZSI6IkxpZGVyIiwiaWF0IjoxNzI2MjY0Mzc1LCJleHAiOjE3MjYyNjc5NzV9.9deH8PoB9ifzUwDRr6B49LBgeDETATSwHk1GpL-cktU\";",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\": \"Aceita\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/private/offers/answer/:id",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"private",
+								"offers",
+								"answer",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "056499bb-9be7-424c-a183-bfc31b48202b"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetMany",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "12344",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/private/offers",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"private",
+								"offers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetById",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ0ZXN0MTIzQGVtYWlsLmNvbSIsInBhc3N3b3JkIjoidGVzdDEyM2Fzc3dvcmQiLCJyb2xlIjoiQWRtaW4iLCJpYXQiOjE3MjYyNjkzNzksImV4cCI6MTcyNjI3Mjk3OX0.MOUYanZ1K-m5C8L2crGuOWuAlE73hmGMsvlmOWiMhX4\";",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/private/offers/:id",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"private",
+								"offers",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "d6c57e66-63e7-4d0e-8636-ee431bafb9c7"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AcceptById",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ0ZXN0MTIzQGVtYWlsLmNvbSIsInBhc3N3b3JkIjoidGVzdDEyM2Fzc3dvcmQiLCJyb2xlIjoiQWRtaW4iLCJpYXQiOjE3MjYyNjkzNzksImV4cCI6MTcyNjI3Mjk3OX0.MOUYanZ1K-m5C8L2crGuOWuAlE73hmGMsvlmOWiMhX4\";",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/private/offers/accept/:id",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"private",
+								"offers",
+								"accept",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "3bc63187-c148-4904-92d8-9d704f581f13"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeclineById",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ0ZXN0MTIzQGVtYWlsLmNvbSIsInBhc3N3b3JkIjoidGVzdDEyM2Fzc3dvcmQiLCJyb2xlIjoiQWRtaW4iLCJpYXQiOjE3MjYyNjkzNzksImV4cCI6MTcyNjI3Mjk3OX0.MOUYanZ1K-m5C8L2crGuOWuAlE73hmGMsvlmOWiMhX4\";",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/private/offers/decline/:id",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"private",
+								"offers",
+								"decline",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "3bc63187-c148-4904-92d8-9d704f581f13"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateById",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\": \"TESTE UPD\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/private/offers/:id",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"private",
+								"offers",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "d6c57e66-63e7-4d0e-8636-ee431bafb9c7"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteById",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/private/offers/:id",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"private",
+								"offers",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "d6c57e66-63e7-4d0e-8636-ee431bafb9c7"
+								}
 							]
 						}
 					},
