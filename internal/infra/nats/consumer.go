@@ -20,12 +20,17 @@ import (
 const (
 	OrdersSubject = "orders"
 	OffersSubject = "offers"
+
+	OffersAcceptedSubject = "accepted"
+	OffersDeclinedSubject = "declined"
+	OffersPendingSubject  = "pending"
 )
 
 var OrdersFilter = fmt.Sprintf("%s.>", OrdersSubject)
-var OffersAcceptedFilter = fmt.Sprintf("%s.accepted.>", OffersSubject)
-var OffersDeclinedFilter = fmt.Sprintf("%s.declined.>", OffersSubject)
-var OffersPendingFilter = fmt.Sprintf("%s.pending.>", OffersSubject)
+var OffersFilter = fmt.Sprintf("%s.>", OffersSubject)
+var OffersAcceptedFilter = fmt.Sprintf("%s.%s", OffersSubject, OffersAcceptedSubject)
+var OffersDeclinedFilter = fmt.Sprintf("%s.%s", OffersSubject, OffersDeclinedSubject)
+var OffersPendingFilter = fmt.Sprintf("%s.%s", OffersSubject, OffersPendingSubject)
 
 type Consumer struct {
 	Js          jetstream.JetStream
@@ -89,7 +94,7 @@ func ConsumerInit() {
 	repositoryOffers := repository.NewOfferRepositoryMysql(config.DB)
 	offersUseCase := offerUseCase.NewOfferUseCase(repositoryOffers)
 
-	offersConsumer := NewOffersConsumer("offer_answer_processor", "offer_answer_processor", OffersAcceptedFilter, offersUseCase)
+	offersConsumer := NewOffersConsumer("offer_answer_processor", "offer_answer_processor", OffersFilter, offersUseCase)
 	offersConsumer.ConsumerCfg.CreateStream(OffersSubject)
 	offersConsumer.HandlingOffers()
 
@@ -100,7 +105,7 @@ func ConsumerInit() {
 
 func (c *OrdersConsumer) HandlingNewOrders() {
 	_, err := c.ConsumerCfg.ConsumerCtx.Consume(func(msg jetstream.Msg) {
-		orderID := getIdFromMsg(msg, OrdersSubject)
+		orderID := getOrderIdFromOrderSubject(msg, OrdersSubject)
 		msg.Ack()
 
 		config.Logger.Info(
@@ -131,32 +136,48 @@ func (c *OrdersConsumer) HandlingNewOrders() {
 
 func (o *OffersConsumer) HandlingOffers() {
 	_, err := o.ConsumerCfg.ConsumerCtx.Consume(func(msg jetstream.Msg) {
-		offerId := getIdFromMsg(msg, OffersAcceptedFilter)
+		offerStatus, offerId := getOfferIdFromOfferSubject(msg)
 		msg.Ack()
 
 		config.Logger.Info(
-			"new offer accepted",
+			fmt.Sprintf("new offer %s", offerStatus),
 			zap.String("offer id", offerId),
 		)
 
 		offer, _ := o.OffersUseCase.OfferRepository.GetById(offerId)
-		offer.SetAcceptedStatus()
-		o.OffersUseCase.OfferRepository.UpdateById(offer)
 
-		offer.Product.SetOfferPrice(offer.Price)
-		offerProductJson, _ := json.Marshal(offer.Product)
+		switch offerStatus {
+		case OffersAcceptedSubject:
+			o.HandleAcceptedOffer(offer)
+		case OffersDeclinedSubject:
+			o.HandleDeclinedOffer(offer)
+		}
 
-		go redis.Redis.Set(context.Background(), redis.GetOfferCacheId(offer.BuyerID, offer.ProductID), string(offerProductJson), config.Env.OfferExpiresAt)
-
-		config.Logger.Info(
-			"order status updated to accepted",
-			zap.String("offer id", offerId),
-		)
 	})
 
 	if err != nil {
 		config.Logger.Fatal("err", zap.Error(err))
 	}
+}
+
+func (o *OffersConsumer) HandleAcceptedOffer(offer *entity.Offer) {
+	offer.SetAcceptedStatus()
+	o.OffersUseCase.OfferRepository.UpdateById(offer)
+
+	offer.Product.SetOfferPrice(offer.Price)
+	offerProductJson, _ := json.Marshal(offer.Product)
+
+	go redis.Redis.Set(
+		context.Background(),
+		redis.GetOfferCacheId(offer.BuyerID, offer.ProductID),
+		string(offerProductJson),
+		config.Env.OfferExpiresAt,
+	)
+}
+
+func (o *OffersConsumer) HandleDeclinedOffer(offer *entity.Offer) {
+	offer.SetDeclinedStatus()
+	o.OffersUseCase.OfferRepository.UpdateById(offer)
 }
 
 func (c *Consumer) CreateStream(subject string) {
@@ -171,6 +192,14 @@ func (c *Consumer) CreateStream(subject string) {
 	}
 }
 
-func getIdFromMsg(msg jetstream.Msg, filter string) string {
+func getOfferIdFromOfferSubject(msg jetstream.Msg) (string, string) {
+	offerDetails := strings.Split(msg.Subject(), ".")
+
+	offerStatus := offerDetails[1]
+	offerId := offerDetails[2]
+	return offerStatus, offerId
+}
+
+func getOrderIdFromOrderSubject(msg jetstream.Msg, filter string) string {
 	return strings.Replace(string(msg.Subject()), fmt.Sprintf("%s.", filter), "", 1)
 }
