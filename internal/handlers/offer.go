@@ -63,38 +63,6 @@ func (p *OfferHandlers) GetById(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(output)
 }
 
-func (p *OfferHandlers) AcceptById(c *fiber.Ctx) error {
-	id := c.Params("id")
-	if id == ":id" {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "offer id missing"})
-	}
-
-	_, err := p.OfferUseCase.GetById(id)
-	if err != nil {
-		return err
-	}
-
-	go nats.OffersPublisher.Publish(nats.OffersAcceptedFilter, id)
-
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "offer accepted successfully"})
-}
-
-func (p *OfferHandlers) DeclineById(c *fiber.Ctx) error {
-	id := c.Params("id")
-	if id == ":id" {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "offer id missing"})
-	}
-
-	_, err := p.OfferUseCase.GetById(id)
-	if err != nil {
-		return err
-	}
-
-	go nats.OffersPublisher.Publish(nats.OffersDeclinedFilter, id)
-
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "offer declined successfully"})
-}
-
 func (p *OfferHandlers) AnswerOffer(c *fiber.Ctx) error {
 	var input dto.OfferStatusInputDto
 	err := c.BodyParser(&input)
