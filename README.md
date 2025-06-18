@@ -9,6 +9,7 @@ Simple CRUD API with Go, Fiber, Gorm, MySQL, Nats (Jetstream) and Redis.
 
 ### Opcionais
 - [Postman](https://www.postman.com/downloads/)
+- [Air](https://github.com/air-verse/air)
 
 
 ## Instalação
