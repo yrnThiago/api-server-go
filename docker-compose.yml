@@ -1,0 +1,28 @@
+services:
+  db:
+    image: mysql:8
+    container_name: mysql
+    restart: always
+    environment:
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
+    volumes:
+      - ./mysql:/var/lib/mysql
+
+  api:
+    build:
+      context: .
+    container_name: api
+    restart: always
+    depends_on:
+      - db
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+    ports:
+      - "${PORT}:${PORT}"
