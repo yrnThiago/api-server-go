@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/yrnThiago/api-server-go/internal/dto"
@@ -29,7 +30,7 @@ func TestUserUseCase_GetById(t *testing.T) {
 
 	tests := []testCase{
 		{
-			name: "return valid user when everything looks good",
+			name: "GetById return valid user when everything looks good",
 			user: userTest,
 			mockSetup: func(repo *mocks.MockIUserRepository) {
 				repo.EXPECT().GetById(userTest.ID).Return(userTest, nil)
@@ -38,7 +39,7 @@ func TestUserUseCase_GetById(t *testing.T) {
 			expectError: false,
 		},
 		{
-			name: "return error when user id not found",
+			name: "GetById return error when user id not found",
 			user: userNotFound,
 			mockSetup: func(repo *mocks.MockIUserRepository) {
 				repo.EXPECT().GetById(userNotFound.ID).Return(nil, fmt.Errorf("id not found"))
@@ -79,11 +80,12 @@ func TestUserUseCase_GetByLogin(t *testing.T) {
 	}
 
 	userTest := entity.NewUser("test@test.com", "123456")
-	userNotFound := entity.NewUser("notfound@notfound.com", "123456")
+	invalidEmail := uuid.NewString()
+	emptyEmail := ""
 
 	tests := []testCase{
 		{
-			name:  "return user when email is registered",
+			name:  "GetByLogin return user when email is registered",
 			email: userTest.Email,
 			mockSetup: func(repo *mocks.MockIUserRepository) {
 				repo.EXPECT().GetByLogin(userTest.Email).Return(userTest, nil)
@@ -92,10 +94,19 @@ func TestUserUseCase_GetByLogin(t *testing.T) {
 			expectError: false,
 		},
 		{
-			name:  "return error when email not found",
-			email: userNotFound.Email,
+			name:  "GetByLogin return error when email not found",
+			email: invalidEmail,
 			mockSetup: func(repo *mocks.MockIUserRepository) {
-				repo.EXPECT().GetByLogin(userNotFound.Email).Return(nil, fmt.Errorf("email not found"))
+				repo.EXPECT().GetByLogin(invalidEmail).Return(nil, fmt.Errorf("email not found"))
+			},
+			expected:    nil,
+			expectError: true,
+		},
+		{
+			name:  "GetByLogin return error when email is empty",
+			email: emptyEmail,
+			mockSetup: func(repo *mocks.MockIUserRepository) {
+				repo.EXPECT().GetByLogin(emptyEmail).Return(nil, fmt.Errorf("email not found"))
 			},
 			expected:    nil,
 			expectError: true,
