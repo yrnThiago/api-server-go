@@ -65,3 +65,57 @@ func TestUserUseCase_GetById(t *testing.T) {
 		})
 	}
 }
+
+func TestUserUseCase_GetByLogin(t *testing.T) {
+	control := gomock.NewController(t)
+	defer control.Finish()
+
+	type testCase struct {
+		name        string
+		email       string
+		mockSetup   func(repo *mocks.MockIUserRepository)
+		expected    *entity.User
+		expectError bool
+	}
+
+	userTest := entity.NewUser("test@test.com", "123456")
+	userNotFound := entity.NewUser("notfound@notfound.com", "123456")
+
+	tests := []testCase{
+		{
+			name:  "return user when email is registered",
+			email: userTest.Email,
+			mockSetup: func(repo *mocks.MockIUserRepository) {
+				repo.EXPECT().GetByLogin(userTest.Email).Return(userTest, nil)
+			},
+			expected:    userTest,
+			expectError: false,
+		},
+		{
+			name:  "return error when email not found",
+			email: userNotFound.Email,
+			mockSetup: func(repo *mocks.MockIUserRepository) {
+				repo.EXPECT().GetByLogin(userNotFound.Email).Return(nil, fmt.Errorf("email not found"))
+			},
+			expected:    nil,
+			expectError: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			repo := mocks.NewMockIUserRepository(control)
+			tt.mockSetup(repo)
+
+			usecase := NewUserUseCase(repo)
+			user, err := usecase.GetByLogin(tt.email)
+
+			if tt.expectError {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, tt.expected, user)
+			}
+		})
+	}
+}
