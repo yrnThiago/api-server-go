@@ -15,6 +15,60 @@ import (
 	"go.uber.org/zap"
 )
 
+func TestUserUseCase_GetMany(t *testing.T) {
+	control := gomock.NewController(t)
+	defer control.Finish()
+
+	type testCase struct {
+		name        string
+		mockSetup   func(repo *mocks.MockIUserRepository)
+		expected    []*dto.UserOutputDto
+		expectError bool
+	}
+
+	userTest := entity.NewUser("test@test.com", "123456")
+	userTest2 := entity.NewUser("test2@test2.com", "654321")
+
+	tests := []testCase{
+		{
+			name: "GetMany return users when everything looks good",
+			mockSetup: func(repo *mocks.MockIUserRepository) {
+				repo.EXPECT().GetMany().Return(nil, fmt.Errorf("db error"))
+			},
+			expected:    nil,
+			expectError: true,
+		},
+		{
+			name: "GetMany return users when everything looks good",
+			mockSetup: func(repo *mocks.MockIUserRepository) {
+				repo.EXPECT().GetMany().Return([]*entity.User{userTest, userTest2}, nil)
+			},
+			expected: []*dto.UserOutputDto{
+				dto.NewUserOutputDto(userTest),
+				dto.NewUserOutputDto(userTest2),
+			},
+			expectError: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			repo := mocks.NewMockIUserRepository(control)
+			tt.mockSetup(repo)
+
+			usecase := NewUserUseCase(repo)
+			user, err := usecase.GetMany()
+
+			if tt.expectError {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, tt.expected, user)
+			}
+		})
+	}
+}
+
 func TestUserUseCase_GetById(t *testing.T) {
 	control := gomock.NewController(t)
 	defer control.Finish()
