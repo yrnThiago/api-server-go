@@ -215,3 +215,69 @@ func TestUserUseCase_UpdateById(t *testing.T) {
 		})
 	}
 }
+
+func TestUserUseCase_DeleteById(t *testing.T) {
+	control := gomock.NewController(t)
+	defer control.Finish()
+
+	type testCase struct {
+		name        string
+		id          string
+		mockSetup   func(repo *mocks.MockIUserRepository)
+		expected    *dto.UserOutputDto
+		expectError bool
+	}
+
+	userTest := entity.NewUser("test@test.com", "123456")
+	userOutputTest := dto.NewUserOutputDto(userTest)
+
+	tests := []testCase{
+		{
+			name: "DeleteById return error id not found",
+			id:   "invalid-id",
+			mockSetup: func(repo *mocks.MockIUserRepository) {
+				repo.EXPECT().GetById("invalid-id").Return(nil, fmt.Errorf("id not found"))
+			},
+			expected:    nil,
+			expectError: true,
+		},
+		{
+			name: "DeleteById return database error",
+			id:   userTest.ID,
+			mockSetup: func(repo *mocks.MockIUserRepository) {
+				repo.EXPECT().GetById(userTest.ID).Return(userTest, nil)
+				repo.EXPECT().DeleteById(userTest.ID).Return(fmt.Errorf("db error"))
+			},
+			expected:    nil,
+			expectError: true,
+		},
+		{
+			name: "DeleteById return updated user output when everything good",
+			id:   userTest.ID,
+			mockSetup: func(repo *mocks.MockIUserRepository) {
+				repo.EXPECT().GetById(userTest.ID).Return(userTest, nil)
+				repo.EXPECT().DeleteById(userTest.ID).Return(nil)
+			},
+			expected:    userOutputTest,
+			expectError: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			repo := mocks.NewMockIUserRepository(control)
+			tt.mockSetup(repo)
+
+			config.Logger = zap.NewNop()
+			usecase := NewUserUseCase(repo)
+			user, err := usecase.DeleteById(tt.id)
+
+			if tt.expectError {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, tt.expected, user)
+			}
+		})
+	}
+}
