@@ -11,9 +11,74 @@ import (
 	"github.com/yrnThiago/api-server-go/internal/dto"
 	"github.com/yrnThiago/api-server-go/internal/entity"
 	"github.com/yrnThiago/api-server-go/internal/tests/mocks"
+	"github.com/yrnThiago/api-server-go/internal/utils"
 	"go.uber.org/mock/gomock"
 	"go.uber.org/zap"
 )
+
+func TestUserUseCase_Add(t *testing.T) {
+	control := gomock.NewController(t)
+	defer control.Finish()
+
+	type testCase struct {
+		name        string
+		input       dto.UserInputDto
+		mockSetup   func(repo *mocks.MockIUserRepository)
+		expected    *dto.UserOutputDto
+		expectError bool
+	}
+
+	inputTest := dto.UserInputDto{Email: "test@test.com", Password: "123456"}
+	inputTest.Password, _ = utils.GenerateHashPassword(inputTest.Password)
+
+	newUser := entity.NewUser(inputTest.Email, inputTest.Password)
+
+	tests := []testCase{
+		{
+			name:        "Add return error when input is not valid",
+			mockSetup:   func(repo *mocks.MockIUserRepository) {},
+			expected:    nil,
+			expectError: true,
+		},
+		{
+			name:  "Add return database error",
+			input: inputTest,
+			mockSetup: func(repo *mocks.MockIUserRepository) {
+				repo.EXPECT().Add(gomock.Any()).Return(nil, fmt.Errorf("db error"))
+			},
+			expected:    nil,
+			expectError: true,
+		},
+		{
+			name:  "Add return new user output when everything good",
+			input: inputTest,
+			mockSetup: func(repo *mocks.MockIUserRepository) {
+				repo.EXPECT().Add(gomock.Any()).Return(newUser, nil)
+			},
+			expected:    dto.NewUserOutputDto(newUser),
+			expectError: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			repo := mocks.NewMockIUserRepository(control)
+			tt.mockSetup(repo)
+
+			config.Logger = zap.NewNop()
+			usecase := NewUserUseCase(repo)
+			user, err := usecase.Add(tt.input)
+
+			if tt.expectError {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, tt.expected.Email, user.Email)
+				assert.Equal(t, tt.expected.Orders, user.Orders)
+			}
+		})
+	}
+}
 
 func TestUserUseCase_GetMany(t *testing.T) {
 	control := gomock.NewController(t)
