@@ -7,10 +7,12 @@ import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 
+	"github.com/yrnThiago/api-server-go/config"
 	"github.com/yrnThiago/api-server-go/internal/dto"
 	"github.com/yrnThiago/api-server-go/internal/entity"
 	"github.com/yrnThiago/api-server-go/internal/tests/mocks"
 	"go.uber.org/mock/gomock"
+	"go.uber.org/zap"
 )
 
 func TestUserUseCase_GetById(t *testing.T) {
@@ -120,6 +122,89 @@ func TestUserUseCase_GetByLogin(t *testing.T) {
 
 			usecase := NewUserUseCase(repo)
 			user, err := usecase.GetByLogin(tt.email)
+
+			if tt.expectError {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, tt.expected, user)
+			}
+		})
+	}
+}
+
+func TestUserUseCase_UpdateById(t *testing.T) {
+	control := gomock.NewController(t)
+	defer control.Finish()
+
+	type testCase struct {
+		name        string
+		id          string
+		input       dto.UserInputDto
+		mockSetup   func(repo *mocks.MockIUserRepository)
+		expected    *dto.UserOutputDto
+		expectError bool
+	}
+
+	inputTest := dto.UserInputDto{Email: "test@test.com", Password: "123456"}
+	userTest := entity.NewUser("test@test.com", "123456")
+
+	updatedUser := &entity.User{
+		ID:       userTest.ID,
+		Email:    inputTest.Email,
+		Password: inputTest.Password,
+	}
+
+	tests := []testCase{
+		{
+			name:        "UpdateById return error when input is not valid",
+			id:          uuid.NewString(),
+			mockSetup:   func(repo *mocks.MockIUserRepository) {},
+			expected:    nil,
+			expectError: true,
+		},
+		{
+			name:  "UpdateById return error when id not found",
+			id:    "invalid-id",
+			input: inputTest,
+			mockSetup: func(repo *mocks.MockIUserRepository) {
+				repo.EXPECT().GetById("invalid-id").Return(nil, fmt.Errorf("id not found"))
+			},
+			expected:    nil,
+			expectError: true,
+		},
+		{
+			name:  "UpdateById return database error",
+			id:    userTest.ID,
+			input: inputTest,
+			mockSetup: func(repo *mocks.MockIUserRepository) {
+				repo.EXPECT().GetById(userTest.ID).Return(userTest, nil)
+				repo.EXPECT().UpdateById(userTest).Return(nil, fmt.Errorf("db error"))
+			},
+			expected:    nil,
+			expectError: true,
+		},
+		{
+			name:  "UpdateById return updated user output when everything good",
+			id:    userTest.ID,
+			input: inputTest,
+			mockSetup: func(repo *mocks.MockIUserRepository) {
+				repo.EXPECT().GetById(userTest.ID).Return(userTest, nil)
+				repo.EXPECT().UpdateById(userTest).Return(updatedUser, nil)
+			},
+			expected:    dto.NewUserOutputDto(updatedUser),
+			expectError: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			repo := mocks.NewMockIUserRepository(control)
+			tt.mockSetup(repo)
+
+			config.Logger = zap.NewNop()
+			usecase := NewUserUseCase(repo)
+			user, err := usecase.UpdateById(tt.id, tt.input)
 
 			if tt.expectError {
 				assert.Error(t, err)
